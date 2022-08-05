@@ -1,20 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
 import moment from 'moment';
 
-const initialState = [
-  {
-      id: 10,
-      start: moment().toDate(),
-      end: moment().add(1, "hours").toDate(),
-      title: "Some title",
-  },
-  {   
-      id: 20,
-      start: moment().add(2, "days").toDate(),
-      end: moment().add(3, "days").toDate(),
-      title: "Some title2",
-    },
-]
+
+const initialState = {
+  items: [
+      {
+        id: 10,
+        start: moment().toString(),
+        end: moment().add(1, "hours").toString(),
+        title: "Some title",
+      },
+      {   
+        id: 20,
+        start: moment().add(2, "days").toString(),
+        end: moment().add(3, "days").toString(),
+        title: "Some title2",
+      },
+    ]
+  }
 
 
 export const eventsSlice = createSlice({
@@ -23,9 +26,15 @@ export const eventsSlice = createSlice({
   reducers: {
       addEvent: {},
       getEvent: {},
-      updateEvent: {},
+      updateEvent: (state, action) => {
+        const updatedEvent = action.payload
+        const objIdx = state.items.findIndex(obj => obj.id === updatedEvent.id)
+        state.items[objIdx] = updatedEvent
+      },
       deleteEvent: {}
   }
 })
+
+export const { updateEvent } = eventsSlice.actions
 
 export default eventsSlice.reducer
