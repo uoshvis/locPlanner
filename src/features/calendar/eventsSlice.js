@@ -16,8 +16,10 @@ const initialState = {
         end: moment().add(3, "days").toString(),
         title: "Some title2",
       },
-    ]
-  }
+    ],
+  showModal: false,
+  
+}
 
 
 export const eventsSlice = createSlice({
@@ -26,6 +28,9 @@ export const eventsSlice = createSlice({
   reducers: {
       addEvent: {},
       getEvent: {},
+      toggleShowModal(state) {
+        state.showModal = !state.showModal
+      },
       updateEvent: (state, action) => {
         const updatedEvent = action.payload
         const objIdx = state.items.findIndex(obj => obj.id === updatedEvent.id)
@@ -35,6 +40,6 @@ export const eventsSlice = createSlice({
   }
 })
 
-export const { updateEvent } = eventsSlice.actions
+export const { toggleShowModal, updateEvent } = eventsSlice.actions
 
 export default eventsSlice.reducer
