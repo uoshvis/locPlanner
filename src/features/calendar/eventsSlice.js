@@ -17,6 +17,7 @@ const initialState = {
         title: "Some title2",
       },
     ],
+  currentItem : {},
   showModal: false,
   
 }
@@ -30,6 +31,16 @@ export const eventsSlice = createSlice({
       getEvent: {},
       toggleShowModal(state) {
         state.showModal = !state.showModal
+        if(!state.showModal) {
+          state.currentItem = {}
+        }
+      },
+      selectCurrentEvent: (state, action) => {
+        state.currentItem = action.payload
+      },
+      updateCurrentEvent: (state, action) => {        
+        const { key, value }  = action.payload
+        state.currentItem[key] = value
       },
       updateEvent: (state, action) => {
         const updatedEvent = action.payload
@@ -40,6 +51,11 @@ export const eventsSlice = createSlice({
   }
 })
 
-export const { toggleShowModal, updateEvent } = eventsSlice.actions
+export const {
+  toggleShowModal,
+  selectCurrentEvent,
+  updateCurrentEvent,
+  updateEvent, 
+} = eventsSlice.actions
 
 export default eventsSlice.reducer
