@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
@@ -6,7 +5,7 @@ import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
-import { toggleShowModal, updateEvent } from "./eventsSlice";
+import { selectCurrentEvent, toggleShowModal, updateEvent } from "./eventsSlice";
 import FormDialog from "../eventForm/EventForm"
 
 const localizer = momentLocalizer(moment);
@@ -16,9 +15,7 @@ const DnDCalendar = withDragAndDrop(Calendar);
 function MainCalendar() {
     const dispatch = useDispatch()
     const events = useSelector(state => state.events.items)
-
-    const [currentEvent, setCurrentEvent] = useState({})
-    // const [showModal, setShowModal] = useState(false)
+    const open = useSelector(state => state.events.showModal)
 
     const handleEventResize = (data) => {
         const { start, end } = data
@@ -41,7 +38,7 @@ function MainCalendar() {
     };
 
     const handleSelectEvent = (data) => {
-        setCurrentEvent(data)
+        dispatch(selectCurrentEvent(data))
         dispatch(toggleShowModal())
     }
 
@@ -60,7 +57,7 @@ function MainCalendar() {
                 onEventResize={handleEventResize}
                 onSelectEvent={handleSelectEvent}
             />
-            <FormDialog currentEvent={currentEvent}/>
+            <FormDialog open={open}/>
 
         </div>
     );

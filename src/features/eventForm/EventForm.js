@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -11,19 +10,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
-import { toggleShowModal, updateEvent } from "../calendar/eventsSlice"
+import { toggleShowModal, updateEvent, updateCurrentEvent} from "../calendar/eventsSlice"
 
 export default function FormDialog(props) {
-  //   const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch()
-  const open = useSelector(state => state.events.showModal)
-  const [currentEvent, setCurrentEvent] = useState({...props.currentEvent})
-  // TODO FIX Current event does not update with select
-  // ?? use global state for currentEvent??
+  const currentEvent = useSelector(state => state.events.currentItem)
 
-  useEffect(() => {
-    setCurrentEvent(props.currentEvent)
-  }, [props.currentEvent])
 
   const handleSubmit = () => {
     dispatch(updateEvent(currentEvent))
@@ -34,16 +26,26 @@ export default function FormDialog(props) {
     dispatch(toggleShowModal())
   };
 
-  const handleStartChange = (data) => {
-    setCurrentEvent({...currentEvent, start: data.toDate()})    
+  const handleTitleChange = (e) => {
+    const { id, value } = e.target
+    dispatch(updateCurrentEvent({key: id, value: value}))
   };
+
+  const handleStartChange = (data) => {
+    dispatch(updateCurrentEvent(
+      {key: 'start', value: data.toDate().toString()}
+    ))
+  };
+
   const handleEndChange = (data) => {
-    setCurrentEvent({...currentEvent, end: data.toDate()})    
+    dispatch(updateCurrentEvent(
+      {key: 'end', value: data.toDate().toString()}
+    ))
   };
 
   return (
     <div>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={props.open} onClose={handleClose}>
         <DialogTitle>Event Form</DialogTitle>
         <DialogContent>
           <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -56,7 +58,8 @@ export default function FormDialog(props) {
               type="text"
               fullWidth
               variant="outlined"
-              defaultValue={currentEvent.title}
+              value={currentEvent.title || ''}
+              onChange={handleTitleChange}
             />
               <DateTimePicker
                 label="Start datetime"
