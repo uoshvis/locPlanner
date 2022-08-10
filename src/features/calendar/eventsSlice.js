@@ -32,6 +32,17 @@ export const eventsSlice = createSlice({
   reducers: {
       addEvent: {},
       getEvent: {},
+
+      filterEvents: (state, action) => {
+        if (action.payload === 'all') {
+          state.items = data
+        }
+        else {
+          const filtered = data.filter(item => item.location === action.payload)
+          state.items = filtered
+        }        
+      },     
+
       toggleShowModal(state) {
         state.showModal = !state.showModal
         if(!state.showModal) {
@@ -55,6 +66,7 @@ export const eventsSlice = createSlice({
 })
 
 export const {
+  filterEvents,
   toggleShowModal,
   selectCurrentEvent,
   updateCurrentEvent,
