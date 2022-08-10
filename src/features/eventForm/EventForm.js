@@ -77,7 +77,7 @@ function FormDialog(props) {
               <Select
                 labelId="demo-simple-select-label"
                 id="location"
-                value={currentEvent.location}
+                value={currentEvent.location || ''}
                 label="Location"
                 onChange={handleLocationChange}
               >
@@ -109,6 +109,7 @@ function FormDialog(props) {
     </div>
   );
 }
+
 
 export default FormDialog
 
