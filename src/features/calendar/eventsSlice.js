@@ -1,21 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import moment from 'moment';
-
-const data = [      {
-  id: 10,
-  start: moment().toString(),
-  end: moment().add(1, "hours").toString(),
-  title: "Some title",
-  location: 'loc1',
-
-},
-{   
-  id: 20,
-  start: moment().add(2, "days").toString(),
-  end: moment().add(3, "days").toString(),
-  title: "Some title2",
-  location: 'loc2',
-},]
 
 
 const initialState = {
@@ -33,16 +16,9 @@ export const eventsSlice = createSlice({
       addEvent: {},
       getEvent: {},
 
-      filterEvents: (state, action) => {
-        if (action.payload === 'all') {
-          state.items = data
-        }
-        else {
-          const filtered = data.filter(item => item.location === action.payload)
-          state.items = filtered
-        }        
-      },     
-
+      getEventsByLocation: (state, action) => {
+        state.items = action.payload      
+      },
       toggleShowModal(state) {
         state.showModal = !state.showModal
         if(!state.showModal) {
@@ -68,8 +44,27 @@ export const eventsSlice = createSlice({
   }
 })
 
+
+export const fetchEventsByLocation = (location) => {
+  return async (dispatch) => {
+    const fetchHandler = async() => {
+      const res = await fetch(`/events/${location}`)
+      const data = await res.json()
+      return data
+    }
+    try {
+      const events = await fetchHandler()
+      dispatch(getEventsByLocation(events))
+    } catch(err) {
+      console.log(err)
+    }
+
+  }
+}
+
+
 export const {
-  filterEvents,
+  getEventsByLocation,
   toggleShowModal,
   setCurrentLocation,
   selectCurrentEvent,
