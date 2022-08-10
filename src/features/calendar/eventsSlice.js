@@ -49,6 +49,9 @@ export const eventsSlice = createSlice({
           state.currentItem = {}
         }
       },
+      setCurrentLocation(state, action) {
+        state.currentLocation = action.payload
+      },
       selectCurrentEvent: (state, action) => {
         state.currentItem = action.payload
       },
@@ -68,6 +71,7 @@ export const eventsSlice = createSlice({
 export const {
   filterEvents,
   toggleShowModal,
+  setCurrentLocation,
   selectCurrentEvent,
   updateCurrentEvent,
   updateEvent, 
