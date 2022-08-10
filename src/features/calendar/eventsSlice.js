@@ -1,25 +1,28 @@
 import { createSlice } from '@reduxjs/toolkit';
 import moment from 'moment';
 
+const data = [      {
+  id: 10,
+  start: moment().toString(),
+  end: moment().add(1, "hours").toString(),
+  title: "Some title",
+  location: 'loc1',
+
+},
+{   
+  id: 20,
+  start: moment().add(2, "days").toString(),
+  end: moment().add(3, "days").toString(),
+  title: "Some title2",
+  location: 'loc2',
+},]
+
 
 const initialState = {
-  items: [
-      {
-        id: 10,
-        start: moment().toString(),
-        end: moment().add(1, "hours").toString(),
-        title: "Some title",
-      },
-      {   
-        id: 20,
-        start: moment().add(2, "days").toString(),
-        end: moment().add(3, "days").toString(),
-        title: "Some title2",
-      },
-    ],
+  items: [],
   currentItem : {},
-  showModal: false,
-  
+  currentLocation: 'all',
+  showModal: false,  
 }
 
 
