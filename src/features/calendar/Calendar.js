@@ -7,6 +7,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import { selectCurrentEvent, toggleShowModal, updateEvent } from "./eventsSlice";
 import FormDialog from "../eventForm/EventForm"
+import { useEffect } from "react";
 
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
@@ -16,6 +17,9 @@ function MainCalendar() {
     const dispatch = useDispatch()
     const events = useSelector(state => state.events.items)
     const open = useSelector(state => state.events.showModal)
+    useEffect(() => {
+        dispatch(filterEvents(location) )
+    }, [dispatch, location])
 
     const handleEventResize = (data) => {
         const { start, end } = data
