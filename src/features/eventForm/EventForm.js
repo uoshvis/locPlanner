@@ -9,10 +9,15 @@ import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
 
 import { toggleShowModal, updateEvent, updateCurrentEvent} from "../calendar/eventsSlice"
 
-export default function FormDialog(props) {
+function FormDialog(props) {
   const dispatch = useDispatch()
   const currentEvent = useSelector(state => state.events.currentItem)
 
@@ -26,9 +31,15 @@ export default function FormDialog(props) {
     dispatch(toggleShowModal())
   };
 
-  const handleTitleChange = (e) => {
+  const handleChange = (e) => {
     const { id, value } = e.target
     dispatch(updateCurrentEvent({key: id, value: value}))
+  };
+
+  const handleLocationChange = (e) => {
+    dispatch(updateCurrentEvent(
+      {key: 'location', value: e.target.value}
+    ))
   };
 
   const handleStartChange = (data) => {
@@ -59,8 +70,22 @@ export default function FormDialog(props) {
               fullWidth
               variant="outlined"
               value={currentEvent.title || ''}
-              onChange={handleTitleChange}
+              onChange={handleChange}
             />
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Location</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="location"
+                value={currentEvent.location}
+                label="Location"
+                onChange={handleLocationChange}
+              >
+                <MenuItem value={'loc1'}>Location 1</MenuItem>
+                <MenuItem value={'loc2'}>Location 2</MenuItem>
+              </Select>
+            </FormControl>
+
               <DateTimePicker
                 label="Start datetime"
                 value={currentEvent.start}
@@ -84,3 +109,7 @@ export default function FormDialog(props) {
     </div>
   );
 }
+
+export default FormDialog
+
+
