@@ -5,7 +5,7 @@ import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
-import { selectCurrentEvent, toggleShowModal, updateEvent, fetchEventsByLocation } from "./eventsSlice";
+import { selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation, fetchEvents } from "./eventsSlice";
 import FormDialog from "../eventForm/EventForm"
 import LocationBtn from "../locationBtn/LocationBtn";
 import { useEffect } from "react";
@@ -20,18 +20,13 @@ function MainCalendar() {
     const open = useSelector(state => state.events.showModal)
     const location = useSelector(state => state.events.currentLocation)
 
+
     useEffect(() => {
         dispatch(fetchEventsByLocation(location))
     }, [dispatch, location])
 
     const handleEventResize = (data) => {
-        const { start, end } = data
-        const updatedEvent = {
-            ...data.event,
-            start: start.toString(),
-            end: end.toString()
-        }
-        dispatch(updateEvent(updatedEvent))
+        alert('handleEventResize not implemented')
     };
 
     const handleEventDrop = (data) => {
@@ -41,7 +36,12 @@ function MainCalendar() {
             start: start.toString(),
             end: end.toString()
         }
-        dispatch(updateEvent(updatedEvent))
+        dispatch(updateEventData(updatedEvent))
+        // TODO implement fetchEvents after update
+        
+        // dispatch(fetchEvents())
+
+
     };
 
     const handleSelectEvent = (data) => {
