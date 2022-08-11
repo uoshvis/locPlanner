@@ -44,13 +44,13 @@ function FormDialog(props) {
 
   const handleStartChange = (data) => {
     dispatch(updateCurrentEvent(
-      {key: 'start', value: data.toDate().toString()}
+      {key: 'start', value: data.toDate().toISOString()}
     ))
   };
 
   const handleEndChange = (data) => {
     dispatch(updateCurrentEvent(
-      {key: 'end', value: data.toDate().toString()}
+      {key: 'end', value: data.toDate().toISOString()}
     ))
   };
 

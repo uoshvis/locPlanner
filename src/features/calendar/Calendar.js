@@ -33,8 +33,8 @@ function MainCalendar() {
         const { start, end } = data
         const updatedEvent = {
             ...data.event,
-            start: start.toString(),
-            end: end.toString()
+            start: start.toISOString(),
+            end: end.toISOString()
         }
         dispatch(updateEventData(updatedEvent))
         // TODO implement fetchEvents after update
