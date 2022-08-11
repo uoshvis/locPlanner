@@ -1,11 +1,13 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 
 const initialState = {
   items: [],
   currentItem : {},
   currentLocation: 'all',
-  showModal: false,  
+  showModal: false,
+  status: 'idle',
+  error: null  
 }
 
 
@@ -16,9 +18,6 @@ export const eventsSlice = createSlice({
       addEvent: {},
       getEvent: {},
 
-      getEventsByLocation: (state, action) => {
-        state.items = action.payload      
-      },
       toggleShowModal(state) {
         state.showModal = !state.showModal
         if(!state.showModal) {
@@ -35,36 +34,70 @@ export const eventsSlice = createSlice({
         const { key, value }  = action.payload
         state.currentItem[key] = value
       },
-      updateEvent: (state, action) => {
-        const updatedEvent = action.payload
-        const objIdx = state.items.findIndex(obj => obj.id === updatedEvent.id)
-        state.items[objIdx] = updatedEvent
-      },
       deleteEvent: {}
+  },
+  extraReducers(builder) {
+    builder
+      .addCase(fetchEvents.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        state.items = action.payload
+      })
+      .addCase(fetchEventsByLocation.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        state.items = action.payload
+      })
+      .addCase(updateEventData.pending, (state, action) => {
+        state.status = 'loading'
+      })
+      .addCase(updateEventData.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+      })
   }
 })
 
 
-export const fetchEventsByLocation = (location) => {
-  return async (dispatch) => {
-    const fetchHandler = async() => {
-      const res = await fetch(`/events/${location}`)
-      const data = await res.json()
-      return data
-    }
-    try {
-      const events = await fetchHandler()
-      dispatch(getEventsByLocation(events))
-    } catch(err) {
-      console.log(err)
-    }
-
+export const fetchEvents = createAsyncThunk('events/fetchEvents', async () => {
+  const fetchHandler = async () => {
+    const response = await fetch(`/events/`)
+    const data = await response.json()
+    return data
   }
-}
+  const data = await fetchHandler()
+  return data
+})
+
+export const fetchEventsByLocation = createAsyncThunk('events/fetchEventsByLocation', async (location) => {
+  const fetchHandler = async () => {
+    const response = await fetch(`/events/${location}`)
+    const data = await response.json()
+    return data
+  }
+  const data = await fetchHandler()
+  return data
+})
+
+
+export const updateEventData = createAsyncThunk('events/updateEvent', async (event) => {
+  const sendRequest = async () => {
+    const response = await fetch(
+        `/events/${event.id}`,
+        {
+          method: "PUT",
+          headers: {
+            'Content-Type': 'application/ajson',
+          },
+          body: JSON.stringify(event)
+        }
+      )
+    const data = await response.json()
+    return data
+  }
+  const data = await sendRequest()
+  return data
+})
 
 
 export const {
-  getEventsByLocation,
   toggleShowModal,
   setCurrentLocation,
   selectCurrentEvent,
