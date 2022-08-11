@@ -29,19 +29,21 @@ function MainCalendar() {
         alert('handleEventResize not implemented')
     };
 
-    const handleEventDrop = (data) => {
+    const handleEventDrop = async (data) => {
         const { start, end } = data
         const updatedEvent = {
             ...data.event,
             start: start.toISOString(),
             end: end.toISOString()
         }
-        dispatch(updateEventData(updatedEvent))
-        // TODO implement fetchEvents after update
         
-        // dispatch(fetchEvents())
-
-
+        try {
+            await dispatch(updateEventData(updatedEvent)).unwrap()
+        } catch (err) {
+            console.log('failed to update', err)
+        } finally {
+            dispatch(fetchEvents())
+        }
     };
 
     const handleSelectEvent = (data) => {
