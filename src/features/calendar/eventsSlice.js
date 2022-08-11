@@ -76,7 +76,6 @@ export const fetchEventsByLocation = createAsyncThunk('events/fetchEventsByLocat
   return data
 })
 
-
 export const updateEventData = createAsyncThunk('events/updateEvent', async (event) => {
   const sendRequest = async () => {
     const response = await fetch(

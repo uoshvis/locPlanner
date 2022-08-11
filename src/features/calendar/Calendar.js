@@ -25,10 +25,6 @@ function MainCalendar() {
         dispatch(fetchEventsByLocation(location))
     }, [dispatch, location])
 
-    const handleEventResize = (data) => {
-        alert('handleEventResize not implemented')
-    };
-
     const handleEventDrop = async (data) => {
         const { start, end } = data
         const updatedEvent = {
@@ -65,7 +61,6 @@ function MainCalendar() {
                 resizable
                 selectable
                 onEventDrop={handleEventDrop}
-                onEventResize={handleEventResize}
                 onSelectEvent={handleSelectEvent}
             />
             <FormDialog open={open}/>
