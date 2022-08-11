@@ -1,24 +1,31 @@
 import { rest } from 'msw'
 import moment from 'moment';
 
-const data = [      
+const items = [      
     {
         id: 10,
-        start: moment(),
-        end: moment().add(1, "hours"),
+        start: moment().toString(),
+        end: moment().add(1, "hours").toString(),
         title: "Some title",
         location: 'loc1',
     },
     {   
         id: 20,
-        start: moment().add(2, "days"),
-        end: moment().add(3, "days"),
+        start: moment().add(2, "days").toString(),
+        end: moment().add(3, "days").toString(),
         title: "Some title2",
         location: 'loc2',
     },
 ]
 
 export const handlers = [
+
+    rest.get('/events/', (req, res, ctx) => {
+        return res(
+            ctx.status(200),
+            ctx.json(items),
+            )
+    }),
 
     rest.get('/events/:location', (req, res, ctx) => {
         const { location } = req.params
@@ -27,14 +34,14 @@ export const handlers = [
 
         if (validLocation) {
             if(location === 'all') {
-                events = data
+                events = items
             }
             else {
-                events = data.filter(item => item.location === location)
+                events = items.filter(item => item.location === location)
             }   
         return res(
             ctx.status(200),
-            ctx.json(events)
+            ctx.json(events),
             )         
         }
         else {
@@ -44,5 +51,22 @@ export const handlers = [
         }
 
     }),
+
+    rest.put('/events/:id', (req, res, ctx) => {
+        const { id } = req.params
+        const data = req.body
+        const itemIdx = items.findIndex(obj => obj.id === Number(id))
+        if (itemIdx !== -1) {
+            items[itemIdx] = data
+            return res(
+                ctx.status(200),
+            )
+        }
+        else {
+            return res(
+                ctx.status(404),
+            )
+        }
+        })
 
 ]
