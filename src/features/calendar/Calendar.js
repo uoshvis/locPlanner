@@ -5,7 +5,7 @@ import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
-import { selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation, fetchEvents } from "./eventsSlice";
+import { selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation } from "./eventsSlice";
 import FormDialog from "../eventForm/EventForm"
 import LocationBtn from "../locationBtn/LocationBtn";
 import { useEffect } from "react";
@@ -38,7 +38,8 @@ function MainCalendar() {
         } catch (err) {
             console.log('Failed to update on Drop', err)
         } finally {
-            dispatch(fetchEvents())
+            // TODO fetch events afer update
+            // await dispatch(fetchEventsByLocation('invalid')).unwrap()
         }
     };
 
