@@ -19,11 +19,25 @@ function MainCalendar() {
     const events = useSelector(state => state.events.items)
     const open = useSelector(state => state.events.showModal)
     const location = useSelector(state => state.events.currentLocation)
+    const status = useSelector(state => state.events.status)
 
 
     useEffect(() => {
-        dispatch(fetchEventsByLocation(location))
-    }, [dispatch, location])
+        // https://github.com/facebook/react/issues/14326
+        let didCancel = false
+
+        async function fetchAPI() {
+            try {
+                await dispatch(fetchEventsByLocation(location)).unwrap()
+            } catch (err) {
+                console.log('Failed ', err)
+            }
+            if (!didCancel) {}
+        }
+
+        fetchAPI()
+        return () => {didCancel = true}   
+    }, [dispatch, location, status])
 
     const handleEventDrop = async (data) => {
         const { start, end } = data
@@ -31,15 +45,11 @@ function MainCalendar() {
             ...data.event,
             start: start.toISOString(),
             end: end.toISOString()
-        }
-        
+        }        
         try {
             await dispatch(updateEventData(updatedEvent)).unwrap()
         } catch (err) {
             console.log('Failed to update on Drop', err)
-        } finally {
-            // TODO fetch events afer update
-            // await dispatch(fetchEventsByLocation('invalid')).unwrap()
         }
     };
 

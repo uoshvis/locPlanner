@@ -37,9 +37,7 @@ function FormDialog(props) {
       } catch (err) {
         console.log('Failed to submit', err)
       } finally {
-        setSubmitRequestStatus('idle')
-        // TODO do fetch after UPDATE
-        // await dispatch(fetchEventsByLocation(location)).unwrap()               
+        setSubmitRequestStatus('idle')          
       }
     }
   };
