@@ -46,6 +46,10 @@ export const eventsSlice = createSlice({
         state.status = 'succeeded'
         state.items = action.payload
       })
+      .addCase(fetchEventsByLocation.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message
+      })
       .addCase(updateEventData.pending, (state, action) => {
         state.status = 'loading'
       })
