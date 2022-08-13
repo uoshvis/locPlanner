@@ -1,3 +1,4 @@
+import { useState } from 'react' 
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -15,16 +16,32 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 
-import { toggleShowModal, updateEvent, updateCurrentEvent} from "../calendar/eventsSlice"
+import { toggleShowModal, updateEventData, updateCurrentEvent, } from "../calendar/eventsSlice"
 
 function FormDialog(props) {
   const dispatch = useDispatch()
   const currentEvent = useSelector(state => state.events.currentItem)
 
+  const [submitRequestStatus, setSubmitRequestStatus] = useState('idle')
 
-  const handleSubmit = () => {
-    dispatch(updateEvent(currentEvent))
-    dispatch(toggleShowModal())
+
+  const canSave = 
+    [currentEvent.title, currentEvent.start].every(Boolean) && submitRequestStatus === 'idle'
+
+  const handleSubmit = async () => {
+    if (canSave) {
+      try {
+        setSubmitRequestStatus('pending')
+        await dispatch(updateEventData(currentEvent)).unwrap()
+        dispatch(toggleShowModal())
+      } catch (err) {
+        console.log('Failed to submit', err)
+      } finally {
+        setSubmitRequestStatus('idle')
+        // TODO do fetch after UPDATE
+        // await dispatch(fetchEventsByLocation(location)).unwrap()               
+      }
+    }
   };
 
   const handleClose = () => {
