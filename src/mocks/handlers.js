@@ -65,7 +65,7 @@ export const handlers = [
         }
         else {
             return res(
-                ctx.status(404),
+                ctx.status(404, 'Item not found'),
             )
         }
         })
