@@ -81,7 +81,7 @@ export const fetchEventsByLocation = createAsyncThunk('events/fetchEventsByLocat
 })
 
 export const updateEventData = createAsyncThunk('events/updateEvent', async (event) => {
-  const sendRequest = async () => {
+  const sendRequest = async (event) => {
     const response = await fetch(
         `/events/${event.id}`,
         {
@@ -95,7 +95,7 @@ export const updateEventData = createAsyncThunk('events/updateEvent', async (eve
     const data = await response.json()
     return data
   }
-  const data = await sendRequest()
+  const data = await sendRequest(event)
   return data
 })
 
