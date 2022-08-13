@@ -36,7 +36,7 @@ function MainCalendar() {
         try {
             await dispatch(updateEventData(updatedEvent)).unwrap()
         } catch (err) {
-            console.log('failed to update', err)
+            console.log('Failed to update on Drop', err)
         } finally {
             dispatch(fetchEvents())
         }
