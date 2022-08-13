@@ -60,6 +60,7 @@ export const handlers = [
             items[itemIdx] = data
             return res(
                 ctx.status(200),
+                ctx.json({})
             )
         }
         else {
