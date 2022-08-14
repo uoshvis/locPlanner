@@ -68,6 +68,19 @@ export const handlers = [
                 ctx.status(404, 'Item not found'),
             )
         }
-        })
+        }),
+
+
+    rest.post('/events/', (req, res, ctx) => {
+        const id = Number(new Date())
+        const data = req.body
+        data.id = id
+        items.push(data)
+        return res(
+            ctx.status(200),
+            ctx.json({})
+            )
+        }
+    )
 
 ]
