@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-
+import { jsonDateTimeConverter } from './calendarHelpers.js'
 
 const initialState = {
   items: [],
@@ -44,7 +44,7 @@ export const eventsSlice = createSlice({
       })
       .addCase(fetchEventsByLocation.fulfilled, (state, action) => {
         state.status = 'succeeded'
-        state.items = action.payload
+        state.items = jsonDateTimeConverter(action.payload)
       })
       .addCase(fetchEventsByLocation.rejected, (state, action) => {
         state.status = 'failed'

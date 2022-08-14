@@ -4,15 +4,15 @@ import moment from 'moment';
 const items = [      
     {
         id: 10,
-        start: moment().toISOString(),
-        end: moment().add(1, "hours").toISOString(),
+        start: moment().toDate(),
+        end: moment().add(1, "days").toDate(),
         title: "Some title",
         location: 'loc1',
     },
     {   
         id: 20,
-        start: moment().add(2, "days").toISOString(),
-        end: moment().add(3, "days").toISOString(),
+        start: moment().add(2, "days").toDate(),
+        end: moment().add(3, "days").toDate(),
         title: "Some title2",
         location: 'loc2',
     },
