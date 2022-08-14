@@ -16,19 +16,35 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 
-import { toggleShowModal, updateEventData, updateCurrentEvent, } from "../calendar/eventsSlice"
+import { toggleShowModal, addEventData, updateEventData, updateCurrentEvent, } from "../calendar/eventsSlice"
 
 function FormDialog(props) {
   const dispatch = useDispatch()
   const currentEvent = useSelector(state => state.events.currentItem)
+  const eventStatus = useSelector(state => state.events.eventStatus)
+
 
   const [submitRequestStatus, setSubmitRequestStatus] = useState('idle')
-
+  const submitBtnText = eventStatus === 'updating' ? 'Update' : 'Add'
 
   const canSave = 
     [currentEvent.title, currentEvent.start].every(Boolean) && submitRequestStatus === 'idle'
 
-  const handleSubmit = async () => {
+  const handleAdd = async () => {
+    if (canSave) {
+      try {
+        setSubmitRequestStatus('pending')
+        await dispatch(addEventData(currentEvent)).unwrap()
+        dispatch(toggleShowModal())
+      } catch (err) {
+        console.log('Failed to add', err)
+      } finally {
+        setSubmitRequestStatus('idle')          
+      }
+    }
+  }
+
+  const handleUpdate = async () => {
     if (canSave) {
       try {
         setSubmitRequestStatus('pending')
@@ -41,11 +57,11 @@ function FormDialog(props) {
       }
     }
   };
-
+  
   const handleClose = () => {
     dispatch(toggleShowModal())
   };
-
+  
   const handleChange = (e) => {
     const { id, value } = e.target
     dispatch(updateCurrentEvent({key: id, value: value}))
@@ -68,6 +84,8 @@ function FormDialog(props) {
       {key: 'end', value: data.toDate().toISOString()}
     ))
   };
+  
+  const submitHandler = eventStatus === 'updating' ? handleUpdate : handleAdd
 
   return (
     <div>
@@ -119,7 +137,7 @@ function FormDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSubmit}>Submit</Button>
+          <Button onClick={submitHandler}>{submitBtnText}</Button>
         </DialogActions>
       </Dialog>
     </div>

@@ -7,7 +7,8 @@ const initialState = {
   currentLocation: 'all',
   showModal: false,
   status: 'idle',
-  error: null  
+  error: null, 
+  eventStatus: '' 
 }
 
 
@@ -23,6 +24,10 @@ export const eventsSlice = createSlice({
         if(!state.showModal) {
           state.currentItem = {}
         }
+      },
+
+      setEventStatus(state, action) {
+        state.eventStatus = action.payload
       },
       setCurrentLocation(state, action) {
         state.currentLocation = action.payload
@@ -50,6 +55,12 @@ export const eventsSlice = createSlice({
         state.status = 'failed'
         state.error = action.error.message
       })
+      .addCase(addEventData.pending, (state, action) => {
+        state.status = 'loading'
+      })
+      .addCase(addEventData.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+      })
       .addCase(updateEventData.pending, (state, action) => {
         state.status = 'loading'
       })
@@ -70,6 +81,7 @@ export const fetchEvents = createAsyncThunk('events/fetchEvents', async () => {
   return data
 })
 
+
 export const fetchEventsByLocation = createAsyncThunk('events/fetchEventsByLocation', async (location) => {
   const fetchHandler = async () => {
     const response = await fetch(`/events/${location}`)
@@ -79,6 +91,28 @@ export const fetchEventsByLocation = createAsyncThunk('events/fetchEventsByLocat
   const data = await fetchHandler()
   return data
 })
+
+
+export const addEventData = createAsyncThunk('events/createEvent', async (event) => {
+  const sendRequest = async (event) => {
+    const response = await fetch(
+        `/events/`,
+        {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/ajson',
+          },
+          body: JSON.stringify(event)
+        }
+      )
+    const data = await response.json()
+    return data
+  }
+  const data = await sendRequest(event)
+  return data
+})
+
+
 
 export const updateEventData = createAsyncThunk('events/updateEvent', async (event) => {
   const sendRequest = async (event) => {
@@ -101,6 +135,7 @@ export const updateEventData = createAsyncThunk('events/updateEvent', async (eve
 
 
 export const {
+  setEventStatus,
   toggleShowModal,
   setCurrentLocation,
   selectCurrentEvent,

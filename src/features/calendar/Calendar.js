@@ -5,7 +5,7 @@ import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
-import { selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation } from "./eventsSlice";
+import { setEventStatus, selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation } from "./eventsSlice";
 import FormDialog from "../eventForm/EventForm"
 import LocationBtn from "../locationBtn/LocationBtn";
 import { useEffect } from "react";
@@ -54,7 +54,19 @@ function MainCalendar() {
     };
 
     const handleSelectEvent = (data) => {
+        dispatch(setEventStatus('updating'))
         dispatch(selectCurrentEvent(data))
+        dispatch(toggleShowModal())
+    }
+
+    const handleSelectSlot = (data) => {
+        const {start, end} = data
+        dispatch(setEventStatus('adding'))
+        dispatch(selectCurrentEvent({
+            location,
+            start: start.toISOString(),
+            end: end.toISOString()
+        }))
         dispatch(toggleShowModal())
     }
 
@@ -73,6 +85,7 @@ function MainCalendar() {
                 selectable
                 onEventDrop={handleEventDrop}
                 onSelectEvent={handleSelectEvent}
+                onSelectSlot={handleSelectSlot}
             />
             <FormDialog open={open}/>
 
