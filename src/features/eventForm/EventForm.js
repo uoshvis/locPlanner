@@ -88,14 +88,15 @@ function FormDialog(props) {
               onChange={handleChange}
             />
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Location</InputLabel>
+              <InputLabel id="location-select-label">Location</InputLabel>
               <Select
-                labelId="demo-simple-select-label"
+                labelId="location-select-label"
                 id="location"
                 value={currentEvent.location || ''}
                 label="Location"
                 onChange={handleLocationChange}
-              >
+              >         
+              <MenuItem disabled value="all"><em>Please select</em></MenuItem>
                 <MenuItem value={'loc1'}>Location 1</MenuItem>
                 <MenuItem value={'loc2'}>Location 2</MenuItem>
               </Select>
