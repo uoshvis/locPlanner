@@ -20,7 +20,8 @@ export const store = configureStore({
           'payload.start',
           'payload.end',
           'meta.arg.start',
-          'meta.arg.end'
+          'meta.arg.end',
+          'payload.value'
         ],
         // Ignore these paths in the state
         ignoredPaths: [
