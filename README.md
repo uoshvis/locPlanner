@@ -25,8 +25,8 @@ The main task is to recreate the project and learn using:
 - [x] Get Events from mock API
 - [x] Add New Event
 - [x] Update Event
-- [x] Form fields validation
-- [ ] Form fields validation error notifications
+- [x] Form field validation
+- [ ] Form field error notifications
 - [ ] API status notifications
 - [ ] Users
 - [ ] Events by Users
