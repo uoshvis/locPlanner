@@ -42,11 +42,25 @@ function EventForm(props) {
     () => {
       // Title
       if (!currentEvent["title"] || !currentEvent["title"].trim()) {    
-        dispatch(setErrors({title: "Can not be empty"}))
+        dispatch(setErrors({title: "Enter title"}))
       }
       // Location
       if (!currentEvent.location || currentEvent.location === 'all') {
-        dispatch(setErrors({location: "Can not be empty"}))
+        dispatch(setErrors({location: "Select location"}))
+      }
+      // Start & end time
+      if (!currentEvent.start) {
+        dispatch(setErrors({start: "Select start time"}))
+      }
+      if (!currentEvent.end) {
+        dispatch(setErrors({end: "Select end time"}))
+      }
+      if (currentEvent.start && currentEvent.end) {
+        const dStart = Date.parse(currentEvent.start) 
+        const dEnd = Date.parse(currentEvent.end) 
+        if (dStart >= dEnd) {
+          dispatch(setErrors({end: "End date must be later"}))
+        } 
       }
     },
     [dispatch, currentEvent],
@@ -136,7 +150,6 @@ function EventForm(props) {
               value={currentEvent.title || ''}
               onChange={handleChange}
             />
-
           <FormControl 
             fullWidth 
             error={!formIsValid && 'location' in errors}>
@@ -153,19 +166,26 @@ function EventForm(props) {
                 <MenuItem value={'loc2'}>Location 2</MenuItem>
               </Select>
               <FormHelperText>{errors.location}</FormHelperText>
-            </FormControl>
-
+            </FormControl>            
               <DateTimePicker
                 label="Start datetime"
                 value={currentEvent.start}
                 onChange={handleStartChange}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => <TextField 
+                  {...params}
+                  error={!formIsValid && 'start' in errors}
+                  helperText={errors.start}
+                />}
               />
               <DateTimePicker
                 label="End datetime"
                 value={currentEvent.end}
                 onChange={handleEndChange}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => <TextField 
+                  {...params}
+                  error={!formIsValid && 'end' in errors}
+                  helperText={errors.end}
+                />}
               />
             </Stack>
           </LocalizationProvider>
