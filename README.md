@@ -10,6 +10,8 @@ The main task is to recreate the project and learn using:
 
 - [Material UI](https://mui.com/)
 
+- [Cypress](https://www.cypress.io/)
+
 - [Mock Service Worker](https://mswjs.io/docs/getting-started/mocks)
 
 - [And more..](https://stackoverflow.com/)
