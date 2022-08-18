@@ -1,4 +1,4 @@
-import { useState } from 'react' 
+import { useCallback, useEffect, useState } from 'react' 
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -14,49 +14,71 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import FormHelperText from '@mui/material/FormHelperText';
+
+import { 
+  toggleShowModal, 
+  addEventData, 
+  updateEventData, 
+  updateCurrentEvent } from "../calendar/eventsSlice"
+import { 
+  setErrors, 
+  resetFieldError, resetAllErrors } from "./formValidationSlice"
 
 
-import { toggleShowModal, addEventData, updateEventData, updateCurrentEvent, } from "../calendar/eventsSlice"
-
-function FormDialog(props) {
+function EventForm(props) {
   const dispatch = useDispatch()
   const currentEvent = useSelector(state => state.events.currentItem)
   const eventStatus = useSelector(state => state.events.eventStatus)
-
+  const formIsValid = useSelector(state => state.form.formIsValid)
+  const errors = useSelector(state => state.form.errors)
 
   const [submitRequestStatus, setSubmitRequestStatus] = useState('idle')
+  
   const submitBtnText = eventStatus === 'updating' ? 'Update' : 'Add'
 
-  const canSave = 
-    [currentEvent.title, currentEvent.start].every(Boolean) && submitRequestStatus === 'idle'
 
-  const handleAdd = async () => {
-    if (canSave) {
-      try {
-        setSubmitRequestStatus('pending')
-        await dispatch(addEventData(currentEvent)).unwrap()
-        dispatch(toggleShowModal())
-      } catch (err) {
-        console.log('Failed to add', err)
-      } finally {
-        setSubmitRequestStatus('idle')          
+  const memoizedCallback = useCallback(
+    () => {
+      // Title
+      if (!currentEvent["title"] || !currentEvent["title"].trim()) {    
+        dispatch(setErrors({title: "Can not be empty"}))
       }
-    }
-  }
+      // Location
+      if (!currentEvent.location || currentEvent.location === 'all') {
+        dispatch(setErrors({location: "Can not be empty"}))
+      }
+    },
+    [dispatch, currentEvent],
+  );
 
-  const handleUpdate = async () => {
-    if (canSave) {
+  useEffect(() => {  
+    if (props.open) {
+      memoizedCallback()
+    } else {
+      dispatch(resetAllErrors())
+    }
+  }, [props.open, memoizedCallback, dispatch])
+
+
+  const handleSubmit = async () => {
+    const submitAction = eventStatus === 'updating' ? updateEventData : addEventData
+
+    if (formIsValid && submitRequestStatus === 'idle') {
       try {
         setSubmitRequestStatus('pending')
-        await dispatch(updateEventData(currentEvent)).unwrap()
+
+        await dispatch(submitAction(currentEvent)).unwrap()
         dispatch(toggleShowModal())
       } catch (err) {
         console.log('Failed to submit', err)
       } finally {
         setSubmitRequestStatus('idle')          
       }
+    } else {
+      alert('Invalid formUpdate '.concat(JSON.stringify(errors)) )
     }
-  };
+  }
   
   const handleClose = () => {
     dispatch(toggleShowModal())
@@ -64,28 +86,35 @@ function FormDialog(props) {
   
   const handleChange = (e) => {
     const { id, value } = e.target
+    dispatch(resetFieldError(id))
     dispatch(updateCurrentEvent({key: id, value: value}))
   };
 
   const handleLocationChange = (e) => {
+    const { value } = e.target
+    const key = 'location'
+    dispatch(resetFieldError(key))
     dispatch(updateCurrentEvent(
-      {key: 'location', value: e.target.value}
+      {key, value: value}
     ))
   };
 
   const handleStartChange = (data) => {
+    const key = 'start'
+    dispatch(resetFieldError(key))
     dispatch(updateCurrentEvent(
-      {key: 'start', value: data.toDate().toISOString()}
+      {key, value: data}
     ))
   };
 
   const handleEndChange = (data) => {
+    const key = 'end'
+    dispatch(resetFieldError(key))
     dispatch(updateCurrentEvent(
-      {key: 'end', value: data.toDate().toISOString()}
+      {key, value: data}
     ))
   };
   
-  const submitHandler = eventStatus === 'updating' ? handleUpdate : handleAdd
 
   return (
     <div>
@@ -101,11 +130,16 @@ function FormDialog(props) {
               label="Title"
               type="text"
               fullWidth
+              error={!formIsValid && 'title' in errors}
+              helperText={errors.title}
               variant="outlined"
               value={currentEvent.title || ''}
               onChange={handleChange}
             />
-            <FormControl fullWidth>
+
+          <FormControl 
+            fullWidth 
+            error={!formIsValid && 'location' in errors}>
               <InputLabel id="location-select-label">Location</InputLabel>
               <Select
                 labelId="location-select-label"
@@ -118,6 +152,7 @@ function FormDialog(props) {
                 <MenuItem value={'loc1'}>Location 1</MenuItem>
                 <MenuItem value={'loc2'}>Location 2</MenuItem>
               </Select>
+              <FormHelperText>{errors.location}</FormHelperText>
             </FormControl>
 
               <DateTimePicker
@@ -137,7 +172,7 @@ function FormDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={submitHandler}>{submitBtnText}</Button>
+          <Button onClick={handleSubmit}>{submitBtnText}</Button>
         </DialogActions>
       </Dialog>
     </div>
@@ -145,6 +180,6 @@ function FormDialog(props) {
 }
 
 
-export default FormDialog
+export default EventForm
 
 

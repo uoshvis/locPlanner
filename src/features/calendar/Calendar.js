@@ -6,7 +6,7 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import { setEventStatus, selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation } from "./eventsSlice";
-import FormDialog from "../eventForm/EventForm"
+import EventForm from "../eventForm/EventForm"
 import LocationBtn from "../locationBtn/LocationBtn";
 import { useEffect } from "react";
 
@@ -87,7 +87,7 @@ function MainCalendar() {
                 onSelectEvent={handleSelectEvent}
                 onSelectSlot={handleSelectSlot}
             />
-            <FormDialog open={open}/>
+            <EventForm open={open}/>
 
 
         </div>
