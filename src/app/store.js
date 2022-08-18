@@ -10,4 +10,19 @@ export const store = configureStore({
     events: eventsReducer,
     form: formReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Ignore these action types
+        ignoredActions: ['events/fetchEventsByLocation/fulfilled'],
+        // Ignore these field paths in all actions
+        ignoredActionPaths: ['payload.start', 'payload.end'],
+        // Ignore these paths in the state
+        ignoredPaths: [
+          'events.items', 
+          `events.currentItem.start`,
+          `events.currentItem.end`
+        ],
+      },
+    }),
 });
