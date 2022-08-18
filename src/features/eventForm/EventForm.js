@@ -20,16 +20,18 @@ import {
   toggleShowModal, 
   addEventData, 
   updateEventData, 
-  updateCurrentEvent } from "../calendar/eventsSlice"
+  updateCurrentEvent } from "../calendar/calendarSlice"
+
 import { 
   setErrors, 
-  resetFieldError, resetAllErrors } from "./formValidationSlice"
+  resetFieldError, 
+  resetAllErrors } from "./formValidationSlice"
 
 
 function EventForm(props) {
   const dispatch = useDispatch()
-  const currentEvent = useSelector(state => state.events.currentItem)
-  const eventStatus = useSelector(state => state.events.eventStatus)
+  const currentEvent = useSelector(state => state.calendar.currentItem)
+  const eventStatus = useSelector(state => state.calendar.eventStatus)
   const formIsValid = useSelector(state => state.form.formIsValid)
   const errors = useSelector(state => state.form.errors)
 

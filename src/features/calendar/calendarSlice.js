@@ -12,8 +12,8 @@ const initialState = {
 }
 
 
-export const eventsSlice = createSlice({
-  name: 'events',
+export const calendarSlice = createSlice({
+  name: 'calendar',
   initialState,
   reducers: {
       addEvent: {},
@@ -71,7 +71,7 @@ export const eventsSlice = createSlice({
 })
 
 
-export const fetchEvents = createAsyncThunk('events/fetchEvents', async () => {
+export const fetchEvents = createAsyncThunk('calendar/fetchEvents', async () => {
   const fetchHandler = async () => {
     const response = await fetch(`/events/`)
     const data = await response.json()
@@ -82,7 +82,7 @@ export const fetchEvents = createAsyncThunk('events/fetchEvents', async () => {
 })
 
 
-export const fetchEventsByLocation = createAsyncThunk('events/fetchEventsByLocation', async (location) => {
+export const fetchEventsByLocation = createAsyncThunk('calendar/fetchEventsByLocation', async (location) => {
   const fetchHandler = async () => {
     const response = await fetch(`/events/${location}`)
     const data = await response.json()
@@ -93,7 +93,7 @@ export const fetchEventsByLocation = createAsyncThunk('events/fetchEventsByLocat
 })
 
 
-export const addEventData = createAsyncThunk('events/createEvent', async (event) => {
+export const addEventData = createAsyncThunk('calendar/createEvent', async (event) => {
   const sendRequest = async (event) => {
     const response = await fetch(
         `/events/`,
@@ -114,7 +114,7 @@ export const addEventData = createAsyncThunk('events/createEvent', async (event)
 
 
 
-export const updateEventData = createAsyncThunk('events/updateEvent', async (event) => {
+export const updateEventData = createAsyncThunk('calendar/updateEvent', async (event) => {
   const sendRequest = async (event) => {
     const response = await fetch(
         `/events/${event.id}`,
@@ -141,6 +141,6 @@ export const {
   selectCurrentEvent,
   updateCurrentEvent,
   updateEvent, 
-} = eventsSlice.actions
+} = calendarSlice.actions
 
-export default eventsSlice.reducer
+export default calendarSlice.reducer

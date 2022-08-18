@@ -1,20 +1,20 @@
 import { configureStore } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/counterSlice';
-import eventsReducer from '../features/calendar/eventsSlice';
+import calendarReducer from '../features/calendar/calendarSlice';
 import formReducer from '../features/eventForm/formValidationSlice';
 
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
-    events: eventsReducer,
+    calendar: calendarReducer,
     form: formReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         // Ignore these action types
-        ignoredActions: ['events/fetchEventsByLocation/fulfilled'],
+        ignoredActions: ['calendar/fetchEventsByLocation/fulfilled'],
         // Ignore these field paths in all actions
         ignoredActionPaths: [
           'payload.start',
@@ -25,9 +25,9 @@ export const store = configureStore({
         ],
         // Ignore these paths in the state
         ignoredPaths: [
-          'events.items', 
-          'events.currentItem.start',
-          'events.currentItem.end',     
+          'calendar.items', 
+          'calendar.currentItem.start',
+          'calendar.currentItem.end',     
         ],
       },
     }),

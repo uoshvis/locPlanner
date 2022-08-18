@@ -5,7 +5,7 @@ import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
-import { setEventStatus, selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation } from "./eventsSlice";
+import { setEventStatus, selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation } from "./calendarSlice";
 import EventForm from "../eventForm/EventForm"
 import LocationBtn from "../locationBtn/LocationBtn";
 import { useEffect } from "react";
@@ -16,10 +16,10 @@ const DnDCalendar = withDragAndDrop(Calendar);
 
 function MainCalendar() {
     const dispatch = useDispatch()
-    const events = useSelector(state => state.events.items)
-    const open = useSelector(state => state.events.showModal)
-    const location = useSelector(state => state.events.currentLocation)
-    const status = useSelector(state => state.events.status)
+    const events = useSelector(state => state.calendar.items)
+    const open = useSelector(state => state.calendar.showModal)
+    const location = useSelector(state => state.calendar.currentLocation)
+    const status = useSelector(state => state.calendar.status)
 
 
     useEffect(() => {

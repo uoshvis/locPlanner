@@ -3,12 +3,12 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { setCurrentLocation } from '../calendar/eventsSlice'
+import { setCurrentLocation } from '../calendar/calendarSlice'
 
 
 function LocationBtn() {
     const dispatch = useDispatch()
-    const location = useSelector(state => state.events.currentLocation)
+    const location = useSelector(state => state.calendar.currentLocation)
 
     const handleChange = (event, newLocation) => {
         dispatch(setCurrentLocation(newLocation))
