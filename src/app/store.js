@@ -16,12 +16,17 @@ export const store = configureStore({
         // Ignore these action types
         ignoredActions: ['events/fetchEventsByLocation/fulfilled'],
         // Ignore these field paths in all actions
-        ignoredActionPaths: ['payload.start', 'payload.end'],
+        ignoredActionPaths: [
+          'payload.start',
+          'payload.end',
+          'meta.arg.start',
+          'meta.arg.end'
+        ],
         // Ignore these paths in the state
         ignoredPaths: [
           'events.items', 
-          `events.currentItem.start`,
-          `events.currentItem.end`
+          'events.currentItem.start',
+          'events.currentItem.end',     
         ],
       },
     }),
