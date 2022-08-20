@@ -34,4 +34,4 @@ The main task is to recreate the project and learn using:
 - [ ] Users
 - [ ] Events by Users
 - [ ] Login/Logout
-- [ ] ! Tests !
+- [ ] ! Tests, tests and tests !

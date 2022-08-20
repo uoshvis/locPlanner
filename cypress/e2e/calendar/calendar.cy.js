@@ -26,4 +26,28 @@ describe('main calendar', () => {
     cy.contains('Update')
  })
 
+  it('opens add new form on slot click', () => {
+    cy.get('.rbc-day-bg').eq(20).click()
+    cy.contains('Add')
+  })
+
+  it('can add new event', () => {
+    cy.get('.rbc-day-bg').eq(20).click()
+    cy.contains('Add')
+
+    const newTitle = "Awesome title"
+    cy.get('input[id="title"]').type(`${newTitle}`)
+
+    cy.get('[id="location"]').click()
+    cy.contains('Location 1')
+    cy.contains('Location 2')
+
+    cy.get('li[data-value="loc1"]').click()
+    cy.get('.MuiButtonBase-root').contains('Add').click()
+
+    cy.contains('Location 1').click()
+    cy.contains(newTitle)
+
+})
+
 })
