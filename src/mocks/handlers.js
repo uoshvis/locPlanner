@@ -5,15 +5,15 @@ const items = [
     {
         id: 10,
         start: moment().toDate(),
-        end: moment().add(1, "days").toDate(),
-        title: "Some title",
+        end: moment().add(1, "hours").toDate(),
+        title: "Some title 1",
         location: 'loc1',
     },
     {   
         id: 20,
         start: moment().add(2, "days").toDate(),
-        end: moment().add(3, "days").toDate(),
-        title: "Some title2",
+        end: moment().add(2, "days").add(3, "hours").toDate(),
+        title: "Some title 2",
         location: 'loc2',
     },
 ]
