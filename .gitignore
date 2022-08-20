@@ -23,4 +23,4 @@ yarn-debug.log*
 yarn-error.log*
 
 # Cypress examples
-/default-test-examples
+cypress/e2e/default-test-examples
