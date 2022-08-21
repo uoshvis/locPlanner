@@ -1,15 +1,14 @@
-/// <reference types="Cypress" />
-
 describe('main calendar', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000/')
+    cy.visitLocal()
   })
 
   it('displays location btns', () => {
-    cy.get('.MuiToggleButtonGroup-root').children().should('have.length', 3)
-    cy.contains('All locations')
-    cy.contains('Location 1')
-    cy.contains('Location 2')
+    cy.get('.MuiToggleButtonGroup-root button').should('have.length', 3)
+
+    cy.get('.MuiToggleButtonGroup-root button').first().should('have.text', 'All locations')
+    cy.get('.MuiToggleButtonGroup-root button').eq(1).should('have.text', 'Location 1')
+    cy.get('.MuiToggleButtonGroup-root button').last().should('have.text', 'Location 2')
   })
 
   it('displays two events by default', () => {
@@ -32,10 +31,11 @@ describe('main calendar', () => {
   })
 
   it('can add new event', () => {
+    const newTitle = "Awesome title"
+
     cy.get('.rbc-day-bg').eq(20).click()
     cy.contains('Add')
 
-    const newTitle = "Awesome title"
     cy.get('input[id="title"]').type(`${newTitle}`)
 
     cy.get('[id="location"]').click()
@@ -47,7 +47,22 @@ describe('main calendar', () => {
 
     cy.contains('Location 1').click()
     cy.contains(newTitle)
+  })
 
-})
+  it('can update event Location', () => {
+    cy.contains('Some title 1').click()
 
+    cy.get('[id="location"]').click()
+    cy.contains('Location 1')
+    cy.contains('Location 2')
+
+    cy.get('li[data-value="loc2"]').click()
+    cy.get('.MuiButtonBase-root').contains('Update').click()
+
+    cy.get('.MuiButtonBase-root').contains('Location 1').click()
+    cy.contains('Some title 1').should('not.exist')
+
+    cy.get('.MuiButtonBase-root').contains('Location 2').click()
+    cy.contains('Some title 1').should('exist')
+  })
 })

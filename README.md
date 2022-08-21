@@ -31,7 +31,7 @@ The main task is to recreate the project and learn using:
 - [x] Form field validation
 - [ ] Form field error notifications
 - [ ] API status notifications
-- [ ] Users
-- [ ] Events by Users
+- [ ] Users profile (select color)
+- [ ] Display Events by Users (colors)
 - [ ] Login/Logout
 - [ ] ! Tests, tests and tests !
