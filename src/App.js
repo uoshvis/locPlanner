@@ -1,12 +1,24 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import './App.css';
 import MainCalendar from './features/calendar/Calendar';
+import Notification from './features/notification/Notification';
+import { getNotificationType, isNotificationOpen, getNotificationMsg } from './features/notification/notificationSlice';
+
 
 function App() {
+  const notificationIsOpen = useSelector(isNotificationOpen)
+  const notificationType = useSelector(getNotificationType)
+  const notificationMsg = useSelector(getNotificationMsg)
+  
+
   return (
     <div className="App">
+      {
+        notificationIsOpen && <Notification type={notificationType} message={notificationMsg}/>
+      }
       <MainCalendar />
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
