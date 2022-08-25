@@ -11,7 +11,9 @@ function LocationBtn() {
     const location = useSelector(state => state.calendar.currentLocation)
 
     const handleChange = (event, newLocation) => {
-        dispatch(setCurrentLocation(newLocation))
+        if (newLocation !== null) {
+          dispatch(setCurrentLocation(newLocation))
+        }
     };
   
     return (
