@@ -1,6 +1,9 @@
 import { rest } from 'msw'
 import moment from 'moment';
 
+// Add an extra delay to all endpoints, so loading spinners show up.
+const ARTIFICIAL_DELAY_MS = 1000
+
 const items = [      
     {
         id: 10,
@@ -40,13 +43,16 @@ export const handlers = [
                 events = items.filter(item => item.location === location)
             }   
         return res(
+            ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
             ctx.json(events),
             )         
         }
         else {
             return res(
-                ctx.status(404, 'Location not found')
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(404, 'Location not found'),
+                ctx.json({})
             )
         }
 
@@ -59,13 +65,16 @@ export const handlers = [
         if (itemIdx !== -1) {
             items[itemIdx] = data
             return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(200),
                 ctx.json({})
             )
         }
         else {
             return res(
-                ctx.status(404, 'Item not found'),
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(404, 'Update item not found'),
+                ctx.json({})
             )
         }
         }),

@@ -9,6 +9,7 @@ import { setEventStatus, selectCurrentEvent, toggleShowModal, updateEventData, f
 import EventForm from "../eventForm/EventForm"
 import LocationBtn from "../locationBtn/LocationBtn";
 import { useEffect } from "react";
+import { setNotification, isNotificationOpen } from "../notification/notificationSlice";
 
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
@@ -20,6 +21,8 @@ function MainCalendar() {
     const open = useSelector(state => state.calendar.showModal)
     const location = useSelector(state => state.calendar.currentLocation)
     const status = useSelector(state => state.calendar.status)
+    const notificationIsOpen = useSelector(isNotificationOpen)
+
 
 
     useEffect(() => {
@@ -29,15 +32,23 @@ function MainCalendar() {
         async function fetchAPI() {
             try {
                 await dispatch(fetchEventsByLocation(location)).unwrap()
-            } catch (err) {
-                console.log('Failed ', err)
+            } 
+            catch {
+                // error catched in reject case
+                // swallow error
             }
             if (!didCancel) {}
         }
-
-        fetchAPI()
-        return () => {didCancel = true}   
-    }, [dispatch, location, status])
+        if (!notificationIsOpen) {
+            fetchAPI()
+        }
+        return () => {didCancel = true}
+           
+    }, [dispatch, 
+        location,
+        status,    // <<== TODO: status cause frequent updates !!
+        notificationIsOpen, // do fetch if notification is closed
+    ]) 
 
     const handleEventDrop = async (data) => {
         const { start, end } = data
@@ -49,7 +60,7 @@ function MainCalendar() {
         try {
             await dispatch(updateEventData(updatedEvent)).unwrap()
         } catch (err) {
-            console.log('Failed to update on Drop', err)
+            dispatch(setNotification({message: err.message, type: 'error'}))
         }
     };
 

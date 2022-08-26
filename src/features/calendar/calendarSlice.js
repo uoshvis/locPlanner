@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { client } from '../../mocks/client.js';
 import { jsonDateTimeConverter } from './calendarHelpers.js'
 
 const initialState = {
@@ -83,13 +84,8 @@ export const fetchEvents = createAsyncThunk('calendar/fetchEvents', async () => 
 
 
 export const fetchEventsByLocation = createAsyncThunk('calendar/fetchEventsByLocation', async (location) => {
-  const fetchHandler = async () => {
-    const response = await fetch(`/events/${location}`)
-    const data = await response.json()
-    return data
-  }
-  const data = await fetchHandler()
-  return data
+  const response = await client.get(`events/${location}`)
+  return response.data
 })
 
 
@@ -115,22 +111,8 @@ export const addEventData = createAsyncThunk('calendar/createEvent', async (even
 
 
 export const updateEventData = createAsyncThunk('calendar/updateEvent', async (event) => {
-  const sendRequest = async (event) => {
-    const response = await fetch(
-        `/events/${event.id}`,
-        {
-          method: "PUT",
-          headers: {
-            'Content-Type': 'application/ajson',
-          },
-          body: JSON.stringify(event)
-        }
-      )
-    const data = await response.json()
-    return data
-  }
-  const data = await sendRequest(event)
-  return data
+    const response = await client.put(`events/${event.id}`, event)
+    return response.data
 })
 
 
