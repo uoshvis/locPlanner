@@ -15,18 +15,18 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import FormHelperText from '@mui/material/FormHelperText';
-
+import Notification from '../notification/Notification';
 import { 
   toggleShowModal, 
   addEventData, 
   updateEventData, 
   updateCurrentEvent } from "../calendar/calendarSlice"
-
 import { 
   setErrors, 
   resetFieldError, 
   resetAllErrors } from "./formValidationSlice"
-
+import { setNotification } from '../notification/notificationSlice';
+import { getNotificationType, isNotificationOpen, getNotificationMsg } from '../notification/notificationSlice';
 
 function EventForm(props) {
   const dispatch = useDispatch()
@@ -34,6 +34,10 @@ function EventForm(props) {
   const eventStatus = useSelector(state => state.calendar.eventStatus)
   const formIsValid = useSelector(state => state.form.formIsValid)
   const errors = useSelector(state => state.form.errors)
+
+  const notificationIsOpen = useSelector(isNotificationOpen)
+  const notificationType = useSelector(getNotificationType)
+  const notificationMsg = useSelector(getNotificationMsg)
 
   const [submitRequestStatus, setSubmitRequestStatus] = useState('idle')
   
@@ -87,12 +91,12 @@ function EventForm(props) {
         await dispatch(submitAction(currentEvent)).unwrap()
         dispatch(toggleShowModal())
       } catch (err) {
-        console.log('Failed to submit', err)
+        dispatch(setNotification({message: err.message, type: 'error'}))
       } finally {
         setSubmitRequestStatus('idle')          
       }
     } else {
-      alert('Invalid formUpdate '.concat(JSON.stringify(errors)) )
+      dispatch(setNotification({message: 'Invalid form', type: 'error'}))
     }
   }
   
@@ -135,6 +139,7 @@ function EventForm(props) {
   return (
     <div>
       <Dialog open={props.open} onClose={handleClose}>
+      { notificationIsOpen && <Notification type={notificationType} message={notificationMsg}/>}
         <DialogTitle>Event Form</DialogTitle>
         <DialogContent>
           <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -200,7 +205,6 @@ function EventForm(props) {
     </div>
   );
 }
-
 
 export default EventForm
 
