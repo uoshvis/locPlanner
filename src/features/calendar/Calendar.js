@@ -7,7 +7,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import { setEventStatus, selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation } from "./calendarSlice";
 import EventForm from "../eventForm/EventForm"
-import LocationBtn from "../locationBtn/LocationBtn";
+import LocationBtn from "../../components/LocationBtn";
 import { useEffect } from "react";
 import { setNotification, isNotificationOpen } from "../notification/notificationSlice";
 
