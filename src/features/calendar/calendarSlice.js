@@ -71,7 +71,6 @@ export const calendarSlice = createSlice({
   }
 })
 
-
 export const fetchEvents = createAsyncThunk('calendar/fetchEvents', async () => {
   const fetchHandler = async () => {
     const response = await fetch(`/events/`)
@@ -82,39 +81,20 @@ export const fetchEvents = createAsyncThunk('calendar/fetchEvents', async () => 
   return data
 })
 
-
 export const fetchEventsByLocation = createAsyncThunk('calendar/fetchEventsByLocation', async (location) => {
   const response = await client.get(`events/${location}`)
   return response.data
 })
 
-
 export const addEventData = createAsyncThunk('calendar/createEvent', async (event) => {
-  const sendRequest = async (event) => {
-    const response = await fetch(
-        `/events/`,
-        {
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/ajson',
-          },
-          body: JSON.stringify(event)
-        }
-      )
-    const data = await response.json()
-    return data
-  }
-  const data = await sendRequest(event)
-  return data
+  const response = await client.post('/events', event)
+  return response.data
 })
-
-
 
 export const updateEventData = createAsyncThunk('calendar/updateEvent', async (event) => {
     const response = await client.put(`events/${event.id}`, event)
     return response.data
 })
-
 
 export const {
   setEventStatus,

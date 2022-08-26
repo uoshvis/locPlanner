@@ -79,13 +79,22 @@ export const handlers = [
         }
         }),
 
-
-    rest.post('/events/', (req, res, ctx) => {
+    rest.post('/events', (req, res, ctx) => {
         const id = Number(new Date())
         const data = req.body
+
+        if(data.title === 'error') {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(500),
+                ctx.json('Server error saving this post!')
+            )
+        }
+
         data.id = id
         items.push(data)
         return res(
+            ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
             ctx.json({})
             )
