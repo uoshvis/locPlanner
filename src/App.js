@@ -12,12 +12,13 @@ function App() {
   const notificationIsOpen = useSelector(isNotificationOpen)
   const notificationType = useSelector(getNotificationType)
   const notificationMsg = useSelector(getNotificationMsg)
-  
+  const open = useSelector(state => state.calendar.showModal)
+
 
   return (
     <div className="App">
       {
-        notificationIsOpen && <Notification type={notificationType} message={notificationMsg}/>
+        notificationIsOpen && !open && <Notification type={notificationType} message={notificationMsg}/>
       }
       <MainCalendar />
       <header className="App-header">
