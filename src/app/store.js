@@ -1,14 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/counterSlice';
 import calendarReducer from '../features/calendar/calendarSlice';
-import formReducer from '../features/eventForm/formValidationSlice';
 import notificationReducer from '../features/notification/notificationSlice'
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     calendar: calendarReducer,
-    form: formReducer,
     notification: notificationReducer,
   },
   middleware: (getDefaultMiddleware) =>
