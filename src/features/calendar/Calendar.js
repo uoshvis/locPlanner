@@ -6,10 +6,10 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import { setEventStatus, selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation } from "./calendarSlice";
-import EventForm from "../eventForm/EventForm"
 import LocationBtn from "../../components/LocationBtn";
 import { useEffect } from "react";
 import { setNotification, isNotificationOpen } from "../notification/notificationSlice";
+import { CalendarEventForm } from "./CalendarEventForm";
 
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
@@ -65,14 +65,14 @@ function MainCalendar() {
     };
 
     const handleSelectEvent = (data) => {
-        dispatch(setEventStatus('updating'))
+        dispatch(setEventStatus('update'))
         dispatch(selectCurrentEvent(data))
         dispatch(toggleShowModal())
     }
 
     const handleSelectSlot = (data) => {
         const {start, end} = data
-        dispatch(setEventStatus('adding'))
+        dispatch(setEventStatus('add'))
         dispatch(selectCurrentEvent({
             location,
             start: start.toISOString(),
@@ -98,8 +98,7 @@ function MainCalendar() {
                 onSelectEvent={handleSelectEvent}
                 onSelectSlot={handleSelectSlot}
             />
-            <EventForm open={open}/>
-
+            {open && <CalendarEventForm open={open}/>}
 
         </div>
     );
