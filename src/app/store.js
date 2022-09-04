@@ -1,11 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
 import calendarReducer from '../features/calendar/calendarSlice';
 import notificationReducer from '../features/notification/notificationSlice'
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
     calendar: calendarReducer,
     notification: notificationReducer,
   },
