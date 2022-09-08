@@ -99,6 +99,26 @@ export const handlers = [
             ctx.json(data)
             )
         }
-    )
+    ),
+
+    rest.delete('/events/:id', (req, res, ctx) => {
+        const { id } = req.params
+        const itemIdx = items.findIndex(obj => obj.id === Number(id))
+        if (itemIdx !== -1) {
+            items.splice(itemIdx, 1)
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(200),
+                ctx.json({id})
+            )
+        }
+        else {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(404, 'Item not found'),
+                ctx.json({})
+            )
+        }
+        }),
 
 ]

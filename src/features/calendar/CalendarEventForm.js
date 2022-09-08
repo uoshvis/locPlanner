@@ -13,7 +13,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
 import { useDispatch, useSelector } from 'react-redux';
-import { addEventData, updateEventData, toggleShowModal } from './calendarSlice';
+import { addEventData, updateEventData, toggleShowModal, deleteEvent } from './calendarSlice';
 import { useEffect, useState } from 'react';
 import { setNotification, clearNotification } from '../notification/notificationSlice';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -153,6 +153,20 @@ export const CalendarEventForm = (props) =>  {
             }
         }
     }
+
+    const handleDelete = async () => {
+        try {
+            setSubmitRequestStatus('pending')
+            dispatch(toggleShowModal())
+            await dispatch(deleteEvent(formEvent)).unwrap()
+        } catch (err) {
+            dispatch(toggleShowModal())
+            dispatch(setNotification({message: err.message, type: 'error'}))
+        } finally {
+            setSubmitRequestStatus('idle')
+        }
+    }
+
     return (
 
         <Dialog open={props.open}>
@@ -228,7 +242,7 @@ export const CalendarEventForm = (props) =>  {
                     formType === 'update' &&
                     <Button
                         variant='text'
-                        onClick={()=> {console.log('ToDo Delete')}}
+                        onClick={handleDelete}
                         startIcon={<DeleteIcon />}
                     >
                     Delete

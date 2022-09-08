@@ -77,6 +77,20 @@ export const calendarSlice = createSlice({
           state.items[itemIdx] = item
         }
       })
+      .addCase(deleteEvent.pending, (state, action) => {
+        state.status = 'loading'
+      })
+      .addCase(deleteEvent.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message
+      })
+      .addCase(deleteEvent.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        const itemIdx = state.items.findIndex(obj => obj.id === Number(action.payload.id))
+        if (itemIdx !== -1) {
+          state.items.splice(itemIdx, 1)
+        }
+      })
   }
 })
 
@@ -103,6 +117,11 @@ export const addEventData = createAsyncThunk('calendar/createEvent', async (even
 export const updateEventData = createAsyncThunk('calendar/updateEvent', async (event) => {
     const response = await client.put(`events/${event.id}`, event)
     return response.data
+})
+
+export const deleteEvent = createAsyncThunk('calendar/deleteEvent', async (event) => {
+  const response = await client.delete(`events/${event.id}`)
+  return response.data
 })
 
 export const {
