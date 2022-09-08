@@ -86,8 +86,8 @@ export const handlers = [
         if(data.title === 'error') {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(500),
-                ctx.json('Server error saving this post!')
+                ctx.status(500, 'Item not added'),
+                ctx.json({})
             )
         }
 

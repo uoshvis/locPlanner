@@ -146,7 +146,6 @@ export const CalendarEventForm = (props) =>  {
                 dispatch(toggleShowModal())
                 await dispatch(submitAction(formEvent)).unwrap()
             } catch (err) {
-                dispatch(toggleShowModal())
                 dispatch(setNotification({message: err.message, type: 'error'}))
             } finally {
                 setSubmitRequestStatus('idle')
@@ -160,7 +159,6 @@ export const CalendarEventForm = (props) =>  {
             dispatch(toggleShowModal())
             await dispatch(deleteEvent(formEvent)).unwrap()
         } catch (err) {
-            dispatch(toggleShowModal())
             dispatch(setNotification({message: err.message, type: 'error'}))
         } finally {
             setSubmitRequestStatus('idle')
@@ -168,7 +166,6 @@ export const CalendarEventForm = (props) =>  {
     }
 
     return (
-
         <Dialog open={props.open}>
             <DialogTitle>{submitBtnText} Event</DialogTitle>  
             <DialogContent>
