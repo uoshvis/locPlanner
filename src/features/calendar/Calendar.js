@@ -99,7 +99,6 @@ function MainCalendar() {
                 defaultView="month"
                 events={events}
                 localizer={localizer}
-                resizable
                 selectable
                 onEventDrop={handleEventDrop}
                 onSelectEvent={handleSelectEvent}
