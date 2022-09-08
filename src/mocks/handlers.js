@@ -67,7 +67,7 @@ export const handlers = [
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(200),
-                ctx.json({})
+                ctx.json(items[itemIdx])
             )
         }
         else {
@@ -96,7 +96,7 @@ export const handlers = [
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
-            ctx.json({})
+            ctx.json(data)
             )
         }
     )
