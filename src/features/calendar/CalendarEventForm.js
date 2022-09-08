@@ -15,9 +15,7 @@ import DialogActions from '@mui/material/DialogActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { addEventData, updateEventData, toggleShowModal } from './calendarSlice';
 import { useEffect, useState } from 'react';
-import Notification from '../notification/Notification';
 import { setNotification, clearNotification } from '../notification/notificationSlice';
-import { getNotificationType, isNotificationOpen, getNotificationMsg } from '../notification/notificationSlice';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckIcon from '@mui/icons-material/Check';
@@ -27,11 +25,8 @@ export const CalendarEventForm = (props) =>  {
     const dispatch = useDispatch()
 
     const event = useSelector(state => state.calendar.currentItem)
-    const eventStatus = useSelector(state => state.calendar.eventStatus)
-    const notificationIsOpen = useSelector(isNotificationOpen)
-    const notificationType = useSelector(getNotificationType)
-    const notificationMsg = useSelector(getNotificationMsg)
-    
+    const formType = useSelector(state => state.calendar.formType)
+
     const [formEvent, setFormEvent] = useState(event)
     const [formIsValid, setFormIsValid] = useState(true)
     const [errors, setErrors] = useState({})
@@ -40,10 +35,10 @@ export const CalendarEventForm = (props) =>  {
     let submitBtnText = ''
     let submitAction = null
     
-    if (eventStatus === 'add') {
+    if (formType === 'add') {
         submitBtnText = 'Add'
         submitAction = addEventData
-    } else if (eventStatus === 'update') {
+    } else if (formType === 'update') {
         submitBtnText = 'Update'
         submitAction = updateEventData
     }
@@ -148,9 +143,10 @@ export const CalendarEventForm = (props) =>  {
         if (validateForm() && submitRequestStatus === 'idle') {
             try {
                 setSubmitRequestStatus('pending')
-                await dispatch(submitAction(formEvent)).unwrap()
                 dispatch(toggleShowModal())
+                await dispatch(submitAction(formEvent)).unwrap()
             } catch (err) {
+                dispatch(toggleShowModal())
                 dispatch(setNotification({message: err.message, type: 'error'}))
             } finally {
                 setSubmitRequestStatus('idle')
@@ -158,11 +154,9 @@ export const CalendarEventForm = (props) =>  {
         }
     }
     return (
-        <Dialog open={props.open}>
-            { notificationIsOpen && <Notification type={notificationType} message={notificationMsg}/>}
-            <DialogTitle>Add new Event
 
-            </DialogTitle>
+        <Dialog open={props.open}>
+            <DialogTitle>{submitBtnText} Event</DialogTitle>  
             <DialogContent>
                 <LocalizationProvider dateAdapter={AdapterMoment}>
                     <Stack spacing={3}>
@@ -231,10 +225,10 @@ export const CalendarEventForm = (props) =>  {
                 </Button>
 
                 {
-                    eventStatus === 'update' &&
+                    formType === 'update' &&
                     <Button
                         variant='text'
-                        onClick={()=> {console.log('delete')}}
+                        onClick={()=> {console.log('ToDo Delete')}}
                         startIcon={<DeleteIcon />}
                     >
                     Delete

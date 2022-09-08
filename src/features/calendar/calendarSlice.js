@@ -7,9 +7,9 @@ const initialState = {
   currentItem : {},
   currentLocation: 'all',
   showModal: false,
-  status: 'idle',
-  error: null, 
-  eventStatus: '' 
+  status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed',
+  error: null,
+  formType: '' // 'add' | 'update' 
 }
 
 
@@ -26,9 +26,8 @@ export const calendarSlice = createSlice({
           state.currentItem = {}
         }
       },
-
-      setEventStatus(state, action) {
-        state.eventStatus = action.payload
+      setFormType(state, action) {
+        state.formType = action.payload
       },
       setCurrentLocation(state, action) {
         state.currentLocation = action.payload
@@ -51,6 +50,9 @@ export const calendarSlice = createSlice({
       .addCase(fetchEventsByLocation.fulfilled, (state, action) => {
         state.status = 'succeeded'
         state.items = jsonDateTimeConverter(action.payload)
+      })
+      .addCase(fetchEventsByLocation.pending, (state, action) => {
+        state.status = 'loading'
       })
       .addCase(fetchEventsByLocation.rejected, (state, action) => {
         state.status = 'failed'
@@ -97,7 +99,7 @@ export const updateEventData = createAsyncThunk('calendar/updateEvent', async (e
 })
 
 export const {
-  setEventStatus,
+  setFormType,
   toggleShowModal,
   setCurrentLocation,
   selectCurrentEvent,

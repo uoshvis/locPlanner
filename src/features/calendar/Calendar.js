@@ -4,12 +4,13 @@ import moment from "moment";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-
-import { setEventStatus, selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation } from "./calendarSlice";
+import { setFormType, selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation } from "./calendarSlice";
 import LocationBtn from "../../components/LocationBtn";
 import { useEffect } from "react";
 import { setNotification, isNotificationOpen } from "../notification/notificationSlice";
 import { CalendarEventForm } from "./CalendarEventForm";
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
@@ -46,7 +47,6 @@ function MainCalendar() {
            
     }, [dispatch, 
         location,
-        status,    // <<== TODO: status cause frequent updates !!
         notificationIsOpen, // do fetch if notification is closed
     ]) 
 
@@ -65,14 +65,14 @@ function MainCalendar() {
     };
 
     const handleSelectEvent = (data) => {
-        dispatch(setEventStatus('update'))
+        dispatch(setFormType('update'))
         dispatch(selectCurrentEvent(data))
         dispatch(toggleShowModal())
     }
 
     const handleSelectSlot = (data) => {
         const {start, end} = data
-        dispatch(setEventStatus('add'))
+        dispatch(setFormType('add'))
         dispatch(selectCurrentEvent({
             location,
             start: start.toISOString(),
@@ -84,6 +84,13 @@ function MainCalendar() {
 
     return (
         <div className="MainCalendar">
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={status === 'loading'}
+            >       
+            {status === 'loading' && <CircularProgress color="inherit" />}
+            </Backdrop>
+
             <LocationBtn />
             
             <DnDCalendar
@@ -98,6 +105,7 @@ function MainCalendar() {
                 onSelectEvent={handleSelectEvent}
                 onSelectSlot={handleSelectSlot}
             />
+            
             {open && <CalendarEventForm open={open}/>}
 
         </div>
