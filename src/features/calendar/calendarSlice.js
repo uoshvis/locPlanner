@@ -43,21 +43,19 @@ export const calendarSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(fetchEvents.fulfilled, (state, action) => {
-        state.status = 'succeeded'
-        state.items = action.payload
+      // fetch by location
+      .addCase(fetchEventsByLocation.pending, (state, action) => {
+        state.status = 'loading'
       })
       .addCase(fetchEventsByLocation.fulfilled, (state, action) => {
         state.status = 'succeeded'
         state.items = jsonDateTimeConverter(action.payload)
       })
-      .addCase(fetchEventsByLocation.pending, (state, action) => {
-        state.status = 'loading'
-      })
       .addCase(fetchEventsByLocation.rejected, (state, action) => {
         state.status = 'failed'
         state.error = action.error.message
       })
+      // add
       .addCase(addEventData.pending, (state, action) => {
         state.status = 'loading'
       })
@@ -66,6 +64,12 @@ export const calendarSlice = createSlice({
         const item = jsonDateTimeConverter(action.payload)
         state.items.push(item)
       })
+      .addCase(addEventData.rejected, (state, action) => {
+        state.status = 'failed'
+        console.log(action.payload)
+        state.error = action.error.message
+      })
+      // update
       .addCase(updateEventData.pending, (state, action) => {
         state.status = 'loading'
       })
@@ -77,6 +81,11 @@ export const calendarSlice = createSlice({
           state.items[itemIdx] = item
         }
       })
+      .addCase(updateEventData.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message
+      })
+      // delete
       .addCase(deleteEvent.pending, (state, action) => {
         state.status = 'loading'
       })
@@ -92,16 +101,6 @@ export const calendarSlice = createSlice({
         }
       })
   }
-})
-
-export const fetchEvents = createAsyncThunk('calendar/fetchEvents', async () => {
-  const fetchHandler = async () => {
-    const response = await fetch(`/events/`)
-    const data = await response.json()
-    return data
-  }
-  const data = await fetchHandler()
-  return data
 })
 
 export const fetchEventsByLocation = createAsyncThunk('calendar/fetchEventsByLocation', async (location) => {
