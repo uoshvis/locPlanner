@@ -19,6 +19,7 @@ function LocationBtn() {
     return (
       <ToggleButtonGroup
         color="primary"
+        sx={{'padding': '1em'}}
         value={location}
         exclusive
         onChange={handleChange}

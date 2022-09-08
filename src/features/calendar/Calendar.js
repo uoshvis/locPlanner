@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
+import styles from './Calendar.module.css'
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
@@ -83,7 +84,7 @@ function MainCalendar() {
 
 
     return (
-        <div className="MainCalendar">
+        <div className={styles.MainCalendar}>
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={status === 'loading'}
@@ -94,7 +95,7 @@ function MainCalendar() {
             <LocationBtn />
             
             <DnDCalendar
-                style={{ height: "100vh" }}
+                style={{ height: '75vh' }}
                 defaultDate={moment().toDate()}
                 defaultView="month"
                 events={events}
