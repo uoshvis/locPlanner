@@ -104,22 +104,22 @@ export const calendarSlice = createSlice({
 })
 
 export const fetchEventsByLocation = createAsyncThunk('calendar/fetchEventsByLocation', async (location) => {
-  const response = await client.get(`events/${location}`)
+  const response = await client.get(`/myApi/events/${location}`)
   return response.data
 })
 
 export const addEventData = createAsyncThunk('calendar/createEvent', async (event) => {
-  const response = await client.post('/events', event)
+  const response = await client.post('/myApi/events', event)
   return response.data
 })
 
 export const updateEventData = createAsyncThunk('calendar/updateEvent', async (event) => {
-    const response = await client.put(`events/${event.id}`, event)
+    const response = await client.put(`/myApi/events/${event.id}`, event)
     return response.data
 })
 
 export const deleteEvent = createAsyncThunk('calendar/deleteEvent', async (event) => {
-  const response = await client.delete(`events/${event.id}`)
+  const response = await client.delete(`/myApi/events/${event.id}`)
   return response.data
 })
 

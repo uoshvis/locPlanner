@@ -23,14 +23,14 @@ const items = [
 
 export const handlers = [
 
-    rest.get('/events/', (req, res, ctx) => {
+    rest.get('/myApi/events/', (req, res, ctx) => {
         return res(
             ctx.status(200),
             ctx.json(items),
             )
     }),
 
-    rest.get('/events/:location', (req, res, ctx) => {
+    rest.get('/myApi/events/:location', (req, res, ctx) => {
         const { location } = req.params
         var events = []
         const validLocation = ['all', 'loc1', 'loc2'].includes(location)
@@ -58,7 +58,7 @@ export const handlers = [
 
     }),
 
-    rest.put('/events/:id', (req, res, ctx) => {
+    rest.put('/myApi/events/:id', (req, res, ctx) => {
         const { id } = req.params
         const data = req.body
         const itemIdx = items.findIndex(obj => obj.id === Number(id))
@@ -79,7 +79,7 @@ export const handlers = [
         }
         }),
 
-    rest.post('/events', (req, res, ctx) => {
+    rest.post('/myApi/events', (req, res, ctx) => {
         const id = Number(new Date())
         const data = req.body
 
@@ -101,7 +101,7 @@ export const handlers = [
         }
     ),
 
-    rest.delete('/events/:id', (req, res, ctx) => {
+    rest.delete('/myApi/events/:id', (req, res, ctx) => {
         const { id } = req.params
         const itemIdx = items.findIndex(obj => obj.id === Number(id))
         if (itemIdx !== -1) {
