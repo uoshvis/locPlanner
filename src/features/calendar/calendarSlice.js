@@ -63,12 +63,19 @@ export const calendarSlice = createSlice({
       })
       .addCase(addEventData.fulfilled, (state, action) => {
         state.status = 'succeeded'
+        const item = jsonDateTimeConverter(action.payload)
+        state.items.push(item)
       })
       .addCase(updateEventData.pending, (state, action) => {
         state.status = 'loading'
       })
       .addCase(updateEventData.fulfilled, (state, action) => {
         state.status = 'succeeded'
+        const item = jsonDateTimeConverter(action.payload)
+        const itemIdx = state.items.findIndex(obj => obj.id === Number(item.id))
+        if (itemIdx !== -1) {
+          state.items[itemIdx] = item
+        }
       })
   }
 })
