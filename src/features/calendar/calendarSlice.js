@@ -115,3 +115,22 @@ export const {
 } = calendarSlice.actions
 
 export default calendarSlice.reducer
+
+
+export const filterEventsByLocation = (state, location) =>
+  {
+    const eventsByLocation = state.calendar.items.filter( function(item) {
+      if (location === 'all') {
+          return item
+      }
+      else {
+          return item.location === location
+      }
+  })
+
+  return eventsByLocation   
+
+  }
+
+
+

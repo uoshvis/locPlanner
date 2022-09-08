@@ -4,7 +4,7 @@ import moment from "moment";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { setFormType, selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation } from "./calendarSlice";
+import { setFormType, selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation, filterEventsByLocation } from "./calendarSlice";
 import LocationBtn from "../../components/LocationBtn";
 import { useEffect } from "react";
 import { setNotification, isNotificationOpen } from "../notification/notificationSlice";
@@ -18,9 +18,9 @@ const DnDCalendar = withDragAndDrop(Calendar);
 
 function MainCalendar() {
     const dispatch = useDispatch()
-    const events = useSelector(state => state.calendar.items)
-    const open = useSelector(state => state.calendar.showModal)
     const location = useSelector(state => state.calendar.currentLocation)
+    const events = useSelector(state => filterEventsByLocation(state, location))
+    const open = useSelector(state => state.calendar.showModal)
     const status = useSelector(state => state.calendar.status)
     const notificationIsOpen = useSelector(isNotificationOpen)
 
@@ -33,7 +33,7 @@ function MainCalendar() {
         async function fetchAPI() {
             try {
                 await dispatch(fetchEventsByLocation(location)).unwrap()
-            } 
+            }
             catch {
                 // error catched in reject case
                 // swallow error
