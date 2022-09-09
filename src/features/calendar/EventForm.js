@@ -26,7 +26,9 @@ export const EventForm = (props) =>  {
 
     const event = useSelector(state => state.calendar.currentItem)
     const formType = useSelector(state => state.calendar.formType)
+    const users = useSelector(state => state.users)
 
+    const [userId, setUserId] = useState('')
     const [formEvent, setFormEvent] = useState(event)
     const [formIsValid, setFormIsValid] = useState(true)
     const [errors, setErrors] = useState({})
@@ -99,6 +101,15 @@ export const EventForm = (props) =>  {
             [key]: data
         }))
         resetFieldError(key)
+    }
+
+    const handleUserChange = e => {
+        setUserId(e.target.value)
+
+        setFormEvent(formEvent => ({
+            ...formEvent, 
+            userId: e.target.value
+        }))
     }
 
     const validateForm = () => {
@@ -202,6 +213,25 @@ export const EventForm = (props) =>  {
                                 <MenuItem value={'loc2'}>Location 2</MenuItem>
                             </Select>
                         </FormControl>
+
+                        <FormControl fullWidth>
+                            <InputLabel id="user-select-label">User</InputLabel>
+                            <Select
+                                labelId="user-select-label"
+                                id="user-select"
+                                value={formEvent.userId}
+                                label="User"
+                                onChange={handleUserChange}
+                            >
+                                {users.map(user => (
+                                    <MenuItem value={user.id}>
+                                        {user.name}
+                                    </MenuItem>                                   
+                                ))}
+
+                            </Select>
+                        </FormControl>
+
                         <DateTimePicker
                             label="Start datetime"
                             value={formEvent.start}

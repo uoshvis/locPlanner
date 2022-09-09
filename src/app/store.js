@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import calendarReducer from '../features/calendar/calendarSlice';
 import notificationReducer from '../features/notification/notificationSlice'
+import usersReducer from '../features/users/usersSlice'
 
 export const store = configureStore({
   reducer: {
     calendar: calendarReducer,
     notification: notificationReducer,
+    users: usersReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -11,6 +11,7 @@ const items = [
         end: moment().add(1, "hours").toDate(),
         title: "Some title 1",
         location: 'loc1',
+        userId: 101,
     },
     {   
         id: 20,
@@ -18,15 +19,31 @@ const items = [
         end: moment().add(2, "days").add(3, "hours").toDate(),
         title: "Some title 2",
         location: 'loc2',
+        userId: 102,
+    },
+]
+
+const users = [
+    {
+        id: 101,
+        userName: 'SantaClaus',
+        name: 'Santa',
+        surname: 'Claus',
+    },
+    {
+        id: 102,
+        userName: 'TeddyBear',
+        name: 'Teddy',
+        surname: 'Bear',
     },
 ]
 
 export const handlers = [
 
-    rest.get('/myApi/events/', (req, res, ctx) => {
+    rest.get('/myApi/users', (req, res, ctx) => {
         return res(
             ctx.status(200),
-            ctx.json(items),
+            ctx.json(users),
             )
     }),
 

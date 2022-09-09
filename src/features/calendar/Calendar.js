@@ -1,17 +1,20 @@
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import styles from './Calendar.module.css'
 import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { setFormType, selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation, filterEventsByLocation } from "./calendarSlice";
-import LocationBtn from "./LocationBtn";
-import { useEffect } from "react";
-import { setNotification, isNotificationOpen } from "../notification/notificationSlice";
-import { EventForm } from "./EventForm";
+import moment from "moment";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import styles from './Calendar.module.css'
+import { 
+    setFormType, selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation, filterEventsByLocation } from "./calendarSlice";
+import { setNotification, 
+    isNotificationOpen } from "../notification/notificationSlice";
+import { fetchUsers } from "../users/usersSlice";
+import LocationBtn from "./LocationBtn";
+import { EventForm } from "./EventForm";
 
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
@@ -49,7 +52,26 @@ function MainCalendar() {
     }, [dispatch, 
         location,
         notificationIsOpen, // do fetch if notification is closed
-    ]) 
+    ])
+    
+    useEffect(() => {
+        let didCancel = false
+
+        async function dofetchUsers() {
+            try {
+                await dispatch(fetchUsers()).unwrap()
+            }
+            catch {
+                // error catched in reject case
+                // swallow error
+            }
+            if (!didCancel) {}
+        }
+        dofetchUsers()
+
+        return () => {didCancel = true}
+           
+    }, [dispatch, ]) 
 
     const handleEventDrop = async (data) => {
         const { start, end } = data
