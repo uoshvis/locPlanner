@@ -21,7 +21,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import CheckIcon from '@mui/icons-material/Check';
 
 
-export const CalendarEventForm = (props) =>  {
+export const EventForm = (props) =>  {
     const dispatch = useDispatch()
 
     const event = useSelector(state => state.calendar.currentItem)
@@ -234,7 +234,6 @@ export const CalendarEventForm = (props) =>  {
                 >  
                 Cancel
                 </Button>
-
                 {
                     formType === 'update' &&
                     <Button

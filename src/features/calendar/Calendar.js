@@ -9,7 +9,7 @@ import { setFormType, selectCurrentEvent, toggleShowModal, updateEventData, fetc
 import LocationBtn from "./LocationBtn";
 import { useEffect } from "react";
 import { setNotification, isNotificationOpen } from "../notification/notificationSlice";
-import { CalendarEventForm } from "./CalendarEventForm";
+import { EventForm } from "./EventForm";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -106,7 +106,7 @@ function MainCalendar() {
                 onSelectSlot={handleSelectSlot}
             />
             
-            {open && <CalendarEventForm open={open}/>}
+            {open && <EventForm open={open}/>}
 
         </div>
     );
