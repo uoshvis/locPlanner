@@ -66,7 +66,6 @@ export const calendarSlice = createSlice({
       })
       .addCase(addEventData.rejected, (state, action) => {
         state.status = 'failed'
-        console.log(action.payload)
         state.error = action.error.message
       })
       // update
