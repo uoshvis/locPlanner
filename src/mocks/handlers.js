@@ -40,6 +40,14 @@ const users = [
 
 export const handlers = [
 
+
+    rest.post('/myApi/login', (req, res, ctx) => {
+        return res(
+            ctx.status(200),
+            ctx.json({token: 'token123'})
+        )
+    }),
+
     rest.get('/myApi/users', (req, res, ctx) => {
         return res(
             ctx.status(200),
