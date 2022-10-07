@@ -1,6 +1,6 @@
-
 import * as React from 'react';
 import { Link } from "react-router-dom";
+import { useSelector } from 'react-redux';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -20,9 +20,19 @@ const pages = [
     { text: 'Calendar', href: '/calendar' },
     { text: 'About', href: '/about' }
   ]
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = [
+    { text: 'Profile', href: '/profile'},
+    { text: 'Account', href: '/account'},
+    { text: 'Dashboard', href: '/dashboard'},
+    { text: 'Logout', href: '/logout'},
+]
 
 const ResponsiveAppBar = () => {
+
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
+    const username = useSelector(state => state.auth.username)
+
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -54,8 +64,8 @@ const ResponsiveAppBar = () => {
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="/"
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -66,7 +76,7 @@ const ResponsiveAppBar = () => {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            LOGO Big
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -116,8 +126,8 @@ const ResponsiveAppBar = () => {
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href=""
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -129,7 +139,7 @@ const ResponsiveAppBar = () => {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            LOGO Small
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
@@ -145,10 +155,25 @@ const ResponsiveAppBar = () => {
             ))}
           </Box>
 
+
+            {isLoggedIn && 
+                <Typography
+                    sx={{
+                        mr: 2,
+                        display: { xs: 'none', md: 'flex' },
+                        fontWeight: 700,
+                        color: 'inherit',
+                    }}
+                >
+                    Welcome back {username}!
+                </Typography>
+            }
+
+
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Remy Sharp" src="https://mui.com/static/images/avatar/1.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -168,8 +193,13 @@ const ResponsiveAppBar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem 
+                    key={setting.text}
+                    component={Link}
+                    to={setting.href}
+                    onClick={handleCloseUserMenu}
+                >
+                  <Typography textAlign="center">{setting.text}</Typography>
                 </MenuItem>
               ))}
             </Menu>
