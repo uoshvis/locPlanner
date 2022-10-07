@@ -43,13 +43,23 @@ export const handlers = [
 
     rest.post('/myApi/login', (req, res, ctx) => {
         return res(
+            ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
             ctx.json({token: 'token123'})
         )
     }),
 
+    rest.post('/myApi/logout', (req, res, ctx) => {
+        return res(
+            ctx.delay(ARTIFICIAL_DELAY_MS),
+            ctx.status(200),
+            ctx.json({})
+        )
+    }),
+
     rest.get('/myApi/users', (req, res, ctx) => {
         return res(
+            ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
             ctx.json(users),
             )
