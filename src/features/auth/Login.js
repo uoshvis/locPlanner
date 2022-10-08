@@ -24,8 +24,9 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            await dispatch(login({userName, password})).unwrap()
-            navigate(from, { replace: true })
+            await dispatch(login({userName, password}))
+                .unwrap()
+            navigate(from, { replace: true }) // ToDo make sure if navigate works
         } catch(err) {
             console.log(err)
         }
