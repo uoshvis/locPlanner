@@ -13,9 +13,13 @@ const Logout = () => {
 
     useEffect(() => {
         dispatch(logout())
+            .unwrap()
             .then(() => {
                 navigate("/", { replace: true });
-            });  
+            })
+            .catch(() => {
+                console.log('logout err');
+            })
     }, [dispatch, navigate]);
   
     return (
