@@ -28,8 +28,8 @@ export const EventForm = (props) =>  {
     const formType = useSelector(state => state.calendar.formType)
     const users = useSelector(state => state.users)
 
-    const [userId, setUserId] = useState('')
     const [formEvent, setFormEvent] = useState(event)
+    const [userId, setUserId] = useState(formEvent.userId)
     const [formIsValid, setFormIsValid] = useState(true)
     const [errors, setErrors] = useState({})
     const [submitRequestStatus, setSubmitRequestStatus] = useState('idle')
@@ -219,7 +219,7 @@ export const EventForm = (props) =>  {
                             <Select
                                 labelId="user-select-label"
                                 id="user-select"
-                                value={formEvent.userId}
+                                value={userId}
                                 label="User"
                                 onChange={handleUserChange}
                             >
