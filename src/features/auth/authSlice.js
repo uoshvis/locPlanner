@@ -36,6 +36,7 @@ export const authSlice = createSlice({
 
 export const login = createAsyncThunk('auth/login', async (crediantials) => {
     const response = await client.post('/myApi/login', crediantials)
+    localStorage.setItem('token', JSON.stringify(response.data));
     return response.data
 })
 

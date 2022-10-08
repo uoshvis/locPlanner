@@ -42,10 +42,14 @@ export const handlers = [
 
 
     rest.post('/myApi/login', (req, res, ctx) => {
+        const token = {}
+        if(req.body.userName && req.body.password) {
+            token[req.body.userName] = 'token123'
+        }
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
-            ctx.json({token: 'token123'})
+            ctx.json(token)
         )
     }),
 
