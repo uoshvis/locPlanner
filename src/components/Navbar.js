@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from "react-router-dom";
-import { useSelector } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -20,17 +20,19 @@ const pages = [
     { text: 'Calendar', href: '/calendar' },
     { text: 'About', href: '/about' }
   ]
+
+// ToDo hide settings if not loggedIn
 const settings = [
     { text: 'Profile', href: '/profile'},
     { text: 'Account', href: '/account'},
     { text: 'Dashboard', href: '/dashboard'},
     { text: 'Logout', href: '/logout'},
 ]
-
-const ResponsiveAppBar = () => {
+// ToDo add isLoggedIn as connect prop
+const ResponsiveAppBar = ({currentUser}) => {
 
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
-    const username = useSelector(state => state.auth.username)
+    // const username = useSelector(state => state.auth.username)
 
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -55,6 +57,36 @@ const ResponsiveAppBar = () => {
     console.log('handleCloseUserMenu')
     setAnchorElUser(null);
   };
+
+  const userWelcome = () => {
+    if (currentUser.roles.includes('admin')) {
+        return (
+            <Typography
+            sx={{
+                mr: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontWeight: 700,
+                color: 'inherit',
+            }}
+        >
+            Welcome back admin!
+        </Typography>
+    )
+    } else {
+        return (
+            <Typography
+            sx={{
+                mr: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontWeight: 700,
+                color: 'inherit',
+            }}
+        >
+            Welcome back user!
+        </Typography>
+        )
+    }
+  }
 
   return (
     <AppBar position="static">
@@ -156,18 +188,7 @@ const ResponsiveAppBar = () => {
           </Box>
 
 
-            {isLoggedIn && 
-                <Typography
-                    sx={{
-                        mr: 2,
-                        display: { xs: 'none', md: 'flex' },
-                        fontWeight: 700,
-                        color: 'inherit',
-                    }}
-                >
-                    Welcome back {username}!
-                </Typography>
-            }
+            { isLoggedIn && userWelcome() }
 
 
           <Box sx={{ flexGrow: 0 }}>
@@ -209,4 +230,10 @@ const ResponsiveAppBar = () => {
     </AppBar>
   );
 };
-export default ResponsiveAppBar;
+
+
+function mapStateToProps(state) {
+    return { currentUser: state.auth.currentUser }
+}
+
+export default connect(mapStateToProps)(ResponsiveAppBar)
