@@ -28,7 +28,7 @@ const settings = [
     { text: 'Dashboard', href: '/dashboard'},
     { text: 'Logout', href: '/logout'},
 ]
-// ToDo add isLoggedIn as connect prop
+// ToDo we recommend using the hooks API as the default.
 const ResponsiveAppBar = ({currentUser}) => {
 
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
