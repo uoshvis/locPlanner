@@ -4,7 +4,11 @@ import { client } from '../../mocks/client.js';
 const initialState =  { 
     isLoggedIn: false,
     status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed',
-    username: 'admin'
+    currentUser: {
+        id: 101,
+        permissions: ['edit'],
+        roles: ['admin'],
+    }
  }
 
 

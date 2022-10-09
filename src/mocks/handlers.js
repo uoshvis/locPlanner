@@ -44,7 +44,8 @@ export const handlers = [
     rest.post('/myApi/login', (req, res, ctx) => {
         const token = {}
         if(req.body.userName && req.body.password) {
-            token[req.body.userName] = 'token123'
+            const userId = 101
+            token[userId] = 'token123'
         }
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),

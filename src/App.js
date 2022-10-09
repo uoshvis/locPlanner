@@ -9,6 +9,7 @@ import Navbar from './components/Navbar'
 import Home from './components/Home'
 import NoMatch from './components/NoMatch';
 import Dashboard from './components/Dashboard';
+import Account from './components/Account';
 import Login from './features/auth/Login';
 import Logout from './features/auth/Logout';
 
@@ -19,44 +20,43 @@ function App() {
     const notificationType = useSelector(getNotificationType)
     const notificationMsg = useSelector(getNotificationMsg)
     const open = useSelector(state => state.calendar.showModal)
-
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
-
-    // const [token, setToken] = useState()
-
-    if(!isLoggedIn) {
-        return <Login />
-    }
+    const user = useSelector(state => state.auth.currentUser)
 
     return (
         <div className="App">
-
-        <React.Fragment>
-            {
-                notificationIsOpen &&
-                !open && 
-                <Notification 
-                    type={notificationType}
-                    message={notificationMsg}
-                />
-            }                
-        </React.Fragment>
+            <React.Fragment>
+                {
+                    notificationIsOpen &&
+                    !open && 
+                    <Notification 
+                        type={notificationType}
+                        message={notificationMsg}
+                    />
+                }                
+            </React.Fragment>
             <Routes>
                 <Route element={<Layout />}>
-                    <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/logout" element={<Logout />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="*" element={<NoMatch />} />
-                    <Route 
-                        path="/calendar"
-                        element = {
-                            <RequireAuth>
-                                <MainCalendar />
+                    <Route element={<RequireAuth isAllowed={!!isLoggedIn} />}>
+                        <Route index element={<Home />} />
+                        <Route path="/calendar" element={<MainCalendar />} />
+                        <Route path="/account" element={<Account />} />
+                    </Route>
+                    <Route
+                        path="dashboard"
+                        element={
+                            <RequireAuth
+                                redirectPath="/"
+                                isAllowed={!!isLoggedIn && user.roles.includes('admin')}
+                            >
+                                <Dashboard />
                             </RequireAuth>
                         }
                     />
-                    </Route>        
+                    <Route path="*" element={<NoMatch />} />
+                </Route>
             </Routes>
         </div>
     );
@@ -64,7 +64,7 @@ function App() {
 
 
 function Layout() {
-    
+
     return (
         <div>
             <Navbar />
@@ -74,16 +74,18 @@ function Layout() {
 }
 
 
-function RequireAuth({ children }) {
-
-    let location = useLocation()
-    const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
-    
-    if (!isLoggedIn) {
-        return <Navigate to='/login' state={{from: location}} replace/>
-    }
-    return children
-    // return children ? children : <Outlet />;
+function RequireAuth({
+    isAllowed,
+    redirectPath = '/login',
+    children }) {
+        let location = useLocation()        
+        if (!isAllowed) {
+            return <Navigate 
+                to={redirectPath}
+                state={{from: location}}
+                replace/>
+        }
+        return children ? children : <Outlet />; // to use as wrapping component
 }
 
 
