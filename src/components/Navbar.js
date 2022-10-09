@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from "react-router-dom";
-import { useSelector, connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -28,11 +28,10 @@ const settings = [
     { text: 'Dashboard', href: '/dashboard'},
     { text: 'Logout', href: '/logout'},
 ]
-// ToDo we recommend using the hooks API as the default.
-const ResponsiveAppBar = ({currentUser}) => {
+const ResponsiveAppBar = () => {
 
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
-    // const username = useSelector(state => state.auth.username)
+    const currentUser = useSelector(state => state.auth.currentUser)
 
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -232,8 +231,4 @@ const ResponsiveAppBar = ({currentUser}) => {
 };
 
 
-function mapStateToProps(state) {
-    return { currentUser: state.auth.currentUser }
-}
-
-export default connect(mapStateToProps)(ResponsiveAppBar)
+export default ResponsiveAppBar
