@@ -7,6 +7,8 @@ import {
     useLocation
     } from "react-router-dom";
 import { useSelector } from 'react-redux';
+import loadable from '@loadable/component';
+
 import './App.css';
 import MainCalendar from './features/calendar/Calendar';
 import Notification from './features/notification/Notification';
@@ -21,8 +23,10 @@ import Users from './components/Users';
 import Info from './components/Info';
 import Events from './components/Events';
 
+const About = loadable(() => import('./components/About'));
+
  
-function App() {
+function App() {    
 
     const notificationIsOpen = useSelector(isNotificationOpen)
     const notificationType = useSelector(getNotificationType)
@@ -69,7 +73,7 @@ function App() {
                             <Route path="*" element={<NoMatch />} />
                         </Route>
                     </Route>
-
+                    <Route path="about" element={<About />} />
                     <Route path="*" element={<NoMatch />} />
                 </Route>
             </Routes>
