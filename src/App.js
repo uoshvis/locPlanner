@@ -1,5 +1,11 @@
 import React from 'react';
-import { Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
+import {
+    Routes,
+    Route,
+    Navigate,
+    Outlet, 
+    useLocation
+    } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import './App.css';
 import MainCalendar from './features/calendar/Calendar';
@@ -9,9 +15,11 @@ import Navbar from './components/Navbar'
 import Home from './components/Home'
 import NoMatch from './components/NoMatch';
 import Dashboard from './components/Dashboard';
-import Account from './components/Account';
 import Login from './features/auth/Login';
 import Logout from './features/auth/Logout';
+import Users from './components/Users';
+import Info from './components/Info';
+import Events from './components/Events';
 
  
 function App() {
@@ -22,6 +30,7 @@ function App() {
     const open = useSelector(state => state.calendar.showModal)
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
     const user = useSelector(state => state.auth.currentUser)
+
 
     return (
         <div className="App">
@@ -42,19 +51,25 @@ function App() {
                     <Route element={<RequireAuth isAllowed={!!isLoggedIn} />}>
                         <Route index element={<Home />} />
                         <Route path="/calendar" element={<MainCalendar />} />
-                        <Route path="/account" element={<Account />} />
+                        <Route path="/events" element={<Events />} />
                     </Route>
-                    <Route
-                        path="dashboard"
-                        element={
-                            <RequireAuth
-                                redirectPath="/"
-                                isAllowed={!!isLoggedIn && user.roles.includes('admin')}
-                            >
-                                <Dashboard />
-                            </RequireAuth>
-                        }
-                    />
+                    
+                    <Route element={
+                                <RequireAuth
+                                    redirectPath="/"
+                                    isAllowed={
+                                        !!isLoggedIn && user.roles.includes('admin')
+                                        }
+                                />}
+                    >
+                        <Route path="dashboard" element={<Dashboard />}>
+                            <Route path="users/*" element={<Users handleUserItemClick={()=> {console.log('clicked item')}} />}>
+                            </Route>
+                            <Route path="info" element={<Info />} />
+                            <Route path="*" element={<NoMatch />} />
+                        </Route>
+                    </Route>
+
                     <Route path="*" element={<NoMatch />} />
                 </Route>
             </Routes>
