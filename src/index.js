@@ -6,6 +6,9 @@ import { store } from './app/store';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
+import { QueryParamProvider } from 'use-query-params';
+import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
+
 
 const container = document.getElementById('root');
 const root = createRoot(container);
@@ -18,9 +21,11 @@ if (process.env.NODE_ENV === 'development') {
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>     
+        <BrowserRouter>
+            <QueryParamProvider adapter={ReactRouter6Adapter}>
+                <App />
+            </QueryParamProvider>
+        </BrowserRouter>     
     </Provider>
   </React.StrictMode>
 );

@@ -18,7 +18,8 @@ import AdbIcon from '@mui/icons-material/Adb';
 
 const pages = [
     { text: 'Calendar', href: '/calendar' },
-    { text: 'About', href: '/about' }
+    { text: 'Events', href: '/events' },
+    { text: 'About', href: '/about' },
   ]
 
 // ToDo hide settings if not loggedIn
