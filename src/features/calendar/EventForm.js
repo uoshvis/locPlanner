@@ -225,7 +225,7 @@ export const EventForm = (props) =>  {
                             >
                                 {users.map(user => (
                                     <MenuItem value={user.id}>
-                                        {user.name}
+                                        {user.firstName}
                                     </MenuItem>                                   
                                 ))}
 

@@ -47,14 +47,17 @@ const users = [
     {
         id: 101,
         userName: 'SantaClaus',
-        name: 'Santa',
-        surname: 'Claus',
+        firstName: 'Santa',
+        lastName: 'Claus',
+        isActive: true,
     },
     {
         id: 102,
         userName: 'TeddyBear',
-        name: 'Teddy',
-        surname: 'Bear',
+        firstName: 'Teddy',
+        lastName: 'Bear',
+        isActive: false,
+
     },
 ]
 
