@@ -16,7 +16,7 @@ import { getNotificationType, isNotificationOpen, getNotificationMsg } from './f
 import Navbar from './components/Navbar'
 import Home from './components/Home'
 import NoMatch from './components/NoMatch';
-import Dashboard from './components/Dashboard';
+import DashboardLayout from './components/Dashboard';
 import Login from './features/auth/Login';
 import Logout from './features/auth/Logout';
 import Users from './components/Users';
@@ -63,10 +63,10 @@ function App() {
                                     redirectPath="/"
                                     isAllowed={
                                         !!isLoggedIn && user.roles.includes('admin')
-                                        }
+                                    }
                                 />}
                     >
-                        <Route path="dashboard" element={<Dashboard />}>
+                        <Route path="dashboard" element={<DashboardLayout />}>
                             <Route path="users/*" element={<Users handleUserItemClick={()=> {console.log('clicked item')}} />}>
                             </Route>
                             <Route path="info" element={<Info />} />

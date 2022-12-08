@@ -56,7 +56,7 @@ function MenuItems() {
 
 }
 
-function Dashboard() {
+function DashboardLayout() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -72,4 +72,4 @@ function Dashboard() {
     );
   }
 
-export default Dashboard
+export default DashboardLayout
