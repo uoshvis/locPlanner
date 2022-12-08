@@ -39,22 +39,17 @@ const ResponsiveAppBar = () => {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
-    console.log('handleOpenNavMenu')
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
-    console.log('handleOpenUserMenu')
     setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
-
-    console.log('handleCloseNavMenu')
     setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
-    console.log('handleCloseUserMenu')
     setAnchorElUser(null);
   };
 
