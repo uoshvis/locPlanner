@@ -4,11 +4,9 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 
-
-const UserList = ({users, handleUserItemClick}) => {
-
+const UserList = ({users}) => {
     const [searchParams, setSearchParams] = useSearchParams();
-
+    
     const searchTerm = searchParams.get('name') || '';
 
     const handleSearch = (event) => {
@@ -38,14 +36,13 @@ const UserList = ({users, handleUserItemClick}) => {
                     .includes(searchTerm.toLocaleLowerCase())
                 )
                 .map((user) => (
-                    <ListItem>
-                        <ListItemButton key={user.id} component={Link} to={user.id} onClick={handleUserItemClick}
-                        >
-                            {user.firstName} {user.lastName}
+                    <ListItem key={user.id}>
+                        <ListItemButton component={Link} to={'' + user.id} >
+                            {user.id} {user.firstName} {user.lastName} 
                         </ListItemButton>
                     </ListItem>               
                 ))}
-            </List>
+            </List> 
         </>
     )
 }
