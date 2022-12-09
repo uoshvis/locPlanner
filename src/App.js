@@ -12,7 +12,12 @@ import loadable from '@loadable/component';
 import './App.css';
 import MainCalendar from './features/calendar/Calendar';
 import Notification from './features/notification/Notification';
-import { getNotificationType, isNotificationOpen, getNotificationMsg } from './features/notification/notificationSlice';
+import { 
+    getApiStatus,
+    getNotificationType,
+    isNotificationOpen,
+    getNotificationMsg
+    } from './features/notification/notificationSlice';
 import Navbar from './components/Navbar'
 import Home from './components/Home'
 import NoMatch from './components/NoMatch';
@@ -22,6 +27,7 @@ import Logout from './features/auth/Logout';
 import Users from './components/Users';
 import Info from './components/Info';
 import Events from './components/Events';
+import BackDropLoader from './components/BackDropLoader';
 
 const About = loadable(() => import('./components/About'));
 
@@ -31,6 +37,7 @@ function App() {
     const notificationIsOpen = useSelector(isNotificationOpen)
     const notificationType = useSelector(getNotificationType)
     const notificationMsg = useSelector(getNotificationMsg)
+    const apiStatus = useSelector(getApiStatus)
     const open = useSelector(state => state.calendar.showModal)
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
     const user = useSelector(state => state.auth.currentUser)
@@ -46,8 +53,12 @@ function App() {
                         type={notificationType}
                         message={notificationMsg}
                     />
-                }                
+                }
+
+                <BackDropLoader apiStatus={apiStatus}/>
+                            
             </React.Fragment>
+
             <Routes>
                 <Route element={<Layout />}>
                     <Route path="/login" element={<Login />} />
@@ -97,6 +108,7 @@ function RequireAuth({
     isAllowed,
     redirectPath = '/login',
     children }) {
+        isAllowed = true  // set to true for dev
         let location = useLocation()        
         if (!isAllowed) {
             return <Navigate 

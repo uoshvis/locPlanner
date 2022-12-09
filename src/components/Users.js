@@ -15,6 +15,7 @@ const Users = () => {
 
     const users = useSelector(state => state.users)
 
+
     useEffect(() => {
         let didCancel = false
 
@@ -39,9 +40,11 @@ const Users = () => {
         console.log(users)
         navigate('/dashboard/users');
       };
+    
 
     return (
         <>
+
             <Routes>
                 <Route index element={<UserList users={users} />} />
                 <Route path=":userId" element={
@@ -49,8 +52,7 @@ const Users = () => {
                 />
             </Routes>
 
-      <Outlet />
-
+            <Outlet />
 
         </>
     )

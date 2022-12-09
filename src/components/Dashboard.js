@@ -64,7 +64,7 @@ function DashboardLayout() {
                 <Grid item xs={2}>                    
                     <Item><MenuItems/></Item>                    
                 </Grid>
-                <Grid item xs={10}>                    
+                <Grid item xs={10}>                 
                     <Item><Outlet /></Item>
                 </Grid>
             </Grid>

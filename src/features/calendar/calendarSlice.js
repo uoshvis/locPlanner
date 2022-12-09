@@ -3,13 +3,12 @@ import { client } from '../../mocks/client.js';
 import { jsonDateTimeConverter } from './calendarHelpers.js'
 
 const initialState = {
-  items: [],
-  currentItem : {},
-  currentLocation: 'all',
-  showModal: false,
-  status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed',
-  error: null,
-  formType: '' // 'add' | 'update' 
+    items: [],
+    currentItem : {},
+    currentLocation: 'all',
+    showModal: false,
+    error: null,
+    formType: '' // 'add' | 'update' 
 }
 
 
@@ -43,37 +42,22 @@ export const calendarSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      // fetch by location
-      .addCase(fetchEventsByLocation.pending, (state, action) => {
-        state.status = 'loading'
-      })
       .addCase(fetchEventsByLocation.fulfilled, (state, action) => {
-        state.status = 'succeeded'
         state.items = jsonDateTimeConverter(action.payload)
       })
       .addCase(fetchEventsByLocation.rejected, (state, action) => {
-        state.status = 'failed'
         state.error = action.error.message
       })
       // add
-      .addCase(addEventData.pending, (state, action) => {
-        state.status = 'loading'
-      })
       .addCase(addEventData.fulfilled, (state, action) => {
-        state.status = 'succeeded'
         const item = jsonDateTimeConverter(action.payload)
         state.items.push(item)
       })
       .addCase(addEventData.rejected, (state, action) => {
-        state.status = 'failed'
         state.error = action.error.message
       })
       // update
-      .addCase(updateEventData.pending, (state, action) => {
-        state.status = 'loading'
-      })
       .addCase(updateEventData.fulfilled, (state, action) => {
-        state.status = 'succeeded'
         const item = jsonDateTimeConverter(action.payload)
         const itemIdx = state.items.findIndex(obj => obj.id === Number(item.id))
         if (itemIdx !== -1) {
@@ -81,19 +65,13 @@ export const calendarSlice = createSlice({
         }
       })
       .addCase(updateEventData.rejected, (state, action) => {
-        state.status = 'failed'
         state.error = action.error.message
       })
       // delete
-      .addCase(deleteEvent.pending, (state, action) => {
-        state.status = 'loading'
-      })
       .addCase(deleteEvent.rejected, (state, action) => {
-        state.status = 'failed'
         state.error = action.error.message
       })
       .addCase(deleteEvent.fulfilled, (state, action) => {
-        state.status = 'succeeded'
         const itemIdx = state.items.findIndex(obj => obj.id === Number(action.payload.id))
         if (itemIdx !== -1) {
           state.items.splice(itemIdx, 1)

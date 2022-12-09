@@ -1,5 +1,7 @@
 import { createEntityAdapter, createSlice, isAnyOf } from '@reduxjs/toolkit';
-import { fetchEventsByLocation } from '../calendar/calendarSlice';
+import { fetchEventsByLocation, addEventData, updateEventData, deleteEvent } from '../calendar/calendarSlice';
+import { fetchUsers } from '../users/usersSlice';
+
 
 const notificationAdapter = createEntityAdapter()
 
@@ -8,9 +10,11 @@ const initialState = notificationAdapter.getInitialState(
     {
        message: null,
        type: null,
-       open: false
+       open: false,
+       apiStatus: 'idle' // 'idle' | 'loading' only 2 <<-- | 'succeeded' | 'failed', 
    }    
 )
+
 
 export const notificationSlice = createSlice({
     name: 'notification',
@@ -39,6 +43,45 @@ export const notificationSlice = createSlice({
                 state.open = true
             }
           )
+          // match pending, fulfilled and rejected
+          .addMatcher(
+            isAnyOf(
+                fetchUsers.pending,
+                fetchEventsByLocation.pending,
+                addEventData.pending,
+                updateEventData.pending,
+                deleteEvent.pending,
+            ),
+            (state, action) => {
+                state.apiStatus = 'loading'
+            }
+          )
+          .addMatcher(
+            isAnyOf(
+                fetchUsers.fulfilled,
+                fetchEventsByLocation.fulfilled,
+                addEventData.fulfilled,
+                updateEventData.fulfilled,
+                deleteEvent.fulfilled,
+
+            ),
+            (state, action) => {
+                state.apiStatus = 'idle'
+            }
+          )
+          .addMatcher(
+            isAnyOf(
+                fetchUsers.rejected,
+                fetchEventsByLocation.rejected,
+                addEventData.rejected,
+                updateEventData.rejected,
+                deleteEvent.rejected
+            ),
+            // set rejected status as 'idle' for now
+            (state, action) => {
+                state.apiStatus = 'idle'
+            }
+          )
           // reset all notifications on pending
           .addMatcher(
             isAnyOf(
@@ -57,6 +100,7 @@ export const notificationSlice = createSlice({
 export const getNotificationMsg = state => state.notification.message
 export const getNotificationType = state => state.notification.type
 export const isNotificationOpen = state => state.notification.open
+export const getApiStatus = state => state.notification.apiStatus
 
 export const { clearNotification, setNotification } = notificationSlice.actions
 

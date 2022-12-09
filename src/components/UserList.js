@@ -4,6 +4,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 
+
 const UserList = ({users}) => {
     const [searchParams, setSearchParams] = useSearchParams();
     
@@ -18,7 +19,6 @@ const UserList = ({users}) => {
           setSearchParams({});
         }
       };
-
 
     return (
         <>

@@ -5,8 +5,8 @@ import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from "moment";
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
+// import Backdrop from '@mui/material/Backdrop';
+// import CircularProgress from '@mui/material/CircularProgress';
 import styles from './Calendar.module.css'
 import { 
     setFormType, selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation, filterEventsByLocation } from "./calendarSlice";
@@ -25,7 +25,6 @@ function MainCalendar() {
     const location = useSelector(state => state.calendar.currentLocation)
     const events = useSelector(state => filterEventsByLocation(state, location))
     const open = useSelector(state => state.calendar.showModal)
-    const status = useSelector(state => state.calendar.status)
     const notificationIsOpen = useSelector(isNotificationOpen)
 
 
@@ -107,12 +106,6 @@ function MainCalendar() {
 
     return (
         <div className={styles.MainCalendar}>
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={status === 'loading'}
-            >       
-            {status === 'loading' && <CircularProgress color="inherit" />}
-            </Backdrop>
 
             <LocationBtn />
             
