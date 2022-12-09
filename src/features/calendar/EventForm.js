@@ -29,6 +29,7 @@ export const EventForm = (props) =>  {
     const users = useSelector(state => state.users)
 
     const [formEvent, setFormEvent] = useState(event)
+    // ToDo addEvent auto select user by current user
     const [userId, setUserId] = useState(formEvent.userId)
     const [formIsValid, setFormIsValid] = useState(true)
     const [errors, setErrors] = useState({})
@@ -208,7 +209,9 @@ export const EventForm = (props) =>  {
                                 label="Location"
                                 onChange={handleLocationChange}
                             >
-                                <MenuItem disabled value="all"><em>Please select</em></MenuItem>
+                                <MenuItem disabled value="all">
+                                    <em>Please select</em>
+                                </MenuItem>
                                 <MenuItem value={'loc1'}>Location 1</MenuItem>
                                 <MenuItem value={'loc2'}>Location 2</MenuItem>
                             </Select>
@@ -219,12 +222,15 @@ export const EventForm = (props) =>  {
                             <Select
                                 labelId="user-select-label"
                                 id="user-select"
-                                value={userId}
+                                value={userId || 'disabled'}
                                 label="User"
                                 onChange={handleUserChange}
-                            >
+                            >   
+                                <MenuItem disabled value="disabled">
+                                    <em>Please select</em>
+                                </MenuItem>
                                 {users.map(user => (
-                                    <MenuItem value={user.id}>
+                                    <MenuItem key={user.id} value={user.id}>
                                         {user.firstName}
                                     </MenuItem>                                   
                                 ))}
