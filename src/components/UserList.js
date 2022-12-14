@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,8 +11,9 @@ import Paper from '@mui/material/Paper';
 
 
 export default function UserList( { users=[] }) {
-  const [searchParams, setSearchParams] = useSearchParams();
     
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchTerm = searchParams.get('name') || '';
 
   const handleSearch = (event) => {
@@ -57,10 +58,9 @@ export default function UserList( { users=[] }) {
                 key={user.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 }, textDecoration : 'none'}}
                 hover={true}
-                component={Link}
-                to={'' + user.id}
+                onClick={() => {navigate(`${user.id}/`)}}
               >
-                <TableCell align="left">{user.id}</TableCell>
+                <TableCell component="th" scope="row">{user.id}</TableCell>
                 <TableCell align="left">{user.firstName}</TableCell>
                 <TableCell align="left">{user.lastName}</TableCell>
                 <TableCell align="left">{user.userName}</TableCell>
