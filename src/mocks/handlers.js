@@ -38,7 +38,7 @@ const items = [
         end: moment().add(3, "days").add(3, "hours").toDate(),
         title: "Sunrise 2",
         location: 'loc2',
-        userId: 102,
+        userId: 103,
         isCompleted: false,
     },
 ]
@@ -58,6 +58,20 @@ const users = [
         lastName: 'Bear',
         isActive: false,
 
+    },
+    {
+        id: 103,
+        userName: 'RedNose',
+        firstName: 'Rudolf',
+        lastName: 'Red',
+        isActive: true,
+    },
+    {
+        id: 104,
+        userName: 'Nobrain',
+        firstName: 'Snowman',
+        lastName: 'White',
+        isActive: false,
     },
 ]
 
