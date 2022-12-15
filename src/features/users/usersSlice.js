@@ -21,3 +21,9 @@ const usersSlice = createSlice({
 })
 
 export default usersSlice.reducer
+
+// ToDo fetch userById
+export const getUserById = (state, userId) =>
+  {
+    return state.users.find(user => user.id === Number(userId))
+  }
