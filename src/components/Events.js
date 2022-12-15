@@ -1,115 +1,85 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-    useQueryParams,
-    StringParam,
-    BooleanParam,
-    withDefault,
-    } from 'use-query-params';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Checkbox from '@mui/material/Checkbox';
 import { fetchEventsByLocation } from "../features/calendar/calendarSlice";
 import { filterEventsByLocation } from "../features/calendar/calendarSlice";
-import { fetchUsers } from "../features/users/usersSlice";
+import { fetchUsers, getUserById } from "../features/users/usersSlice";
+
+import { DataGrid } from '@mui/x-data-grid/';
+import Box from "@mui/material/Box";
 
  
-const bySearch = (search) => (event) =>
-  event.title
-    .toLowerCase()
-    .includes((search.title || '').toLowerCase())
-    && event.isCompleted === search.isCompleted;
-
-
 const Events = ({ handleUserItemClick}) => {
     //  redux part
     const dispatch = useDispatch()
     const events = useSelector(state => filterEventsByLocation(state, 'all'))
-    useEffect(() => {
-        // https://github.com/facebook/react/issues/14326
-        let didCancel = false
+    // ToDo filter events by user
+    // ToDo userId as current user all events for administrator
+    // UserId as authenticated userId
+    const user = useSelector(state => getUserById(state, 101))
+    // ToDo add remove selected events
+    const [selectedIds, setSelectedIds] = React.useState(new Set())
 
-        async function fetchAPI() {
-            try {
-                await dispatch(fetchEventsByLocation('all')).unwrap()
-            }
-            catch {
-                // error catched in reject case
-                // swallow error
-            }
-            if (!didCancel) {}           
-            
+
+    // https://stackoverflow.com/questions/67100027/dispatch-multiple-async-actions-with-redux-toolkit
+    useEffect(() => {     
+        dispatch(fetchEventsByLocation('all'))
+        dispatch(fetchUsers())
+    }, [dispatch])
+
+
+    function createData(events, user) {
+        let userEvents = []
+        if(user) {
+            userEvents = events.filter(event => event.userId === user.id)
+            userEvents = userEvents.map(event => ({
+                ...event,
+                userFullName: user.firstName + ' ' + user.lastName
+                })        
+            )
         }
-        fetchAPI()
+        return userEvents
+    }
 
-        return () => {didCancel = true}
-           
-    }, [dispatch,])
-    
-    useEffect(() => {
-        let didCancel = false
+    const handleSelection = (ids) => {
+        const selectedIds = new Set(ids)
+        setSelectedIds(selectedIds)
+    }
 
-        async function dofetchUsers() {
-            try {
-                await dispatch(fetchUsers()).unwrap()
-            }
-            catch {
-                // error catched in reject case
-                // swallow error
-            }
-            if (!didCancel) {}
-        }
-        dofetchUsers()
+    const columns = [
+        { field: 'id', headerName: 'ID', width: 20 },
+        { field: 'title', headerName: 'Title', width: 200 },
+        { field: 'location', headerName: 'Location', width: 100 },
+        {
+          field: 'userFullName',
+          headerName: 'User',
+          width: 200,
+        },
+        {
+          field: 'isCompleted',
+          headerName: 'Completed',
+          type: 'boolean',
+          description: 'This column has a value getter and is not sortable.',
+          width: 100,
+        },
+      ];
 
-        return () => {didCancel = true}
-           
-    }, [dispatch, ]) 
-    // End of redux part
-
-    const handleTitle = (event) => {
-        setSearch({ title: event.target.value });
-      };
-
-    const handleIsCompleted = (event) => {
-        setSearch({ isCompleted: event.target.checked });
-    };
-
-    const [search, setSearch] = useQueryParams({
-        title: withDefault(StringParam, ''),
-        isCompleted: withDefault(BooleanParam, false),
-    });
-
-    const label = { inputProps: { 'aria-label': "Is Completed?" } };
-
+      
     return (
-        <>
-            <h2>Events</h2>
-            
-            <input
-                type="text"
-                value={search.title}
-                onChange={handleTitle}
-            />
-            
+        <div>
+            <h2>My Events</h2>
 
-            <br/>
-            Completed
-
-            <Checkbox {...label}
-                value={search.isCompleted}
-                onChange={handleIsCompleted}
-            />
-                
-            <List>
-                {events
-                .filter(bySearch(search))
-                .map((event) => (
-                    <ListItem key={event.id} onClick={handleUserItemClick}>
-                           {event.id} - {event.title} - {event.location} - {event.userId} - {String(event.isCompleted)}
-                    </ListItem>               
-                ))}
-            </List>
-        </>
+            <Box sx={{height: 400}}>
+                <DataGrid
+                    sx = {{width: '80%', margin: 'auto'}}
+                    rows={createData(events, user)}
+                    columns={columns}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                    checkboxSelection
+                    onSelectionModelChange = { handleSelection }
+                />
+            </Box>    
+        </div>
     )
 }
 
