@@ -27,3 +27,14 @@ export const getUserById = (state, userId) =>
   {
     return state.users.find(user => user.id === Number(userId))
   }
+
+export const getUserColors = (state) =>
+    {
+        var userColors = state.users.reduce(
+            (obj, item) => {
+                obj[item.id] = item.userColor; 
+                return obj
+            }, {}
+        )
+        return userColors
+    }

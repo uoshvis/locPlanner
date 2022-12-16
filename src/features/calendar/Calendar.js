@@ -12,7 +12,7 @@ import {
     setFormType, selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation, filterEventsByLocation } from "./calendarSlice";
 import { setNotification, 
     isNotificationOpen } from "../notification/notificationSlice";
-import { fetchUsers } from "../users/usersSlice";
+import { fetchUsers, getUserColors } from "../users/usersSlice";
 import LocationBtn from "./LocationBtn";
 import { EventForm } from "./EventForm";
 
@@ -26,6 +26,7 @@ function MainCalendar() {
     const events = useSelector(state => filterEventsByLocation(state, location))
     const open = useSelector(state => state.calendar.showModal)
     const notificationIsOpen = useSelector(isNotificationOpen)
+    const userColors = useSelector(state => getUserColors(state))
 
 
 
@@ -103,6 +104,15 @@ function MainCalendar() {
         dispatch(toggleShowModal())
     }
 
+    const eventStyleGetter = (event) => {
+        const userColor = userColors[event.userId]
+        const style = {
+            backgroundColor: userColor,
+        }
+        return {
+            style: style
+        }
+    }
 
     return (
         <div className={styles.MainCalendar}>
@@ -119,6 +129,7 @@ function MainCalendar() {
                 onEventDrop={handleEventDrop}
                 onSelectEvent={handleSelectEvent}
                 onSelectSlot={handleSelectSlot}
+                eventPropGetter={eventStyleGetter}
             />
             
             {open && <EventForm open={open}/>}

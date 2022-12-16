@@ -50,6 +50,7 @@ const users = [
         firstName: 'Santa',
         lastName: 'Claus',
         isActive: true,
+        userColor: 'red',
     },
     {
         id: 102,
@@ -57,7 +58,7 @@ const users = [
         firstName: 'Teddy',
         lastName: 'Bear',
         isActive: false,
-
+        userColor: 'green',
     },
     {
         id: 103,
@@ -65,6 +66,7 @@ const users = [
         firstName: 'Rudolf',
         lastName: 'Red',
         isActive: true,
+        userColor: 'blue',
     },
     {
         id: 104,
@@ -72,6 +74,7 @@ const users = [
         firstName: 'Snowman',
         lastName: 'White',
         isActive: false,
+        userColor: 'cyan',
     },
 ]
 
