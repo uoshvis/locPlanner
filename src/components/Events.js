@@ -48,6 +48,7 @@ const Events = ({ handleUserItemClick}) => {
     const columns = [
         { field: 'id', headerName: 'ID', width: 20 },
         { field: 'title', headerName: 'Title', width: 200 },
+        { field: 'start', headerName: 'Start Date', width: 300, type: 'dateTime' },
         { field: 'location', headerName: 'Location', width: 100 },
         {
           field: 'userFullName',
