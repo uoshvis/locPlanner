@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchEventsByLocation } from "../features/calendar/calendarSlice";
 import { filterEventsByLocation } from "../features/calendar/calendarSlice";
-import { fetchUsers, getUserById } from "../features/users/usersSlice";
+import { fetchUsers } from "../features/users/usersSlice";
 
 import { DataGrid } from '@mui/x-data-grid/';
 import Box from "@mui/material/Box";
@@ -15,7 +15,7 @@ const Events = ({ handleUserItemClick}) => {
     // ToDo filter events by user
     // ToDo userId as current user all events for administrator
     // UserId as authenticated userId
-    const user = useSelector(state => getUserById(state, 101))
+    const user = useSelector(state => state.auth.userDetails)
     // ToDo add remove selected events
     const [selectedIds, setSelectedIds] = React.useState(new Set())
 
@@ -27,7 +27,7 @@ const Events = ({ handleUserItemClick}) => {
     }, [dispatch])
 
 
-    function createData(events, user) {
+    function createData(events, userId) {
         let userEvents = []
         if(user) {
             userEvents = events.filter(event => event.userId === user.id)
