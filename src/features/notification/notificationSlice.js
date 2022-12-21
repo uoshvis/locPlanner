@@ -44,6 +44,10 @@ export const notificationSlice = createSlice({
             }
           )
           // match pending, fulfilled and rejected
+
+          // ToDo action.type.endsWith("/pending")
+
+          // ToDo or import { isPending } from '@reduxjs/toolkit'
           .addMatcher(
             isAnyOf(
                 fetchUsers.pending,
