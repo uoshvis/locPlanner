@@ -1,14 +1,22 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { client } from '../../mocks/client.js';
 
+
+const userToken = localStorage.getItem('userToken')
+    ? localStorage.getItem('userToken')
+    : null
+
 const initialState =  { 
     isLoggedIn: false,
     status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed',
-    currentUser: {
-        id: 101,
+    userId: null,
+    userInfo: {   // ToDo userInfo => userRolesInfo
+        id: null,
         permissions: ['edit'],
         roles: ['admin'],
-    }
+    },
+    userDetails: {},
+    userToken,
  }
 
 
@@ -29,6 +37,8 @@ export const authSlice = createSlice({
             })
             .addCase(login.fulfilled, (state, action) => {
                 state.isLoggedIn = true
+                state.userToken = action.payload
+                state.userId = Number(Object.keys(action.payload)[0])
                 state.status = 'succeeded'
             })
             .addCase(logout.pending, (state, action) => {
@@ -42,20 +52,29 @@ export const authSlice = createSlice({
                 state.isLoggedIn = false
                 state.status = 'succeeded'        
             })
+
+            .addCase(fetchUser.fulfilled, (state, action) => {
+                state.userDetails = action.payload
+            })
     }
 })
 
 export const login = createAsyncThunk('auth/login', async (crediantials) => {
     const response = await client.post('/myApi/login', crediantials)
-    localStorage.setItem('token', JSON.stringify(response.data));
+    localStorage.setItem('userToken', JSON.stringify(response.data));
     return response.data
 })
 
 export const logout = createAsyncThunk('auth/logout', async (crediantials) => {
     const response = await client.post('/myApi/logout', crediantials)
-    localStorage.removeItem('token');
+    localStorage.removeItem('userToken');
     return response.data
 })
 
+export const fetchUser = createAsyncThunk('users/fetchUser', async (id) => {
+    const response = await client.get(`/myApi/users/${id}`)
+    return response.data
+
+})
 
 export default authSlice.reducer
