@@ -40,7 +40,7 @@ function App() {
     const apiStatus = useSelector(getApiStatus)
     const open = useSelector(state => state.calendar.showModal)
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
-    const user = useSelector(state => state.auth.currentUser)
+    const userInfo = useSelector(state => state.auth.userInfo)
 
 
     return (
@@ -73,7 +73,7 @@ function App() {
                                 <RequireAuth
                                     redirectPath="/"
                                     isAllowed={
-                                        !!isLoggedIn && user.roles.includes('admin')
+                                        !!isLoggedIn && userInfo.roles.includes('admin')
                                     }
                                 />}
                     >
@@ -108,7 +108,7 @@ function RequireAuth({
     isAllowed,
     redirectPath = '/login',
     children }) {
-        isAllowed = true  // set to true for dev
+       // isAllowed = true  // uncomment for dev
         let location = useLocation()        
         if (!isAllowed) {
             return <Navigate 
