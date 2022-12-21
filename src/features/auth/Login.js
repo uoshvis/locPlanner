@@ -16,21 +16,25 @@ const Login = () => {
 
     const status = useSelector(state => state.auth.status)
 
-
     let from = location.state?.from?.pathname || "/"
 
     const dispatch = useDispatch()
 
-    const handleSubmit = async (e) => {
+
+    const handleSubmit = (e) => {
         e.preventDefault()
-        try {
-            await dispatch(login({userName, password}))
-                .unwrap()
-            navigate(from, { replace: true }) // ToDo make sure if navigate works
-        } catch(err) {
-            console.log(err)
-        }
-    }
+
+        dispatch(login({userName, password}))
+          .unwrap()
+          .then(() => {
+            navigate(from, { replace: true })
+          })
+          
+          .catch((err) => {
+            console.log('Error No 63')
+          })
+      }
+
 
     return(
         <div className={styles.LoginWrapper}>
@@ -45,7 +49,7 @@ const Login = () => {
             <form onSubmit={handleSubmit}>
             <label>
                 <p>Username</p>
-                <input name="username" type="text" onChange={e => setUserName(e.target.value)}/>
+                <input name="userName" type="text" onChange={e => setUserName(e.target.value)}/>
             </label>
             <label>
                 <p>Password</p>
