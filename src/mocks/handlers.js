@@ -20,7 +20,7 @@ const items = [
         end: moment().add(6, "hours").toDate(),
         title: "Full moon 1",
         location: 'loc1',
-        userId: 101,
+        userId: 102,
         isCompleted: true,
     },
     {   
@@ -29,7 +29,7 @@ const items = [
         end: moment().add(2, "days").add(3, "hours").toDate(),
         title: "Sunshine 2",
         location: 'loc2',
-        userId: 102,
+        userId: 103,
         isCompleted: true,
     },
     {   
@@ -38,12 +38,21 @@ const items = [
         end: moment().add(3, "days").add(3, "hours").toDate(),
         title: "Sunrise 2",
         location: 'loc2',
-        userId: 103,
+        userId: 104,
         isCompleted: false,
     },
 ]
 
 const users = [
+    {
+        id: 100,
+        userName: 'admin',
+        firstName: 'Admin',
+        lastName: 'istrator',
+        isActive: true,
+        userColor: 'red',
+        password: '123',
+    },
     {
         id: 101,
         userName: 'SantaClaus',
@@ -51,6 +60,7 @@ const users = [
         lastName: 'Claus',
         isActive: true,
         userColor: 'red',
+        password: '123',
     },
     {
         id: 102,
@@ -59,6 +69,7 @@ const users = [
         lastName: 'Bear',
         isActive: false,
         userColor: 'green',
+        password: '123',
     },
     {
         id: 103,
@@ -67,6 +78,7 @@ const users = [
         lastName: 'Red',
         isActive: true,
         userColor: 'blue',
+        password: '123',
     },
     {
         id: 104,
@@ -75,7 +87,9 @@ const users = [
         lastName: 'White',
         isActive: false,
         userColor: 'cyan',
+        password: '123',
     },
+    
 ]
 
 export const handlers = [
@@ -83,15 +97,26 @@ export const handlers = [
 
     rest.post('/myApi/login', (req, res, ctx) => {
         const token = {}
-        if(req.body.userName && req.body.password) {
-            const userId = 101
-            token[userId] = 'token123'
+        const userName = req.body.userName
+        const password = req.body.password
+        if(userName && password) {
+            const user = users.find(user => user.userName === userName)
+            if (user && user.password === password) {
+                const userId = user.id
+                token[userId] = userName + '_token'
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(200),
+                    ctx.json(token)
+                )
+            }
+        } else {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(404, 'Invalid password or email'),
+                ctx.json({'message': 'too bad'})
+            )
         }
-        return res(
-            ctx.delay(ARTIFICIAL_DELAY_MS),
-            ctx.status(200),
-            ctx.json(token)
-        )
     }),
 
     rest.post('/myApi/logout', (req, res, ctx) => {
@@ -108,6 +133,27 @@ export const handlers = [
             ctx.status(200),
             ctx.json(users),
             )
+    }),
+
+    rest.get('/myApi/users/:id', (req, res, ctx) => {
+        const { id } = req.params
+        console.log(id)
+        const user = users.find(user => user.id === Number(id))
+        
+        if (user) {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(200),
+                ctx.json(user),
+                )
+        }
+        else {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(404, 'User not found'),
+                ctx.json({})
+            )
+        }
     }),
 
     rest.get('/myApi/events/:location', (req, res, ctx) => {
