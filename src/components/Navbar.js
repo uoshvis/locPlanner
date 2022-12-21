@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -15,6 +15,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import { fetchUser } from "../features/auth/authSlice";
 
 const pages = [
     { text: 'Calendar', href: '/calendar' },
@@ -31,12 +32,22 @@ const settings = [
 ]
 const ResponsiveAppBar = () => {
 
+    const dispatch = useDispatch()
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
-    const currentUser = useSelector(state => state.auth.currentUser)
+    const userToken = useSelector(state => state.auth.userToken)
+    const userId = useSelector(state => state.auth.userId)
+    const userDetails = useSelector(state => state.auth.userDetails)
 
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+
+  useEffect(() => {
+    if (userToken) {
+      dispatch(fetchUser(userId))
+    }
+  }, [userToken, dispatch, userId])
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -52,36 +63,6 @@ const ResponsiveAppBar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  const userWelcome = () => {
-    if (currentUser.roles.includes('admin')) {
-        return (
-            <Typography
-            sx={{
-                mr: 2,
-                display: { xs: 'none', md: 'flex' },
-                fontWeight: 700,
-                color: 'inherit',
-            }}
-        >
-            Welcome back admin!
-        </Typography>
-    )
-    } else {
-        return (
-            <Typography
-            sx={{
-                mr: 2,
-                display: { xs: 'none', md: 'flex' },
-                fontWeight: 700,
-                color: 'inherit',
-            }}
-        >
-            Welcome back user!
-        </Typography>
-        )
-    }
-  }
 
   return (
     <AppBar position="static">
@@ -182,44 +163,59 @@ const ResponsiveAppBar = () => {
             ))}
           </Box>
 
+            {
+                isLoggedIn  && 
 
-            { isLoggedIn && userWelcome() }
+                <>
+                    <Typography
+                        sx={{
+                            mr: 2,
+                            display: { xs: 'none', md: 'flex' },
+                            fontWeight: 700,
+                            color: 'inherit',
+                        }}
+                    >
+                        Welcome back {userDetails.firstName}!
+                    </Typography>
+            
 
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="https://mui.com/static/images/avatar/1.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem 
-                    key={setting.text}
-                    component={Link}
-                    to={setting.href}
-                    onClick={handleCloseUserMenu}
-                >
-                  <Typography textAlign="center">{setting.text}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+                    <Box sx={{ flexGrow: 0 }}>
+                        <Tooltip title="Open settings">
+                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                            <Avatar alt="Remy Sharp" src="https://mui.com/static/images/avatar/1.jpg" />
+                        </IconButton>
+                        </Tooltip>
+                        <Menu
+                        sx={{ mt: '45px' }}
+                        id="menu-appbar"
+                        anchorEl={anchorElUser}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        open={Boolean(anchorElUser)}
+                        onClose={handleCloseUserMenu}
+                        >
+                        {settings.map((setting) => (
+                            <MenuItem 
+                                key={setting.text}
+                                component={Link}
+                                to={setting.href}
+                                onClick={handleCloseUserMenu}
+                            >
+                            <Typography textAlign="center">{setting.text}</Typography>
+                            </MenuItem>
+                        ))}
+                        </Menu>
+                    </Box>
+                </>
+            }
         </Toolbar>
       </Container>
     </AppBar>
