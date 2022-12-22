@@ -1,6 +1,7 @@
 import { createEntityAdapter, createSlice, isAnyOf } from '@reduxjs/toolkit';
 import { fetchEventsByLocation, addEventData, updateEventData, deleteEvent } from '../calendar/calendarSlice';
 import { fetchUsers } from '../users/usersSlice';
+import { fetchUser } from '../auth/authSlice';
 
 
 const notificationAdapter = createEntityAdapter()
@@ -44,13 +45,10 @@ export const notificationSlice = createSlice({
             }
           )
           // match pending, fulfilled and rejected
-
-          // ToDo action.type.endsWith("/pending")
-
-          // ToDo or import { isPending } from '@reduxjs/toolkit'
           .addMatcher(
             isAnyOf(
                 fetchUsers.pending,
+                fetchUser.pending,
                 fetchEventsByLocation.pending,
                 addEventData.pending,
                 updateEventData.pending,
@@ -63,11 +61,11 @@ export const notificationSlice = createSlice({
           .addMatcher(
             isAnyOf(
                 fetchUsers.fulfilled,
+                fetchUser.fulfilled,
                 fetchEventsByLocation.fulfilled,
                 addEventData.fulfilled,
                 updateEventData.fulfilled,
                 deleteEvent.fulfilled,
-
             ),
             (state, action) => {
                 state.apiStatus = 'idle'
@@ -76,6 +74,7 @@ export const notificationSlice = createSlice({
           .addMatcher(
             isAnyOf(
                 fetchUsers.rejected,
+                fetchUser.rejected,
                 fetchEventsByLocation.rejected,
                 addEventData.rejected,
                 updateEventData.rejected,
