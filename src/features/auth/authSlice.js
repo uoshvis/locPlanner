@@ -53,7 +53,7 @@ export const authSlice = createSlice({
                 state.status = 'succeeded'        
             })
 
-            .addCase(fetchUser.fulfilled, (state, action) => {
+            .addCase(fetchUserDetails.fulfilled, (state, action) => {
                 state.userDetails = action.payload
             })
     }
@@ -71,7 +71,7 @@ export const logout = createAsyncThunk('auth/logout', async (crediantials) => {
     return response.data
 })
 
-export const fetchUser = createAsyncThunk('users/fetchUser', async (id) => {
+export const fetchUserDetails = createAsyncThunk('users/fetchUser', async (id) => {
     const response = await client.get(`/myApi/users/${id}`)
     return response.data
 

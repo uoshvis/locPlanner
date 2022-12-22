@@ -15,7 +15,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { fetchUser } from "../features/auth/authSlice";
+import { fetchUserDetails } from "../features/auth/authSlice";
 
 const pages = [
     { text: 'Calendar', href: '/calendar' },
@@ -44,7 +44,7 @@ const ResponsiveAppBar = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      dispatch(fetchUser(userId))
+      dispatch(fetchUserDetails(userId))
     }
   }, [isLoggedIn, dispatch, userId])
 
