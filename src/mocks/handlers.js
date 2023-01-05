@@ -43,6 +43,20 @@ const items = [
     },
 ]
 
+const userInfo = [
+    {
+        id: 1,
+        userId: 100,
+        roles: ['admin'],
+    },
+    {
+        id: 2,
+        userId: 101,
+        roles: ['user'],
+    },
+    
+]
+
 const users = [
     {
         id: 100,
@@ -137,7 +151,6 @@ export const handlers = [
 
     rest.get('/myApi/users/:id', (req, res, ctx) => {
         const { id } = req.params
-        console.log(id)
         const user = users.find(user => user.id === Number(id))
         
         if (user) {
@@ -151,6 +164,26 @@ export const handlers = [
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(404, 'User not found'),
+                ctx.json({})
+            )
+        }
+    }),
+
+    rest.get('/myApi/users/:id/info', (req, res, ctx) => {
+        const { id } = req.params
+        const info = userInfo.find(item => item.userId === Number(id))
+        
+        if (info) {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(200),
+                ctx.json(info),
+                )
+        }
+        else {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(404, 'UserInfo not found'),
                 ctx.json({})
             )
         }
