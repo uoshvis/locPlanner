@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchEventsByLocation } from "../features/calendar/calendarSlice";
 import { filterEventsByLocation } from "../features/calendar/calendarSlice";
-import { fetchUsers } from "../features/users/usersSlice";
 
 import { DataGrid } from '@mui/x-data-grid/';
 import Box from "@mui/material/Box";
@@ -23,7 +22,6 @@ const Events = ({ handleUserItemClick}) => {
     // https://stackoverflow.com/questions/67100027/dispatch-multiple-async-actions-with-redux-toolkit
     useEffect(() => {     
         dispatch(fetchEventsByLocation('all'))
-        dispatch(fetchUsers())
     }, [dispatch])
 
 
