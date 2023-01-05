@@ -5,8 +5,7 @@ import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from "moment";
-// import Backdrop from '@mui/material/Backdrop';
-// import CircularProgress from '@mui/material/CircularProgress';
+import "moment/locale/lt";
 import styles from './Calendar.module.css'
 import { 
     setFormType, selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation, filterEventsByLocation } from "./calendarSlice";
@@ -15,6 +14,14 @@ import { setNotification,
 import { fetchUsers, getUserColors } from "../users/usersSlice";
 import LocationBtn from "./LocationBtn";
 import { EventForm } from "./EventForm";
+
+
+moment.locale('lt', {
+    week: {
+        dow: 1,
+        doy: 1,
+    }
+})
 
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
