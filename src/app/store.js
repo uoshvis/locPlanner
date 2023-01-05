@@ -1,17 +1,27 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import calendarReducer from '../features/calendar/calendarSlice';
 import notificationReducer from '../features/notification/notificationSlice'
 import usersReducer from '../features/users/usersSlice'
 import authReducer from '../features/auth/authSlice'
 
 
-export const store = configureStore({
-  reducer: {
+const combineReducer = combineReducers({
     calendar: calendarReducer,
     notification: notificationReducer,
     users: usersReducer,
     auth: authReducer,
-  },
+})
+
+const rootReducer = (state, action) => {
+    console.log('action.type', action.type)
+    if (action.type === 'auth/logout/fulfilled') {
+        state = undefined
+    }
+    return combineReducer(state, action)
+
+}
+export const store = configureStore({
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
