@@ -82,11 +82,8 @@ function App() {
                     </Route>
                     
                     <Route element={
-                                <RequireAuth
+                                <RequireAuthorization
                                     redirectPath="/"
-                                    isAllowed={
-                                        !!isLoggedIn && userInfo.roles.includes('admin')
-                                    }
                                 />}
                     >
                         <Route path="dashboard" element={<DashboardLayout />}>
@@ -121,7 +118,7 @@ function RequireAuth({
     redirectPath = '/login',
     children }) {
        // isAllowed = true  // uncomment for dev
-        let location = useLocation()        
+        let location = useLocation()     
         if (!isAllowed) {
             return <Navigate 
                 to={redirectPath}
@@ -131,5 +128,23 @@ function RequireAuth({
         return children ? children : <Outlet />; // to use as wrapping component
 }
 
+
+function RequireAuthorization({
+    redirectPath = '/',
+    children }) {
+        const {userInfo, isLoggedIn} = useSelector((state) => state.auth)
+
+        const isAllowed = userInfo.roles.includes('admin') && isLoggedIn
+        
+        if (!isAllowed) {
+            return (
+                <div>
+                    <h1>You dont have permissions</h1>
+                    <span>Contact admin</span>
+                </div>
+            )
+        }
+        return children ? children : <Outlet />; // to use as wrapping component
+}
 
 export default App;
