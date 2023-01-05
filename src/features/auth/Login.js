@@ -6,6 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import styles from "./Login.module.css"
 import { login } from './authSlice'
 
+
 const Login = () => {
     const [userName, setUserName] = useState()
     const [password, setPassword] = useState()
@@ -17,7 +18,9 @@ const Login = () => {
 
     let from = location.state?.from?.pathname || "/"
 
-    const { isLoggedIn, status } = useSelector((state) => state.auth)
+    const { isLoggedIn } = useSelector((state) => state.auth)
+    const { apiStatus } = useSelector((state) => state.notification)
+
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -34,9 +37,9 @@ const Login = () => {
         <div className={styles.LoginWrapper}>
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={status === 'loading'}
-            >       
-                {status === 'loading' && <CircularProgress color="inherit" />}
+                open={apiStatus === 'loading'}
+            >
+                {apiStatus === 'loading' && <CircularProgress color="inherit" />}
             </Backdrop>
 
             <h1>Please log in</h1>
@@ -50,7 +53,7 @@ const Login = () => {
                 <input name="password" type="password" onChange={e => setPassword(e.target.value)}/>
             </label>
             <div>
-                <button type="submit" disabled={status==='loading'}>
+                <button type="submit" disabled={apiStatus==='loading'}>
                     Submit
                 </button>
             </div>
