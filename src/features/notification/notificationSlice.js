@@ -57,6 +57,9 @@ export const notificationSlice = createSlice({
             ),
             (state, action) => {
                 state.apiStatus = 'loading'
+                state.message = null
+                state.type = null
+                state.open = false
             }
           )
           .addMatcher(
@@ -86,17 +89,9 @@ export const notificationSlice = createSlice({
             // set rejected status as 'idle' for now
             (state, action) => {
                 state.apiStatus = 'idle'
-            }
-          )
-          // reset all notifications on pending
-          .addMatcher(
-            isAnyOf(
-                fetchEventsByLocation.pending
-            ),
-            (state, action) => {
-                state.message = null
-                state.type = null
-                state.open = false
+                state.message = action.error.message
+                state.type = 'error'
+                state.open = true
             }
           )
       },

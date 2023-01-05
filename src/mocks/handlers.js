@@ -123,12 +123,19 @@ export const handlers = [
                     ctx.status(200),
                     ctx.json(token)
                 )
+            } else {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(401, 'Invalid password or email'),
+                    ctx.json({})
+                )
             }
+
         } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(404, 'Invalid password or email'),
-                ctx.json({'message': 'too bad'})
+                ctx.status(401, 'Please enter your login data'),
+                ctx.json({})
             )
         }
     }),

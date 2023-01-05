@@ -9,6 +9,7 @@ const userToken = localStorage.getItem('userToken')
 const initialState =  { 
     isLoggedIn: false,
     status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed',
+    // ToDo use UserID from unserInfo
     userId: null,
     userInfo: {},
     userDetails: {},
@@ -29,7 +30,6 @@ export const authSlice = createSlice({
             })
             .addCase(login.rejected, (state, action) => { // ToDo Add reject case for invalid user
                 state.status = 'failed'
-                state.error = action.error.message
             })
             .addCase(login.fulfilled, (state, action) => {
                 state.isLoggedIn = true
@@ -42,7 +42,6 @@ export const authSlice = createSlice({
             })
             .addCase(logout.rejected, (state, action) => {
                 state.status = 'failed'
-                state.error = action.error.message
             })
             .addCase(logout.fulfilled, (state, action) => {
                 state.isLoggedIn = false

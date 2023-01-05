@@ -6,7 +6,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import styles from "./Login.module.css"
 import { login } from './authSlice'
 
-
 const Login = () => {
     const [userName, setUserName] = useState()
     const [password, setPassword] = useState()
@@ -29,13 +28,7 @@ const Login = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
         dispatch(login({userName, password}))
-            .unwrap()
-          // Or use rejectWithValue inside asyncThunk func
-          .catch((err) => {
-            console.log('Error in Login.js', err)
-          })
-      }
-
+    }
 
     return(
         <div className={styles.LoginWrapper}>
