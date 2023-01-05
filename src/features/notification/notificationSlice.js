@@ -1,7 +1,7 @@
 import { createEntityAdapter, createSlice, isAnyOf } from '@reduxjs/toolkit';
 import { fetchEventsByLocation, addEventData, updateEventData, deleteEvent } from '../calendar/calendarSlice';
 import { fetchUsers } from '../users/usersSlice';
-import { fetchUserDetails } from '../auth/authSlice';
+import { login, fetchUserDetails } from '../auth/authSlice';
 
 
 const notificationAdapter = createEntityAdapter()
@@ -47,6 +47,7 @@ export const notificationSlice = createSlice({
           // match pending, fulfilled and rejected
           .addMatcher(
             isAnyOf(
+                login.pending,
                 fetchUsers.pending,
                 fetchUserDetails.pending,
                 fetchEventsByLocation.pending,
@@ -60,6 +61,7 @@ export const notificationSlice = createSlice({
           )
           .addMatcher(
             isAnyOf(
+                login.fulfilled,
                 fetchUsers.fulfilled,
                 fetchUserDetails.fulfilled,
                 fetchEventsByLocation.fulfilled,
@@ -73,6 +75,7 @@ export const notificationSlice = createSlice({
           )
           .addMatcher(
             isAnyOf(
+                login.rejected,
                 fetchUsers.rejected,
                 fetchUserDetails.rejected,
                 fetchEventsByLocation.rejected,
