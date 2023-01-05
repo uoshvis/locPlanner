@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import Backdrop from '@mui/material/Backdrop';
@@ -11,27 +11,28 @@ const Login = () => {
     const [userName, setUserName] = useState()
     const [password, setPassword] = useState()
 
+    const dispatch = useDispatch()
+
     let navigate = useNavigate()
     let location = useLocation()
 
-    const status = useSelector(state => state.auth.status)
-
     let from = location.state?.from?.pathname || "/"
 
-    const dispatch = useDispatch()
+    const { isLoggedIn, status } = useSelector((state) => state.auth)
 
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate(from, { replace: true })
+        }
+    })
 
     const handleSubmit = (e) => {
         e.preventDefault()
-
         dispatch(login({userName, password}))
-          .unwrap()
-          .then(() => {
-            navigate(from, { replace: true })
-          })
-          
+            .unwrap()
+          // Or use rejectWithValue inside asyncThunk func
           .catch((err) => {
-            console.log('Error No 63')
+            console.log('Error in Login.js', err)
           })
       }
 
@@ -56,7 +57,9 @@ const Login = () => {
                 <input name="password" type="password" onChange={e => setPassword(e.target.value)}/>
             </label>
             <div>
-                <button type="submit">Submit</button>
+                <button type="submit" disabled={status==='loading'}>
+                    Submit
+                </button>
             </div>
             </form>
         </div>
