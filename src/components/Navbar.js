@@ -33,20 +33,18 @@ const settings = [
 const ResponsiveAppBar = () => {
 
     const dispatch = useDispatch()
-    const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
-    const userId = useSelector(state => state.auth.userId)
-    const userDetails = useSelector(state => state.auth.userDetails)
-
-
+    const { isLoggedIn, userId, userDetails } = useSelector(state => state.auth)
+    
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      dispatch(fetchUserDetails(userId))
-    }
-  }, [isLoggedIn, dispatch, userId])
+    useEffect(() => {
+        if (isLoggedIn) {
+            dispatch(fetchUserDetails(userId))
+        }
+    }, [isLoggedIn, userId, dispatch])
+
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
