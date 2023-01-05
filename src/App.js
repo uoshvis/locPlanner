@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from "react";
 import {
     Routes,
     Route,
@@ -6,7 +6,7 @@ import {
     Outlet, 
     useLocation
     } from "react-router-dom";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch} from 'react-redux';
 import loadable from '@loadable/component';
 
 import './App.css';
@@ -28,19 +28,31 @@ import Users from './components/Users';
 import Info from './components/Info';
 import Events from './components/Events';
 import BackDropLoader from './components/BackDropLoader';
+import { fetchUserInfo } from "./features/auth/authSlice";
 
 const About = loadable(() => import('./components/About'));
 
  
 function App() {    
-
+    const dispatch = useDispatch()
+    
     const notificationIsOpen = useSelector(isNotificationOpen)
     const notificationType = useSelector(getNotificationType)
     const notificationMsg = useSelector(getNotificationMsg)
     const apiStatus = useSelector(getApiStatus)
     const open = useSelector(state => state.calendar.showModal)
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
-    const userInfo = useSelector(state => state.auth.userInfo)
+    const userId = useSelector(state => state.auth.userId)
+
+
+    useEffect(() => {
+        const fetch = () => {
+            dispatch(fetchUserInfo(userId))
+        }
+        if (isLoggedIn) {
+            fetch()
+        }
+      }, [isLoggedIn, dispatch, userId])
 
 
     return (
