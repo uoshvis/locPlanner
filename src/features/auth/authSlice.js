@@ -10,11 +10,7 @@ const initialState =  {
     isLoggedIn: false,
     status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed',
     userId: null,
-    userInfo: {   // ToDo userInfo => userRolesInfo
-        id: null,
-        permissions: ['edit'],
-        roles: ['admin'],
-    },
+    userInfo: {},
     userDetails: {},
     userToken,
  }
@@ -52,9 +48,11 @@ export const authSlice = createSlice({
                 state.isLoggedIn = false
                 state.status = 'succeeded'        
             })
-
             .addCase(fetchUserDetails.fulfilled, (state, action) => {
                 state.userDetails = action.payload
+            })
+            .addCase(fetchUserInfo.fulfilled, (state, action) => {
+                state.userInfo = action.payload
             })
     }
 })
@@ -74,7 +72,11 @@ export const logout = createAsyncThunk('auth/logout', async (crediantials) => {
 export const fetchUserDetails = createAsyncThunk('users/fetchUser', async (id) => {
     const response = await client.get(`/myApi/users/${id}`)
     return response.data
+})
 
+export const fetchUserInfo = createAsyncThunk('users/fetchUserInfo', async (id) => {
+    const response = await client.get(`/myApi/users/${id}/info`)
+    return response.data
 })
 
 export default authSlice.reducer
