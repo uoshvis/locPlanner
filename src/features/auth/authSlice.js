@@ -3,7 +3,7 @@ import { client } from '../../mocks/client.js';
 
 
 const userToken = localStorage.getItem('userToken')
-    ? localStorage.getItem('userToken')
+    ? localStorage.getItem('userToken') && JSON.parse(localStorage.getItem('userToken'))
     : null
 
 const initialState =  { 
