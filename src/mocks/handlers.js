@@ -64,7 +64,7 @@ const users = [
         firstName: 'Admin',
         lastName: 'istrator',
         isActive: true,
-        userColor: 'red',
+        userColor: '#f44336',
         password: '123',
     },
     {
@@ -73,7 +73,7 @@ const users = [
         firstName: 'Santa',
         lastName: 'Claus',
         isActive: true,
-        userColor: 'red',
+        userColor: '#e91e63',
         password: '123',
     },
     {
@@ -82,7 +82,7 @@ const users = [
         firstName: 'Teddy',
         lastName: 'Bear',
         isActive: false,
-        userColor: 'green',
+        userColor: '#9c27b0',
         password: '123',
     },
     {
@@ -91,7 +91,7 @@ const users = [
         firstName: 'Rudolf',
         lastName: 'Red',
         isActive: true,
-        userColor: 'blue',
+        userColor: '#673ab7',
         password: '123',
     },
     {
@@ -100,7 +100,7 @@ const users = [
         firstName: 'Snowman',
         lastName: 'White',
         isActive: false,
-        userColor: 'cyan',
+        userColor: '#3f51b5',
         password: '123',
     },
     
@@ -171,6 +171,28 @@ export const handlers = [
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(404, 'User not found'),
+                ctx.json({})
+            )
+        }
+    }),
+
+    rest.put('/myApi/users/:id', (req, res, ctx) => {
+        const { id } = req.params
+        const data = req.body
+        console.log('I got data: ', data)
+        const itemIdx = users.findIndex(obj => obj.id === Number(id))
+        if (itemIdx !== -1) {
+            users[itemIdx] = {...data}
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(200),
+                ctx.json(users[itemIdx])
+            )
+        }
+        else {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(404, 'Update item not found'),
                 ctx.json({})
             )
         }
