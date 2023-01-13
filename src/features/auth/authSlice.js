@@ -6,7 +6,8 @@ const userToken = localStorage.getItem('userToken')
     ? localStorage.getItem('userToken') && JSON.parse(localStorage.getItem('userToken'))
     : null
 
-const initialState =  { 
+const initialState =  {
+    //ToDo userToken as way for auto login confirmation 
     isLoggedIn: false,
     // ToDo use UserID from unserInfo
     userId: null,
@@ -46,6 +47,9 @@ export const authSlice = createSlice({
             .addCase(fetchUserInfo.fulfilled, (state, action) => {
                 state.userInfo = action.payload
             })
+            .addCase(updateUser.fulfilled, (state, action) => {
+                state.userDetails = action.payload
+            })
     }
 })
 
@@ -68,6 +72,11 @@ export const fetchUserDetails = createAsyncThunk('users/fetchUser', async (id) =
 
 export const fetchUserInfo = createAsyncThunk('users/fetchUserInfo', async (id) => {
     const response = await client.get(`/myApi/users/${id}/info`)
+    return response.data
+})
+
+export const updateUser = createAsyncThunk('users/updateUser', async (data) => {
+    const response = await client.put(`/myApi/users/${data.id}`, data)
     return response.data
 })
 
