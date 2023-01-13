@@ -1,7 +1,7 @@
 import { createEntityAdapter, createSlice, isAnyOf } from '@reduxjs/toolkit';
 import { fetchEventsByLocation, addEventData, updateEventData, deleteEvent } from '../calendar/calendarSlice';
 import { fetchUsers } from '../users/usersSlice';
-import { login, fetchUserDetails } from '../auth/authSlice';
+import { login, fetchUserDetails, updateUser } from '../auth/authSlice';
 
 
 const notificationAdapter = createEntityAdapter()
@@ -54,6 +54,8 @@ export const notificationSlice = createSlice({
                 addEventData.pending,
                 updateEventData.pending,
                 deleteEvent.pending,
+                updateUser.pending,
+
             ),
             (state, action) => {
                 state.apiStatus = 'loading'
@@ -71,6 +73,8 @@ export const notificationSlice = createSlice({
                 addEventData.fulfilled,
                 updateEventData.fulfilled,
                 deleteEvent.fulfilled,
+                updateUser.fulfilled,
+
             ),
             (state, action) => {
                 state.apiStatus = 'idle'
@@ -84,7 +88,8 @@ export const notificationSlice = createSlice({
                 fetchEventsByLocation.rejected,
                 addEventData.rejected,
                 updateEventData.rejected,
-                deleteEvent.rejected
+                deleteEvent.rejected,
+                updateUser.rejected,
             ),
             // set rejected status as 'idle' for now
             (state, action) => {
