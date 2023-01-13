@@ -26,7 +26,6 @@ const pages = [
 // ToDo hide settings if not loggedIn
 const settings = [
     { text: 'Profile', href: '/profile'},
-    { text: 'Account', href: '/account'},
     { text: 'Dashboard', href: '/dashboard'},
     { text: 'Logout', href: '/logout'},
 ]
