@@ -27,6 +27,8 @@ import Logout from './features/auth/Logout';
 import Users from './components/Users';
 import Info from './components/Info';
 import Events from './components/Events';
+import Profile from './components/Profile';
+
 import BackDropLoader from './components/BackDropLoader';
 import { fetchUserInfo } from "./features/auth/authSlice";
 
@@ -79,6 +81,7 @@ function App() {
                         <Route index element={<Home />} />
                         <Route path="/calendar" element={<MainCalendar />} />
                         <Route path="/events" element={<Events />} />
+                        <Route path="/profile" element={<Profile />} />
                     </Route>
                     
                     <Route element={
