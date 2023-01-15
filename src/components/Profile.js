@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useForm } from "react-hook-form";
+import { Controller, useController, useForm } from "react-hook-form";
 import { CirclePicker } from 'react-color';
 
 import Container from '@mui/material/Container';
@@ -15,43 +15,80 @@ import Button from "@mui/material/Button";
 
 import { updateUser } from "../features/auth/authSlice";
 
+let renderCount = 0
+
+
+function Input( {control, name, label, readOnly, id, maxLength=20 }) { 
+    const {
+        field,
+        fieldState: { invalid, isTouched, isDirty, error },
+        formState: { touchedFields, dirtyFields }
+    } = useController({
+        name,
+        control,
+        rules: { required: 'Required', maxLength: {
+            value: maxLength, 
+            message: `Too long.. Max ${maxLength}`} },
+    })
+
+    return (
+        <TextField 
+            onChange={field.onChange} // send value to hook form 
+            onBlur={field.onBlur} // notify when input is touched/blur
+            value={field.value || ''} // input value
+            name={field.name} // send down the input name
+            inputRef={field.ref} // send input ref, so we can focus on input when error appearhelperText
+            id={id}
+            label={label}
+            error={Boolean(error)}
+            helperText={error?.message}
+            InputProps={{
+                        readOnly
+                    }}
+            // InputLabelProps={{ shrink: true }}  
+        />
+    )
+}  
+
 
 function Profile() {
     const dispatch = useDispatch()
     const [user, setUser] =React.useState({})
     const { userDetails } = useSelector(state => state.auth)
-    const { register, handleSubmit, reset, clearErrors, formState: { errors } } = useForm({
-        mode: 'onChange',
+    const { register, handleSubmit, reset, setValue, formState, watch, clearErrors, control,
+        formState: { isSubmitSuccessful, errors } } = useForm({
+            // mode: 'onChange',
+            // https://stackoverflow.com/questions/62242657/how-to-change-react-hook-form-defaultvalue-with-useeffect
+            // defaultValues: useMemo(() => {
+            //     return userDetails
+            // }, [userDetails])
+            defaultValues: user,
+            values: userDetails
 
-        // https://stackoverflow.com/questions/62242657/how-to-change-react-hook-form-defaultvalue-with-useeffect
-        // defaultValues: useMemo(() => {
-        //     return userDetails
-        // }, [userDetails])
-        defaultValues: userDetails
-    });
+        });
     const [readOnly, setReadOnly] = React.useState(true)
-    const [color, setColor] = React.useState('')
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const id = open ? 'color-popover' : undefined;
 
+    const watchColor = watch("userColor", '');
+
+    // ToDo reset fields if error
+    // ToDo do I need below ????
     useEffect(() => {
-        if (userDetails) {
-            setColor(userDetails.userColor)
+        if(userDetails) {
             setUser({...userDetails})
-        }
-      }, [setColor, userDetails]);
+        } 
+    }, [userDetails]);
     
     //   https://stackoverflow.com/questions/64306943/defaultvalues-of-react-hook-form-is-not-setting-the-values-to-the-input-fields-i
+    // ToDo values reset after unsuccessful submit
     useEffect(() => {
-        reset(user)
-    }, [reset, user])
+        if (formState.isSubmitSuccessful) {
+            reset(userDetails)
+        }
+    }, [formState.isSubmitSuccessful, reset, userDetails])
 
-    const handleColorChange = (color, event) => {
-        setColor(color.hex)
-        // ToDo control by use form?
-        setUser({...user, userColor: color.hex})
-    }
 
     const handleColorChangeSubmit =() => {
         setAnchorEl(null)
@@ -70,15 +107,10 @@ function Profile() {
       setAnchorEl(null);
     }; 
 
-    const handleChange = (e) => {
-        const id = e.target.id
-        const value = e.target.value
-        clearErrors(id)
-        setUser((prev) =>({
-            ...prev,
-            [id]: value
-        }))
-    }
+
+    console.log('Renders:', renderCount++)
+
+    console.log(watch())
 
     return (
         <Container maxwidth="xs">
@@ -95,50 +127,29 @@ function Profile() {
                 noValidate
                 autoComplete="off"
             >
-                <TextField
+                <Input
+                    control={control}
+                    name='userName'
+                    label='User Name'
                     id="userName"
-                    required
-                    error={Boolean(errors.userName)}
-                    helperText={errors.userName?.message}
-                    label="Username"
-                    {...register("userName", { required: "Username Required", maxLength: 20,})}
-                    value={user.userName || ''}
-                    onChange={handleChange}
-                    variant="filled"
-                    InputProps={{
-                        readOnly
-                    }}
+                    readOnly={readOnly}
+                    maxLength={15}
                 />
-
-                <TextField
+                <Input
+                    control={control}
+                    name='firstName'
+                    label='First Name'
                     id="firstName"
-                    required
-                    error={Boolean(errors.firstName)}
-                    helperText={errors.firstName?.message}
-                    label="First name"
-                    {...register('firstName', { required: "First Name Required" })}
-                    value={user.firstName || ''}
-                    onChange={handleChange}
-                    variant="filled"
-                    InputProps={{
-                        readOnly
-                    }}
+                    readOnly={readOnly}
+                />
+                <Input
+                    control={control}
+                    name='lastName'
+                    label='Last Name'
+                    id="lastName"
+                    readOnly={readOnly}
                 />
 
-                <TextField
-                    id="lastName"
-                    error={Boolean(errors.lastName)}
-                    helperText={errors.lastName?.message}
-                    required
-                    label="Last name"
-                    {...register('lastName', { required: "Last Name Required" })}
-                    value={user.lastName || ''}
-                    onChange={handleChange}
-                    variant="filled"
-                    InputProps={{
-                        readOnly
-                    }}
-                />
 
                 <Button aria-describedby={id}
                     required
@@ -146,12 +157,12 @@ function Profile() {
                     variant="contained"  
                     sx={{
                         "&.Mui-disabled": {
-                        background: color,
+                        background: watchColor,
                         color: "#fff"
                         },
-                        backgroundColor: color,
+                        backgroundColor: watchColor,
                         "&.MuiButton-root:hover": {
-                            background: color
+                            background: watchColor
                         }
                     }}
                     onClick={handleClick}
@@ -176,11 +187,16 @@ function Profile() {
                                 Select your color
                             </Typography>
 
-                            <CirclePicker
-                                color={color}
-                                onChange={handleColorChange}
-                            />                          
-
+                            <Controller
+                                control={control}
+                                name="userColor"
+                                render={({ field: { onChange, value, name } }) => (
+                                    <CirclePicker
+                                        color={value}
+                                        onChange={(e) => setValue(name, e.hex) }
+                                    />                          
+                                )}
+                            />
                         </CardContent>
                         <CardActions sx={{ justifyContent: "center" }}>
                             <Button size="small" onClick={handleColorChangeSubmit}>
