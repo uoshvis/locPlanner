@@ -107,7 +107,8 @@ const users = [
 ]
 
 export const handlers = [
-
+    
+    // #################### Login-logout handlers #############################
 
     rest.post('/myApi/login', (req, res, ctx) => {
         const token = {}
@@ -148,6 +149,8 @@ export const handlers = [
         )
     }),
 
+    // #################### Users handlers ####################################
+
     rest.get('/myApi/users', (req, res, ctx) => {
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),
@@ -179,8 +182,8 @@ export const handlers = [
     rest.put('/myApi/users/:id', (req, res, ctx) => {
         const { id } = req.params
         const data = req.body
-        console.log('I got data: ', data)
         const itemIdx = users.findIndex(obj => obj.id === Number(id))
+        // const itemIdx = -1
         if (itemIdx !== -1) {
             users[itemIdx] = {...data}
             return res(
@@ -217,6 +220,8 @@ export const handlers = [
             )
         }
     }),
+
+    // #################### Events handlers ####################################
 
     rest.get('/myApi/events/:location', (req, res, ctx) => {
         const { location } = req.params
