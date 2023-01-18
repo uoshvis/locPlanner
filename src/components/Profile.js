@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Controller, useController, useForm } from "react-hook-form";
 import { CirclePicker } from 'react-color';
@@ -15,14 +15,11 @@ import Button from "@mui/material/Button";
 
 import { updateUser } from "../features/auth/authSlice";
 
-let renderCount = 0
-
 
 function Input( {control, name, label, readOnly, id, maxLength=20 }) { 
     const {
         field,
-        fieldState: { invalid, isTouched, isDirty, error },
-        formState: { touchedFields, dirtyFields }
+        fieldState: { error }
     } = useController({
         name,
         control,
@@ -53,42 +50,24 @@ function Input( {control, name, label, readOnly, id, maxLength=20 }) {
 
 function Profile() {
     const dispatch = useDispatch()
-    const [user, setUser] =React.useState({})
     const { userDetails } = useSelector(state => state.auth)
-    const { register, handleSubmit, reset, setValue, formState, watch, clearErrors, control,
-        formState: { isSubmitSuccessful, errors } } = useForm({
-            // mode: 'onChange',
-            // https://stackoverflow.com/questions/62242657/how-to-change-react-hook-form-defaultvalue-with-useeffect
-            // defaultValues: useMemo(() => {
-            //     return userDetails
-            // }, [userDetails])
-            defaultValues: user,
+    const { handleSubmit, reset, setValue, watch, control } = useForm({
+            defaultValues: {
+                'userName': '',
+                'firstName': '',
+                'lastName': '',
+                'userColor': ''
+            },
             values: userDetails
 
         });
+
+    const watchColor = watch("userColor", '');
     const [readOnly, setReadOnly] = React.useState(true)
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const id = open ? 'color-popover' : undefined;
-
-    const watchColor = watch("userColor", '');
-
-    // ToDo reset fields if error
-    // ToDo do I need below ????
-    useEffect(() => {
-        if(userDetails) {
-            setUser({...userDetails})
-        } 
-    }, [userDetails]);
-    
-    //   https://stackoverflow.com/questions/64306943/defaultvalues-of-react-hook-form-is-not-setting-the-values-to-the-input-fields-i
-    // ToDo values reset after unsuccessful submit
-    useEffect(() => {
-        if (formState.isSubmitSuccessful) {
-            reset(userDetails)
-        }
-    }, [formState.isSubmitSuccessful, reset, userDetails])
-
+     
 
     const handleColorChangeSubmit =() => {
         setAnchorEl(null)
@@ -96,7 +75,14 @@ function Profile() {
 
     const onSaveSubmit = (data) => {
         dispatch(updateUser(data))
-        setReadOnly(true)
+            .unwrap()
+            .then(() => {
+                reset()
+                setReadOnly(true)
+            })
+            .catch(() => {
+                reset(userDetails)
+            })
     }
 
     const handleClick = (event) => {
@@ -107,10 +93,11 @@ function Profile() {
       setAnchorEl(null);
     }; 
 
+    const handleCancel = () => {
+        reset()
+        setReadOnly(true)
+    }
 
-    console.log('Renders:', renderCount++)
-
-    console.log(watch())
 
     return (
         <Container maxwidth="xs">
@@ -210,10 +197,13 @@ function Profile() {
             
             <Button type="submit" disabled={readOnly}>Save</Button>
 
+            <Button disabled={readOnly} onClick={handleCancel}>Cancel</Button>
+
             </Box>
         
         </Container>
     );
   }
+
 
   export default Profile
