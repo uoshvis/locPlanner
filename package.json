@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
+    "@hookform/resolvers": "^2.9.10",
     "@loadable/component": "^5.15.2",
     "@mui/icons-material": "^5.10.3",
     "@mui/material": "^5.9.3",
@@ -24,7 +25,8 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "use-query-params": "^2.1.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zod": "^3.20.2"
   },
   "scripts": {
     "start": "react-scripts start",
