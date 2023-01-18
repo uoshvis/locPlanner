@@ -1,6 +1,8 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Controller, useController, useForm } from "react-hook-form";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from "zod"
 import { CirclePicker } from 'react-color';
 
 import Container from '@mui/material/Container';
@@ -16,16 +18,20 @@ import Button from "@mui/material/Button";
 import { updateUser } from "../features/auth/authSlice";
 
 
-function Input( {control, name, label, readOnly, id, maxLength=20 }) { 
+const userSchema = z.object({
+    userName: z.string().max(15).min(1, { message: 'User Name Required' }),
+    firstName: z.string().min(1, { message: 'First Name Required' }),
+    lastName: z.string().min(1, { message: 'Last Name Required' }),
+    userColor: z.string().startsWith('#').max(7),
+})
+
+function Input( {control, name, label, readOnly, id}) { 
     const {
         field,
         fieldState: { error }
     } = useController({
         name,
         control,
-        rules: { required: 'Required', maxLength: {
-            value: maxLength, 
-            message: `Too long.. Max ${maxLength}`} },
     })
 
     return (
@@ -51,15 +57,15 @@ function Input( {control, name, label, readOnly, id, maxLength=20 }) {
 function Profile() {
     const dispatch = useDispatch()
     const { userDetails } = useSelector(state => state.auth)
-    const { handleSubmit, reset, setValue, watch, control } = useForm({
-            defaultValues: {
-                'userName': '',
-                'firstName': '',
-                'lastName': '',
-                'userColor': ''
-            },
-            values: userDetails
-
+    const { handleSubmit, reset, setValue, getValues, watch, control } = useForm({
+        defaultValues: {
+            'userName': '',
+            'firstName': '',
+            'lastName': '',
+            'userColor': ''
+        },
+        values: userDetails,
+        resolver: zodResolver(userSchema),
         });
 
     const watchColor = watch("userColor", '');
@@ -73,7 +79,9 @@ function Profile() {
         setAnchorEl(null)
     }
 
-    const onSaveSubmit = (data) => {
+    const onSaveSubmit = () => {
+        const data = getValues()
+        
         dispatch(updateUser(data))
             .unwrap()
             .then(() => {
@@ -98,7 +106,6 @@ function Profile() {
         setReadOnly(true)
     }
 
-
     return (
         <Container maxwidth="xs">
             <Box
@@ -120,7 +127,6 @@ function Profile() {
                     label='User Name'
                     id="userName"
                     readOnly={readOnly}
-                    maxLength={15}
                 />
                 <Input
                     control={control}
