@@ -41,6 +41,24 @@ const items = [
         userId: 104,
         isCompleted: false,
     },
+    {   
+        id: 22,
+        start: moment().add(5, "days").toDate(),
+        end: moment().add(5, "days").add(5, "hours").toDate(),
+        title: "Sunrise 2 again",
+        location: 'loc2',
+        userId: 101,
+        isCompleted: false,
+    },
+    {   
+        id: 23,
+        start: moment().add(6, "days").toDate(),
+        end: moment().add(6, "days").add(6, "hours").toDate(),
+        title: "Happy hour",
+        location: 'loc2',
+        userId: 101,
+        isCompleted: false,
+    },
 ]
 
 const userInfo = [
