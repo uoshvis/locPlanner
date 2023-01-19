@@ -6,9 +6,11 @@ function Home() {
         <main>
           <h2>Welcome to the homepage!</h2>
           <p>You can do this, I believe in you.</p>
+
+          <>Todays review: event names: location</>
         </main>
         <nav>
-          <Link to="/calendar">View Calendar</Link>
+          <Link to="/calendar">View Full Calendar</Link>
         </nav>
       </>
     );
