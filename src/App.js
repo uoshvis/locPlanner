@@ -22,7 +22,7 @@ import Navbar from './components/Navbar'
 import Home from './components/Home'
 import NoMatch from './components/NoMatch';
 import DashboardLayout from './components/Dashboard';
-import Login from './features/auth/Login';
+import SignIn from './features/auth/SignIn';
 import Logout from './features/auth/Logout';
 import Users from './components/Users';
 import Info from './components/Info';
@@ -75,7 +75,7 @@ function App() {
 
             <Routes>
                 <Route element={<Layout />}>
-                    <Route path="/login" element={<Login />} />
+                    <Route path="/login" element={<SignIn />} />
                     <Route path="/logout" element={<Logout />} />
                     <Route element={<RequireAuth isAllowed={!!isLoggedIn} />}>
                         <Route index element={<Home />} />
