@@ -1,22 +1,29 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchEventsByLocation } from "../features/calendar/calendarSlice";
-import { filterEventsByLocation } from "../features/calendar/calendarSlice";
+import {
+    fetchEventsByLocation,
+    filterEventsByLocation,
+    setFormType,
+    selectCurrentEvent,
+    toggleShowModal
+ } from "../features/calendar/calendarSlice";
 
 import { DataGrid } from '@mui/x-data-grid/';
 import Box from "@mui/material/Box";
-
+import { EventForm } from "../features/calendar/EventForm";
  
 const Events = ({ handleUserItemClick}) => {
-    //  redux part
     const dispatch = useDispatch()
     const events = useSelector(state => filterEventsByLocation(state, 'all'))
     // ToDo filter events by user
     // ToDo userId as current user all events for administrator
     // UserId as authenticated userId
     const user = useSelector(state => state.auth.userDetails)
+    const open = useSelector(state => state.calendar.showModal)
+
     // ToDo add remove selected events
     const [selectedIds, setSelectedIds] = React.useState(new Set())
+    console.log("🚀 ~ file: Events.js:20 ~ Events ~ selectedIds", selectedIds)
 
 
     // https://stackoverflow.com/questions/67100027/dispatch-multiple-async-actions-with-redux-toolkit
@@ -38,10 +45,17 @@ const Events = ({ handleUserItemClick}) => {
         return userEvents
     }
 
-    const handleSelection = (ids) => {
-        const selectedIds = new Set(ids)
+    const handleSelection = (selection) => {
+        const selectedIds = new Set(selection)
         setSelectedIds(selectedIds)
     }
+    const handleRowDoubleClick = ({id}) => {      
+        const selectedEvent = events.find(event => event.id === id)
+        dispatch(setFormType('update'))
+        dispatch(selectCurrentEvent(selectedEvent))
+        dispatch(toggleShowModal())
+    }
+
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 20 },
@@ -75,9 +89,14 @@ const Events = ({ handleUserItemClick}) => {
                     pageSize={5}
                     rowsPerPageOptions={[5]}
                     checkboxSelection
-                    onSelectionModelChange = { handleSelection }
+                    disableSelectionOnClick
+                    onSelectionModelChange={handleSelection}                    
+                    onRowDoubleClick={handleRowDoubleClick}                    
                 />
-            </Box>    
+            </Box>
+
+            {open && <EventForm open={open}/>}
+    
         </div>
     )
 }
