@@ -82,18 +82,18 @@ function App() {
                         <Route path="/calendar" element={<MainCalendar />} />
                         <Route path="/events" element={<Events />} />
                         <Route path="/profile" element={<Profile />} />
-                    </Route>
                     
-                    <Route element={
-                                <RequireAuthorization
-                                    redirectPath="/"
-                                />}
-                    >
-                        <Route path="dashboard" element={<DashboardLayout />}>
-                            <Route path="users/*" element={<Users handleUserItemClick={()=> {console.log('clicked item')}} />}>
+                        <Route element={
+                                    <RequireAuthorization
+                                        redirectPath="/"
+                                    />}
+                        >
+                            <Route path="dashboard" element={<DashboardLayout />}>
+                                <Route path="users/*" element={<Users handleUserItemClick={()=> {console.log('clicked item')}} />}>
+                                </Route>
+                                <Route path="info" element={<Info />} />
+                                <Route path="*" element={<NoMatch />} />
                             </Route>
-                            <Route path="info" element={<Info />} />
-                            <Route path="*" element={<NoMatch />} />
                         </Route>
                     </Route>
                     <Route path="about" element={<About />} />
@@ -137,8 +137,7 @@ function RequireAuthorization({
     children }) {
         const {userInfo, isLoggedIn} = useSelector((state) => state.auth)
 
-        const isAllowed = userInfo.roles.includes('admin') && isLoggedIn
-        
+        const isAllowed = isLoggedIn && userInfo.roles.includes('admin')        
         if (!isAllowed) {
             return (
                 <div>
