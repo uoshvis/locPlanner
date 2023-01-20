@@ -65,7 +65,7 @@ const userInfo = [
     {
         id: 1,
         userId: 100,
-        roles: ['admin'],
+        roles: ['admin', 'user'],
     },
     {
         id: 2,
@@ -87,15 +87,29 @@ const userInfo = [
         userId: 104,
         roles: ['user'],
     },
+    {
+        id: 9,
+        userId: 999,
+        roles: ['superAdmin', 'admin'],
+    },
     
 ]
 
 const users = [
     {
+        id: 999,
+        userName: 'superAdmin',
+        firstName: 'Super',
+        lastName: 'Admin',
+        isActive: true,
+        userColor: '#f44336',
+        password: '123',
+    },
+    {
         id: 100,
         userName: 'admin',
-        firstName: 'Admin',
-        lastName: 'istrator',
+        firstName: 'Administrator',
+        lastName: 'Joker',
         isActive: true,
         userColor: '#f44336',
         password: '123',
