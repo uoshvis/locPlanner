@@ -40,6 +40,7 @@ export const UserSelectDropdown = ({name, control, label, setValue}) => {
                         onChange={onChange}
                         value={value}
                         disabled={usersList.length === 1}
+                        label={label}
                     >
                         {generateSingleOptions(usersList)}
                     </Select>
