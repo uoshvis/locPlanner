@@ -25,21 +25,25 @@ export const LocationInputDropDown = ({name, control, label}) => {
             );
         });
     };
-    // https://stackoverflow.com/questions/56122219/in-mui-when-do-we-use-input-vs-textfield-for-building-a-form/69416366?answertab=trending#tab-top
+
     return (
         <Controller
             control={control}
             name={name}
-            render={({ field: { onChange, value } }) => (
+            rules={{
+                required: "Please select location"
+            }}
+            render={({ field: { onChange, value, ref }, fieldState: {error}}) => (
                 <TextField
+                    onChange={onChange}
+                    value={value}
+                    ref={ref}
+                    label="Location"
                     id="outlined-select-location"
                     select
-                    label="Location"
-                    value={value}
-                    onChange={onChange}
-                    // defaultValue="EUR"
-                    // helperText="Please select location"
-                    >
+                    error={!!error}
+                    helperText={error?.message}
+                >
                     {generateSingleOptions()}
                 </TextField>
             )}
