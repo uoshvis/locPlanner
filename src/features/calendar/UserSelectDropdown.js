@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {  MenuItem, TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { useSelector } from 'react-redux';
 
@@ -30,22 +30,26 @@ export const UserSelectDropdown = ({name, control, label, setValue}) => {
     };
 
     return (
-        <FormControl fullWidth>  
-            <InputLabel>{label}</InputLabel>
-            <Controller
-                control={control}
-                name={name}
-                render={({ field: { onChange, value } }) => (
-                    <Select 
-                        onChange={onChange}
-                        value={value}
-                        disabled={usersList.length === 1}
-                        label={label}
-                    >
-                        {generateSingleOptions(usersList)}
-                    </Select>
+        <Controller
+            control={control}
+            name={name}
+            rules={{
+                required: "Please select user"
+            }}
+            render={({ field: { onChange, value, ref }, fieldState: {error}}) => (
+                <TextField
+                    onChange={onChange}
+                    value={value}
+                    ref={ref}
+                    label="User"
+                    id="outlined-select-location"
+                    select
+                    error={!!error}
+                    helperText={error?.message}
+                >
+                    {generateSingleOptions(usersList)}
+                </TextField>
             )}
         />
-        </FormControl>
     );
 };
