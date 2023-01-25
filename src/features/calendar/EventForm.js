@@ -5,10 +5,6 @@ import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
@@ -19,6 +15,11 @@ import { setNotification, clearNotification } from '../notification/notification
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckIcon from '@mui/icons-material/Check';
+import DialogContentText from '@mui/material/DialogContentText';
+import { Box, FormControl, FormGroup } from '@mui/material';
+import { Controller, useForm } from 'react-hook-form';
+import {LocationInputDropDown}  from './LocationInputDropdown';
+import { UserSelectDropdown } from './UserSelectDropdown';
 
 
 export const EventForm = (props) =>  {
@@ -26,14 +27,32 @@ export const EventForm = (props) =>  {
 
     const event = useSelector(state => state.calendar.currentItem)
     const formType = useSelector(state => state.calendar.formType)
+    const { userDetails, userInfo } = useSelector(state => state.auth)
     const users = useSelector(state => state.users)
 
-    const [formEvent, setFormEvent] = useState(event)
-    // ToDo addEvent auto select user by current user
-    const [userId, setUserId] = useState(formEvent.userId)
-    const [formIsValid, setFormIsValid] = useState(true)
-    const [errors, setErrors] = useState({})
     const [submitRequestStatus, setSubmitRequestStatus] = useState('idle')
+    const [usersList, setUsersList] = useState([])
+    const [readOnly, setReadOnly] = useState(formType === 'view'? true: false)
+
+    
+    const { handleSubmit, control, watch, setValue, getValues } = useForm({
+        defaultValues: {
+            title: '',
+            userId: '',
+            location: '',
+            start: '',
+            end: '',
+        },
+        values: event,
+    });
+
+    useEffect(() => {
+        if(userInfo.roles.includes('admin')) {
+            setUsersList(users)
+        } else {
+            setUsersList(users.filter(user=> user.id === event.userId))
+        }
+    },[ userInfo, users, setValue, event ])
 
     let submitBtnText = ''
     let submitAction = null
@@ -44,132 +63,43 @@ export const EventForm = (props) =>  {
     } else if (formType === 'update') {
         submitBtnText = 'Update'
         submitAction = updateEventData
+    } else if (formType === 'view') {
+        submitBtnText = 'View'
     }
-
-    useEffect(() => {
-        if (Object.keys(errors).length === 0 ) {
-            setFormIsValid(true)
-        } else {
-            setFormIsValid(false)
-        }
-    }, [errors])
 
     useEffect(() => {
         dispatch(clearNotification())
-    }, [formEvent, dispatch])
-
-
-    const resetFieldError = (field) => {
-        setErrors((errors) => {
-            const newErrors = {...errors}
-            delete newErrors[field]
-            return newErrors
-        })
-    }
-
-    const handleChange = (e) => {
-        const { id, value } = e.target
-        setFormEvent(formEvent => ({
-            ...formEvent,
-            [id]: value
-        }))
-        resetFieldError(id)
-    }
-
-    const handleLocationChange = (e) => {
-        const { value } = e.target
-        const key = 'location'
-        setFormEvent(formEvent => ({
-            ...formEvent,
-            [key]: value
-        }))
-        resetFieldError(key)
-    }
-
-    const handleStartChange = (data) => {
-        const key = 'start'
-        setFormEvent(formEvent => ({
-            ...formEvent,
-            [key]: data
-        }))
-        resetFieldError(key)
-    }
-
-    const handleEndChange = (data) => {
-        const key = 'end'
-        setFormEvent(formEvent => ({
-            ...formEvent,
-            [key]: data
-        }))
-        resetFieldError(key)
-    }
-
-    const handleUserChange = e => {
-        setUserId(e.target.value)
-
-        setFormEvent(formEvent => ({
-            ...formEvent, 
-            userId: e.target.value
-        }))
-    }
-
-    const validateForm = () => {
-        let fEvent = formEvent
-        let errs = {}
-        let isValid = true;
-        //Title
-        if (!fEvent["title"] || !fEvent["title"].trim()) {    
-            isValid = false
-            errs['title'] = 'Cannot be empty'
-        }
-        if (!fEvent.location || fEvent.location === 'all') {
-            isValid = false
-            errs['location'] = 'Select a location'
-        }
-        // Start & end time
-        if (!fEvent.start) {
-            isValid = false
-            errs['start'] = "Select start time"
-        }
-        if (!fEvent.end) {
-            isValid = false
-            errs['end'] = "Select start end"
-        }
-        if (fEvent.start && fEvent.end) {
-            const dStart = Date.parse(fEvent.start) 
-            const dEnd = Date.parse(fEvent.end) 
-            if (dStart >= dEnd) {
-                isValid = false
-                errs['end'] = "End date must be later"
-            } 
-          }
-        setErrors(errs)
-        return isValid
-    }
+    }, [dispatch])
 
     const handleClose = () => {
         dispatch(toggleShowModal())
     };
       
-    const handleSubmit = async () => {
-        if (validateForm() && submitRequestStatus === 'idle') {
-            try {
-                setSubmitRequestStatus('pending')
-                dispatch(toggleShowModal())
-                await dispatch(submitAction(formEvent)).unwrap()
-            } catch (err) {
-                dispatch(setNotification({message: err.message, type: 'error'}))
-            } finally {
-                setSubmitRequestStatus('idle')
-            }
-        }
+    const onSubmit =  (data, e) => {
+
+        console.log("🚀 ~ file: EventForm.js:79 ~ onSubmit ~ event", e)
+        console.log("🚀 ~ file: EventForm.js:72 ~ onSubmit ~ data", {data})
+
+        // const dataLoad = {...data, startDate: data.startDate.toDate(), endDate: data.endDate.toDate(), }
+        
+        // if (submitRequestStatus === 'idle') {
+        //     try {
+        //         setSubmitRequestStatus('pending')
+        //         dispatch(toggleShowModal())
+        //         await dispatch(submitAction(dataLoad)).unwrap()
+        //     } catch (err) {
+        //         dispatch(setNotification({message: err.message, type: 'error'}))
+        //     } finally {
+        //         setSubmitRequestStatus('idle')
+        //     }
+        // }
     }
 
     const handleDelete = async () => {
         try {
             setSubmitRequestStatus('pending')
             dispatch(toggleShowModal())
-            await dispatch(deleteEvent(formEvent)).unwrap()
+            await dispatch(deleteEvent()).unwrap()
         } catch (err) {
             dispatch(setNotification({message: err.message, type: 'error'}))
         } finally {
@@ -177,118 +107,151 @@ export const EventForm = (props) =>  {
         }
     }
 
+    console.log(watch())
+
+
+
     return (
-        <Dialog open={props.open}>
-            <DialogTitle>{submitBtnText} Event</DialogTitle>  
-            <DialogContent>
-                <LocalizationProvider dateAdapter={AdapterMoment}>
-                    <Stack spacing={3}>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="title"
-                            label="Title"
-                            type="text"
-                            fullWidth
-                            error={!formIsValid && 'title' in errors}
-                            helperText={errors.title}
-                            variant="outlined"
-                            value={formEvent.title || ''}
-                            onChange={handleChange}
-                        />
-                        
-                        <FormControl 
-                            fullWidth
-                            error={!formIsValid && 'location' in errors}
-                        >
-                            <InputLabel id="location-select-label">Location</InputLabel>
-                            <Select
-                                labelId="location-select-label"
-                                id="location"
-                                value={formEvent.location || ''}
-                                label="Location"
-                                onChange={handleLocationChange}
-                            >
-                                <MenuItem disabled value="all">
-                                    <em>Please select</em>
-                                </MenuItem>
-                                <MenuItem value={'loc1'}>Location 1</MenuItem>
-                                <MenuItem value={'loc2'}>Location 2</MenuItem>
-                            </Select>
-                        </FormControl>
+        <Dialog
+            open={props.open}
+        >
+            <Box
+                sx={{ p: 2, m: 1, border: '1px dashed grey' }}
+                component='form'
+            >
 
-                        <FormControl fullWidth>
-                            <InputLabel id="user-select-label">User</InputLabel>
-                            <Select
-                                labelId="user-select-label"
-                                id="user-select"
-                                value={userId || 'disabled'}
-                                label="User"
-                                onChange={handleUserChange}
-                            >   
-                                <MenuItem disabled value="disabled">
-                                    <em>Please select</em>
-                                </MenuItem>
-                                {users.map(user => (
-                                    <MenuItem key={user.id} value={user.id}>
-                                        {user.firstName}
-                                    </MenuItem>                                   
-                                ))}
-
-                            </Select>
-                        </FormControl>
-
-                        <DateTimePicker
-                            label="Start datetime"
-                            value={formEvent.start}
-                            onChange={handleStartChange}
-                            renderInput={(params) => 
-                                <TextField {...params}
-                                error={!formIsValid && 'start' in errors}
-                                helperText={errors.start}
-                                />
-                            }
-                        />
-                        <DateTimePicker                                             label="End datetime"
-                            value={formEvent.end}
-                            onChange={handleEndChange}
-                            renderInput={(params) => 
-                                <TextField {...params}
-                                error={!formIsValid && 'end' in errors}
-                                helperText={errors.end}
-                                />
-                            }
-                        />                     
-                    </Stack>
-                </LocalizationProvider>
-            </DialogContent>
-            <DialogActions>
-                <Button 
-                    variant='text'
-                    onClick={handleClose}
-                    startIcon={<CancelIcon />}
-                >  
-                Cancel
-                </Button>
-                {
-                    formType === 'update' &&
-                    <Button
-                        variant='text'
-                        onClick={handleDelete}
-                        startIcon={<DeleteIcon />}
-                    >
-                    Delete
-                    </Button>
-                }
-                <Button 
-                    variant='text'
-                    onClick={handleSubmit}
-                    startIcon={<CheckIcon />}
+                <DialogTitle>{submitBtnText} Event</DialogTitle>          <DialogContent sx={{ p: 2, m: 1, border: '1px dashed green' }}
                 >
-                    {submitBtnText}
-                </Button>
+                    <DialogContentText>
+                        To submit, fill in all fields.
+                    </DialogContentText>                
+                    <LocalizationProvider dateAdapter={AdapterMoment}>
+                        <Stack spacing={3}>
 
-            </DialogActions>            
+                            <Controller
+                                control={control}
+                                name="title"
+                                rules={{ required: "Please enter a title" }}
+                                render={({ field: { onChange, value, ref }, fieldState: {error}}) => (
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        id="title"
+                                        label="Title"
+                                        type="text"
+                                        fullWidth
+                                        error={!!error}
+                                        helperText={error?.message}
+                                        variant="outlined"
+                                        value={value}
+                                        onChange={onChange}
+                                        disabled={readOnly}
+                                    />
+                                )}
+                            />
+
+                            <LocationInputDropDown
+                                name='location'
+                                control={control}
+                                label='Location'
+                                disabled={readOnly}
+                            />
+
+                            <UserSelectDropdown 
+                                name='userId'
+                                control={control}
+                                usersList={usersList}
+                                label='User'
+                                disabled={readOnly}
+
+                            />
+
+                            <Controller
+                                control={control}
+                                name="start"
+                                rules={{
+                                    required: "Please select datetime"
+                                }}
+
+                                render={({field, fieldState}) => (
+                                    <DateTimePicker
+                                        {...field}
+                                        label="Start datetime"
+                                        disabled={readOnly}
+   
+                                        renderInput={(params) => 
+                                            <TextField {...params}
+                                                error={!!fieldState.error}
+                                                helperText={fieldState.error?.message}
+
+                                            />
+                                        }
+                                    />
+                                )}
+                            />
+
+                            <Controller
+                                control={control}
+                                name="end"
+                                rules={{
+                                    required: "Please select datetime",
+                                    validate: () => {
+                                        return getValues('end') > getValues('start') ? true : "End date must be later"
+                                    }
+                                }}
+                                render={({field, fieldState}) => (
+                                    <DateTimePicker
+                                        {...field}
+                                        label="End datetime"
+                                        disabled={readOnly}   
+                                        renderInput={(params) => 
+                                            <TextField {...params}
+                                                error={!!fieldState.error}
+                                                helperText={fieldState.error?.message}
+                                            />
+                                        }
+                                    />
+                                )}
+                            />                     
+
+                        </Stack>
+
+                    </LocalizationProvider>
+                </DialogContent>
+
+
+                <DialogActions>
+                    <Button 
+                        variant='text'
+                        onClick={handleClose}
+                        startIcon={<CancelIcon />}
+                    >  
+                    Cancel
+                    </Button>
+                    {
+                        formType === 'update' &&
+                        <Button
+                            variant='text'
+                            onClick={handleDelete}
+                            startIcon={<DeleteIcon />}
+                            disabled
+                        >
+                        Delete
+                        </Button>
+                    }
+                    <Button
+                        type='submit' 
+                        variant='text'
+                        onClick={handleSubmit}
+                        disabled
+                        startIcon={<CheckIcon />}
+                    >
+                        {submitBtnText}
+                    </Button>
+
+                </DialogActions>
+
+            </Box>        
         </Dialog>
     )
 }
