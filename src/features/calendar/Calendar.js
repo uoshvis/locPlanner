@@ -96,9 +96,12 @@ function MainCalendar() {
     };
 
     const handleSelectEvent = (data) => {
-        if(data.userId === userDetails.id || userInfo.roles.includes("admin")) {
+        if(data.userId === userDetails.id) {
             dispatch(setFormType('update'))
-        }else {
+        } else if (userInfo.roles.includes('admin')) {
+            dispatch(setFormType('update'))
+        }        
+        else {
             dispatch(setFormType('view'))
         }
         dispatch(selectCurrentEvent(data))
@@ -107,9 +110,10 @@ function MainCalendar() {
 
     const handleSelectSlot = (data) => {
         const {start, end} = data
+        const loc = location === 'all' ? '': location
         dispatch(setFormType('add'))
         dispatch(selectCurrentEvent({
-            location,
+            location: loc,
             userId: userDetails.id,
             start: start.toISOString(),
             end: end.toISOString()
