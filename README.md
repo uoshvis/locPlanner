@@ -10,6 +10,8 @@ The main task is to recreate the project and learn using:
 
 -   [React Router](https://reactrouter.com/)
 
+-   [React Hook Form](https://react-hook-form.com/)
+
 -   [Material UI](https://mui.com/)
 
 -   [Cypress](https://www.cypress.io/)
@@ -29,13 +31,13 @@ The main task is to recreate the project and learn using:
 -   [x] Get Events from mock API
 -   [x] Add New Event
 -   [x] Update Event
--   [ ] Delete Event
+-   [x] Delete Event
 -   [x] Form field validation
 -   [ ] Form field error notifications
 -   [ ] API status notifications
--   [ ] Users profile (select color)
--   [ ] Display Events by Users (colors)
--   [ ] Login/Logout
+-   [x] Users profile (select color)
+-   [x] Display Events by Users (colors)
+-   [x] Login/Logout
 -   [ ] Router
 -   [ ] JWT
 -   [ ] Roles
