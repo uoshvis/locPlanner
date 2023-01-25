@@ -1,23 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {  MenuItem, TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
-import { useSelector } from 'react-redux';
 
 
-export const UserSelectDropdown = ({name, control, label, setValue}) => {
-
-    const { userDetails, userInfo } = useSelector(state => state.auth)
-    const users = useSelector(state => state.users)
-    const [usersList, setUsersList] = useState([])
-    
-    useEffect(() => {
-        if(userInfo.roles.includes('admin')) {
-            setUsersList(users)
-        } else {
-            setValue('userId', userDetails.id)
-            setUsersList([userDetails])
-        }
-    },[ userDetails,userInfo, users, setValue ])
+export const UserSelectDropdown = ({name, control, label, usersList=[]}) => {
           
     const generateSingleOptions = (usersList) => {
         return usersList.map((user) => {
