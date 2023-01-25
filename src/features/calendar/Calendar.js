@@ -34,6 +34,7 @@ function MainCalendar() {
     const open = useSelector(state => state.calendar.showModal)
     const notificationIsOpen = useSelector(isNotificationOpen)
     const userColors = useSelector(state => getUserColors(state))
+    const { userDetails } = useSelector(state => state.auth)
 
 
 
@@ -105,6 +106,7 @@ function MainCalendar() {
         dispatch(setFormType('add'))
         dispatch(selectCurrentEvent({
             location,
+            userId: userDetails.id,
             start: start.toISOString(),
             end: end.toISOString()
         }))
