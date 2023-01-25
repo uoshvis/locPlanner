@@ -3,7 +3,8 @@ import {  MenuItem, TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
 
 
-export const UserSelectDropdown = ({name, control, label, usersList=[]}) => {
+export const UserSelectDropdown = ({
+    name, control, label, usersList=[], disabled}) => {
           
     const generateSingleOptions = (usersList) => {
         return usersList.map((user) => {
@@ -32,6 +33,7 @@ export const UserSelectDropdown = ({name, control, label, usersList=[]}) => {
                     select
                     error={!!error}
                     helperText={error?.message}
+                    disabled={disabled}
                 >
                     {generateSingleOptions(usersList)}
                 </TextField>

@@ -14,7 +14,7 @@ const options = [
     },  
 ];
 
-export const LocationInputDropDown = ({name, control, label}) => {
+export const LocationInputDropDown = ({name, control, label, disabled}) => {
 
     const generateSingleOptions = () => {
         return options.map((option) => {
@@ -43,6 +43,7 @@ export const LocationInputDropDown = ({name, control, label}) => {
                     select
                     error={!!error}
                     helperText={error?.message}
+                    disabled={disabled}
                 >
                     {generateSingleOptions()}
                 </TextField>
