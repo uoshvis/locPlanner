@@ -11,7 +11,7 @@ const options = [
     {
         label: "Location 2",
         value: "loc2",
-    },  
+    },
 ];
 
 export const LocationInputDropDown = ({name, control, label, disabled}) => {
@@ -38,7 +38,7 @@ export const LocationInputDropDown = ({name, control, label, disabled}) => {
                     onChange={onChange}
                     value={value}
                     ref={ref}
-                    label="Location"
+                    label={label}
                     id="outlined-select-location"
                     select
                     error={!!error}
