@@ -75,24 +75,23 @@ export const EventForm = (props) =>  {
         dispatch(toggleShowModal())
     };
       
-    const onSubmit =  (data, e) => {
+    const onSubmit =  async (data) => {
 
-        console.log("🚀 ~ file: EventForm.js:79 ~ onSubmit ~ event", e)
         console.log("🚀 ~ file: EventForm.js:72 ~ onSubmit ~ data", {data})
 
         // const dataLoad = {...data, startDate: data.startDate.toDate(), endDate: data.endDate.toDate(), }
         
-        // if (submitRequestStatus === 'idle') {
-        //     try {
-        //         setSubmitRequestStatus('pending')
-        //         dispatch(toggleShowModal())
-        //         await dispatch(submitAction(dataLoad)).unwrap()
-        //     } catch (err) {
-        //         dispatch(setNotification({message: err.message, type: 'error'}))
-        //     } finally {
-        //         setSubmitRequestStatus('idle')
-        //     }
-        // }
+        if (submitRequestStatus === 'idle') {
+            try {
+                setSubmitRequestStatus('pending')
+                dispatch(toggleShowModal())
+                await dispatch(submitAction(data)).unwrap()
+            } catch (err) {
+                dispatch(setNotification({message: err.message, type: 'error'}))
+            } finally {
+                setSubmitRequestStatus('idle')
+            }
+        }
     }
 
     const handleDelete = async () => {
