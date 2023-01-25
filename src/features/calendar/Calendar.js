@@ -96,7 +96,11 @@ function MainCalendar() {
     };
 
     const handleSelectEvent = (data) => {
-        dispatch(setFormType('update'))
+        if(data.userId === userDetails.id) {
+            dispatch(setFormType('update'))
+        }else {
+            dispatch(setFormType('view'))
+        }
         dispatch(selectCurrentEvent(data))
         dispatch(toggleShowModal())
     }
