@@ -32,7 +32,7 @@ export const EventForm = (props) =>  {
 
     const [submitRequestStatus, setSubmitRequestStatus] = useState('idle')
     const [usersList, setUsersList] = useState([])
-    const [readOnly, setReadOnly] = useState(formType === 'view'? true: false)
+    const [readOnly, setReadOnly] = useState(formType === 'view' ? true: false)
 
     
     const { handleSubmit, control, watch, setValue, getValues } = useForm({
@@ -118,6 +118,7 @@ export const EventForm = (props) =>  {
             <Box
                 sx={{ p: 2, m: 1, border: '1px dashed grey' }}
                 component='form'
+                onSubmit={handleSubmit(onSubmit)}
             >
 
                 <DialogTitle>{submitBtnText} Event</DialogTitle>          <DialogContent sx={{ p: 2, m: 1, border: '1px dashed green' }}
@@ -234,7 +235,7 @@ export const EventForm = (props) =>  {
                             variant='text'
                             onClick={handleDelete}
                             startIcon={<DeleteIcon />}
-                            disabled
+                            disabled={readOnly}
                         >
                         Delete
                         </Button>
@@ -243,7 +244,7 @@ export const EventForm = (props) =>  {
                         type='submit' 
                         variant='text'
                         onClick={handleSubmit}
-                        disabled
+                        disabled={readOnly}
                         startIcon={<CheckIcon />}
                     >
                         {submitBtnText}

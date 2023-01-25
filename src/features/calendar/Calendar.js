@@ -34,7 +34,7 @@ function MainCalendar() {
     const open = useSelector(state => state.calendar.showModal)
     const notificationIsOpen = useSelector(isNotificationOpen)
     const userColors = useSelector(state => getUserColors(state))
-    const { userDetails } = useSelector(state => state.auth)
+    const { userDetails, userInfo } = useSelector(state => state.auth)
 
 
 
@@ -96,7 +96,7 @@ function MainCalendar() {
     };
 
     const handleSelectEvent = (data) => {
-        if(data.userId === userDetails.id) {
+        if(data.userId === userDetails.id || userInfo.roles.includes("admin")) {
             dispatch(setFormType('update'))
         }else {
             dispatch(setFormType('view'))
