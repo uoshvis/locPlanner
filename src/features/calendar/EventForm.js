@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContentText from '@mui/material/DialogContentText';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -33,15 +35,18 @@ export const EventForm = (props) =>  {
     const [usersList, setUsersList] = useState([])
     const [readOnly, ] = useState(formType === 'view' ? true : false)
     
-    const { handleSubmit, control, setValue, getValues } = useForm({
-        defaultValues: {
-            title: '',
-            userId: '',
-            location: '',
-            start: '',
-            end: '',
-        },
-        values: event,
+    const defaultValues = {
+        title: '',
+        userId: '',
+        location: '',
+        start: '',
+        end: '',
+        isCompleted: false,
+    }
+
+    const { handleSubmit, control, setValue, getValues, watch } = useForm({
+        defaultValues,
+        values: {...defaultValues, ...event},
     });
 
     let submitBtnText = ''
@@ -82,7 +87,9 @@ export const EventForm = (props) =>  {
             dispatch(toggleShowModal())
         }
     }
-
+    const useWatch = watch()
+    console.log("🚀 ~ file: EventForm.js:90 ~ EventForm ~ watch", useWatch)
+    
     return (
         <Dialog
             open={props.open}
@@ -96,6 +103,7 @@ export const EventForm = (props) =>  {
                 >
                     <DialogContentText>
                         To submit, fill in all fields.
+
                     </DialogContentText>                
                     <LocalizationProvider dateAdapter={AdapterMoment}>
                         <Stack spacing={3}>
@@ -176,7 +184,28 @@ export const EventForm = (props) =>  {
                                         }
                                     />
                                 )}
-                            />                   
+                            />
+                            <Controller
+                                name="isCompleted"
+                                control={control}
+                                render={({
+                                    field: { onChange, value, name,},
+                                    formState,
+                                }) => (
+                                    <FormControlLabel 
+                                        label="Completed"
+                                        disabled={readOnly}
+                                        control={
+                                        <Checkbox
+                                            name={name}
+                                            checked={value}
+                                            onChange={onChange}
+                                            inputProps={{ 'aria-label': 'controlled' }}
+                                        />
+                                        }
+                                    />
+                                )}
+                            />         
                         </Stack>
                     </LocalizationProvider>
                 </DialogContent>
