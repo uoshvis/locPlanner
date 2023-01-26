@@ -19,8 +19,6 @@ const Events = ({ handleUserItemClick}) => {
     const open = useSelector(state => state.calendar.showModal)
     
     const [selectedIds, setSelectedIds] = React.useState(new Set())
-    console.log("🚀 ~ file: Events.js:20 ~ Events ~ selectedIds", selectedIds)
-
 
     // https://stackoverflow.com/questions/67100027/dispatch-multiple-async-actions-with-redux-toolkit
     useEffect(() => {     

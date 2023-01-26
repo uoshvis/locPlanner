@@ -89,8 +89,7 @@ function App() {
                                     />}
                         >
                             <Route path="dashboard" element={<DashboardLayout />}>
-                                <Route path="users/*" element={<Users handleUserItemClick={()=> {console.log('clicked item')}} />}>
-                                </Route>
+                                <Route path="users/*" element={<Users />}/>
                                 <Route path="info" element={<Info />} />
                                 <Route path="*" element={<NoMatch />} />
                             </Route>
