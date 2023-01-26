@@ -29,12 +29,10 @@ The main task is to recreate the project and learn using:
 -   [x] Mock REST API (Mock Service Worker)
 -   [x] Async Logic and Data Fetching in Redux
 -   [x] Get Events from mock API
--   [x] Add New Event
--   [x] Update Event
--   [x] Delete Event
+-   [x] React hook form (add/update/delete)
 -   [x] Form field validation
--   [ ] Form field error notifications
--   [ ] API status notifications
+-   [x] Form field error notifications
+-   [x] API status notifications
 -   [x] Users profile (select color)
 -   [x] Display Events by Users (colors)
 -   [x] Login/Logout
