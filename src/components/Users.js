@@ -36,10 +36,8 @@ const Users = () => {
     }, [dispatch, ])
 
     const handleRemoveUser = (userId) => {
-        // ToDo implement handleRemove user
-        console.log(users)
         navigate('/dashboard/users');
-      };
+    };
     
 
     return (

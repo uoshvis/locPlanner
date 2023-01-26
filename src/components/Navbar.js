@@ -23,7 +23,6 @@ const pages = [
     { text: 'About', href: '/about' },
   ]
 
-// ToDo hide settings if not loggedIn
 const settings = [
     { text: 'Profile', href: '/profile'},
     { text: 'Dashboard', href: '/dashboard'},

@@ -174,7 +174,7 @@ export const handlers = [
             } else {
                 return res(
                     ctx.delay(ARTIFICIAL_DELAY_MS),
-                    ctx.status(401, 'Invalid password or email'),
+                    ctx.status(401, 'Invalid userName or password'),
                     ctx.json({})
                 )
             }

@@ -7,15 +7,12 @@ const userToken = localStorage.getItem('userToken')
     : null
 
 const initialState =  {
-    //ToDo userToken as way for auto login confirmation 
     isLoggedIn: false,
-    // ToDo use UserID from unserInfo
     userId: null,
     userInfo: {},
     userDetails: {},
     userToken,
- }
-
+}
 
 export const authSlice = createSlice({
     name: 'auth',
@@ -27,7 +24,7 @@ export const authSlice = createSlice({
         builder
             .addCase(login.pending, (state, action) => {
             })
-            .addCase(login.rejected, (state, action) => { // ToDo Add reject case for invalid user
+            .addCase(login.rejected, (state, action) => {
             })
             .addCase(login.fulfilled, (state, action) => {
                 state.isLoggedIn = true

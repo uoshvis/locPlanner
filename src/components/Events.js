@@ -15,13 +15,9 @@ import { EventForm } from "../features/calendar/EventForm";
 const Events = ({ handleUserItemClick}) => {
     const dispatch = useDispatch()
     const events = useSelector(state => filterEventsByLocation(state, 'all'))
-    // ToDo filter events by user
-    // ToDo userId as current user all events for administrator
-    // UserId as authenticated userId
     const user = useSelector(state => state.auth.userDetails)
     const open = useSelector(state => state.calendar.showModal)
-
-    // ToDo add remove selected events
+    
     const [selectedIds, setSelectedIds] = React.useState(new Set())
     console.log("🚀 ~ file: Events.js:20 ~ Events ~ selectedIds", selectedIds)
 
