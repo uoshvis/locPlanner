@@ -302,6 +302,7 @@ export const handlers = [
         const { id } = req.params
         const data = req.body
         const itemIdx = items.findIndex(obj => obj.id === Number(id))
+        // const itemIdx = -1
         if (itemIdx !== -1) {
             items[itemIdx] = data
             return res(
@@ -317,7 +318,7 @@ export const handlers = [
                 ctx.json({})
             )
         }
-        }),
+    }),
 
     rest.post('/myApi/events', (req, res, ctx) => {
         const id = Number(new Date())
@@ -344,6 +345,7 @@ export const handlers = [
     rest.delete('/myApi/events/:id', (req, res, ctx) => {
         const { id } = req.params
         const itemIdx = items.findIndex(obj => obj.id === Number(id))
+        // const itemIdx = -1
         if (itemIdx !== -1) {
             items.splice(itemIdx, 1)
             return res(
@@ -359,6 +361,6 @@ export const handlers = [
                 ctx.json({})
             )
         }
-        }),
+    }),
 
 ]

@@ -6,9 +6,7 @@ import { Controller } from "react-hook-form";
 export const UserSelectDropdown = ({name, control, label, usersList, disabled}) => {
 
     const generateSingleOptions = (usersList) => {
-        console.log("🚀 ~ file: UserSelectDropdown.js:17 ~ returnusersList.map ~ user", usersList[0]+"")
-        return usersList.map((user) => {
-            
+        return usersList.map((user) => {            
             return (
                 <MenuItem key={user.id} value={user.id}>
                     { user.firstName + ' ' + user.lastName }

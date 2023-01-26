@@ -1,24 +1,23 @@
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Controller, useForm } from 'react-hook-form';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContentText from '@mui/material/DialogContentText';
 import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import TextField from '@mui/material/TextField';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import Button from '@mui/material/Button';
-import DialogActions from '@mui/material/DialogActions';
-import { useDispatch, useSelector } from 'react-redux';
-import { addEventData, updateEventData, toggleShowModal, deleteEvent } from './calendarSlice';
-import { useEffect, useState } from 'react';
-import { setNotification, clearNotification } from '../notification/notificationSlice';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckIcon from '@mui/icons-material/Check';
-import DialogContentText from '@mui/material/DialogContentText';
-import { Box, FormControl, FormGroup } from '@mui/material';
-import { Controller, useForm } from 'react-hook-form';
-import {LocationInputDropDown}  from './LocationInputDropdown';
+import { addEventData, updateEventData, toggleShowModal, deleteEvent } from './calendarSlice';
+import { LocationInputDropDown }  from './LocationInputDropdown';
 import { UserSelectDropdown } from './UserSelectDropdown';
 
 
@@ -26,16 +25,15 @@ export const EventForm = (props) =>  {
     const dispatch = useDispatch()
 
     const event = useSelector(state => state.calendar.currentItem)
-    const formType = useSelector(state => state.calendar.formType)
-    const { userDetails, userInfo } = useSelector(state => state.auth)
+    const { userInfo } = useSelector(state => state.auth)
+    const { apiStatus } = useSelector(state => state.notification)
+    const { formType } = useSelector(state => state.calendar)
     const users = useSelector(state => state.users)
 
-    const [submitRequestStatus, setSubmitRequestStatus] = useState('idle')
     const [usersList, setUsersList] = useState([])
-    const [readOnly, setReadOnly] = useState(formType === 'view' ? true: false)
-
+    const [readOnly, ] = useState(formType === 'view' ? true : false)
     
-    const { handleSubmit, control, watch, setValue, getValues } = useForm({
+    const { handleSubmit, control, setValue, getValues } = useForm({
         defaultValues: {
             title: '',
             userId: '',
@@ -45,14 +43,6 @@ export const EventForm = (props) =>  {
         },
         values: event,
     });
-
-    useEffect(() => {
-        if(userInfo.roles.includes('admin')) {
-            setUsersList(users)
-        } else {
-            setUsersList(users.filter(user=> user.id === event.userId))
-        }
-    },[ userInfo, users, setValue, event ])
 
     let submitBtnText = ''
     let submitAction = null
@@ -68,47 +58,30 @@ export const EventForm = (props) =>  {
     }
 
     useEffect(() => {
-        dispatch(clearNotification())
-    }, [dispatch])
+        if(userInfo.roles.includes('admin')) {
+            setUsersList(users)
+        } else {
+            setUsersList(users.filter(user=> user.id === event.userId))
+        }
+    },[ userInfo, users, setValue, event ])
 
     const handleClose = () => {
         dispatch(toggleShowModal())
     };
       
-    const onSubmit =  async (data) => {
-
-        console.log("🚀 ~ file: EventForm.js:72 ~ onSubmit ~ data", {data})
-
-        // const dataLoad = {...data, startDate: data.startDate.toDate(), endDate: data.endDate.toDate(), }
-        
-        if (submitRequestStatus === 'idle') {
-            try {
-                setSubmitRequestStatus('pending')
-                dispatch(toggleShowModal())
-                await dispatch(submitAction(data)).unwrap()
-            } catch (err) {
-                dispatch(setNotification({message: err.message, type: 'error'}))
-            } finally {
-                setSubmitRequestStatus('idle')
-            }
-        }
-    }
-
-    const handleDelete = async () => {
-        try {
-            setSubmitRequestStatus('pending')
+    const onSubmit = (data) => {      
+        if (apiStatus === 'idle') {
+            dispatch(submitAction(data))
             dispatch(toggleShowModal())
-            await dispatch(deleteEvent()).unwrap()
-        } catch (err) {
-            dispatch(setNotification({message: err.message, type: 'error'}))
-        } finally {
-            setSubmitRequestStatus('idle')
         }
     }
 
-    console.log(watch())
-
-
+    const handleDelete = () => {
+        if (apiStatus === 'idle') {
+            dispatch(deleteEvent(event))
+            dispatch(toggleShowModal())
+        }
+    }
 
     return (
         <Dialog
@@ -119,7 +92,6 @@ export const EventForm = (props) =>  {
                 component='form'
                 onSubmit={handleSubmit(onSubmit)}
             >
-
                 <DialogTitle>{submitBtnText} Event</DialogTitle>          <DialogContent sx={{ p: 2, m: 1, border: '1px dashed green' }}
                 >
                     <DialogContentText>
@@ -127,7 +99,6 @@ export const EventForm = (props) =>  {
                     </DialogContentText>                
                     <LocalizationProvider dateAdapter={AdapterMoment}>
                         <Stack spacing={3}>
-
                             <Controller
                                 control={control}
                                 name="title"
@@ -149,36 +120,30 @@ export const EventForm = (props) =>  {
                                     />
                                 )}
                             />
-
                             <LocationInputDropDown
                                 name='location'
                                 control={control}
                                 label='Location'
                                 disabled={readOnly}
                             />
-
                             <UserSelectDropdown 
                                 name='userId'
                                 control={control}
                                 usersList={usersList}
                                 label='User'
                                 disabled={readOnly}
-
                             />
-
                             <Controller
                                 control={control}
                                 name="start"
                                 rules={{
                                     required: "Please select datetime"
                                 }}
-
                                 render={({field, fieldState}) => (
                                     <DateTimePicker
                                         {...field}
                                         label="Start datetime"
-                                        disabled={readOnly}
-   
+                                        disabled={readOnly}   
                                         renderInput={(params) => 
                                             <TextField {...params}
                                                 error={!!fieldState.error}
@@ -189,7 +154,6 @@ export const EventForm = (props) =>  {
                                     />
                                 )}
                             />
-
                             <Controller
                                 control={control}
                                 name="end"
@@ -212,13 +176,10 @@ export const EventForm = (props) =>  {
                                         }
                                     />
                                 )}
-                            />                     
-
+                            />                   
                         </Stack>
-
                     </LocalizationProvider>
                 </DialogContent>
-
 
                 <DialogActions>
                     <Button 
@@ -226,7 +187,7 @@ export const EventForm = (props) =>  {
                         onClick={handleClose}
                         startIcon={<CancelIcon />}
                     >  
-                    Cancel
+                        Cancel
                     </Button>
                     {
                         formType === 'update' &&
@@ -239,15 +200,18 @@ export const EventForm = (props) =>  {
                         Delete
                         </Button>
                     }
-                    <Button
-                        type='submit' 
-                        variant='text'
-                        onClick={handleSubmit}
-                        disabled={readOnly}
-                        startIcon={<CheckIcon />}
-                    >
-                        {submitBtnText}
-                    </Button>
+                    { 
+                        formType !== 'view' &&
+                        <Button
+                            type='submit' 
+                            variant='text'
+                            onClick={handleSubmit}
+                            disabled={readOnly}
+                            startIcon={<CheckIcon />}
+                        >
+                            {submitBtnText}
+                        </Button>
+                    }
 
                 </DialogActions>
 
@@ -255,7 +219,6 @@ export const EventForm = (props) =>  {
         </Dialog>
     )
 }
-
 
             
             
