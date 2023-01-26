@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout } from './authSlice'
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import { logout } from './authSlice'
 
 
 const Logout = () => {
@@ -13,12 +13,11 @@ const Logout = () => {
 
     useEffect(() => {
         dispatch(logout())
-            .unwrap()
             .then(() => {
                 navigate("/", { replace: true });
             })
             .catch(() => {
-                console.log('logout err');
+                navigate("/", { replace: true });
             })
     }, [dispatch, navigate]);
   
