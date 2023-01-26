@@ -57,7 +57,7 @@ const items = [
         title: "Happy hour",
         location: 'loc2',
         userId: 101,
-        isCompleted: false,
+        isCompleted: true,
     },
 ]
 
