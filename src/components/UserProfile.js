@@ -54,7 +54,7 @@ function Input( {control, name, label, readOnly, id}) {
 }  
 
 
-function Profile() {
+function UserProfile() {
     const dispatch = useDispatch()
     const { userDetails } = useSelector(state => state.auth)
     const { handleSubmit, reset, setValue, getValues, watch, control } = useForm({
@@ -212,4 +212,4 @@ function Profile() {
   }
 
 
-  export default Profile
+  export default UserProfile

@@ -27,7 +27,7 @@ import Logout from './features/auth/Logout';
 import Users from './components/Users';
 import Info from './components/Info';
 import Events from './components/Events';
-import Profile from './components/Profile';
+import UserProfile from './components/UserProfile';
 
 import BackDropLoader from './components/BackDropLoader';
 import { fetchUserInfo } from "./features/auth/authSlice";
@@ -81,7 +81,7 @@ function App() {
                         <Route index element={<Home />} />
                         <Route path="/calendar" element={<MainCalendar />} />
                         <Route path="/events" element={<Events />} />
-                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/profile" element={<UserProfile />} />
                     
                         <Route element={
                                     <RequireAuthorization
@@ -129,6 +129,7 @@ function RequireAuth({
         }
         return children ? children : <Outlet />; // to use as wrapping component
 }
+
 
 
 function RequireAuthorization({

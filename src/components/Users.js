@@ -42,7 +42,6 @@ const Users = () => {
 
     return (
         <>
-
             <Routes>
                 <Route index element={<UserList users={users} />} />
                 <Route path=":userId" element={
@@ -51,7 +50,6 @@ const Users = () => {
             </Routes>
 
             <Outlet />
-
         </>
     )
 }
