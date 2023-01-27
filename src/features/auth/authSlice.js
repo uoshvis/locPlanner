@@ -28,8 +28,9 @@ export const authSlice = createSlice({
             })
             .addCase(login.fulfilled, (state, action) => {
                 state.isLoggedIn = true
-                state.userToken = action.payload
-                state.userId = Number(Object.keys(action.payload)[0])
+                state.userToken = action.payload.token
+                state.userId = Number(Object.keys(action.payload.token)[0])
+                state.userInfo = action.payload.userInfo
             })
             .addCase(logout.pending, (state, action) => {
             })
@@ -51,9 +52,18 @@ export const authSlice = createSlice({
 })
 
 export const login = createAsyncThunk('auth/login', async (crediantials) => {
-    const response = await client.post('/myApi/login', crediantials)
-    localStorage.setItem('userToken', JSON.stringify(response.data));
-    return response.data
+    async function loginWithUserInfo() {
+        try {
+           const loginPromise = await client.post('/myApi/login', crediantials)
+           const loginResponseData = loginPromise.data
+           const userId = Number(Object.keys(loginResponseData)[0])
+           const userInfo = await client.get(`/myApi/users/${userId}/info`)           
+           return {token: {...loginResponseData}, userInfo: {...userInfo.data}}
+        } catch {}
+    }
+    const promise = await loginWithUserInfo()
+
+    return promise
 })
 
 export const logout = createAsyncThunk('auth/logout', async (crediantials) => {
@@ -67,8 +77,13 @@ export const fetchUserDetails = createAsyncThunk('users/fetchUser', async (id) =
     return response.data
 })
 
-export const fetchUserInfo = createAsyncThunk('users/fetchUserInfo', async (id) => {
-    const response = await client.get(`/myApi/users/${id}/info`)
+export const fetchUserInfo = createAsyncThunk('users/fetchUserInfo', async (id, thunkAPI) => {
+    let userId = id
+    const {auth: {userToken}} = thunkAPI.getState()
+    if (!userId && userToken) {
+        userId = Number(Object.keys(userToken)[0])
+    }
+    const response = await client.get(`/myApi/users/${userId}/info`)
     return response.data
 })
 

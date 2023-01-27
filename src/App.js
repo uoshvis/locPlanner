@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
     Routes,
     Route,
@@ -6,7 +6,7 @@ import {
     Outlet, 
     useLocation
     } from "react-router-dom";
-import { useSelector, useDispatch} from 'react-redux';
+import { useSelector} from 'react-redux';
 import loadable from '@loadable/component';
 
 import './App.css';
@@ -28,34 +28,19 @@ import Users from './components/Users';
 import Info from './components/Info';
 import Events from './components/Events';
 import UserProfile from './components/UserProfile';
-
 import BackDropLoader from './components/BackDropLoader';
-import { fetchUserInfo } from "./features/auth/authSlice";
 
 const About = loadable(() => import('./components/About'));
 
  
-function App() {    
-    const dispatch = useDispatch()
-    
+function App() {      
+
     const notificationIsOpen = useSelector(isNotificationOpen)
     const notificationType = useSelector(getNotificationType)
     const notificationMsg = useSelector(getNotificationMsg)
     const apiStatus = useSelector(getApiStatus)
     const open = useSelector(state => state.calendar.showModal)
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
-    const userId = useSelector(state => state.auth.userId)
-
-
-    useEffect(() => {
-        const fetch = () => {
-            dispatch(fetchUserInfo(userId))
-        }
-        if (isLoggedIn) {
-            fetch()
-        }
-      }, [isLoggedIn, dispatch, userId])
-
 
     return (
         <div className="App">
@@ -135,9 +120,9 @@ function RequireAuth({
 function RequireAuthorization({
     redirectPath = '/',
     children }) {
-        const {userInfo, isLoggedIn} = useSelector((state) => state.auth)
+        const { isLoggedIn, userInfo } = useSelector((state) => state.auth)
+        const isAllowed = isLoggedIn && userInfo.roles.includes('admin')
 
-        const isAllowed = isLoggedIn && userInfo.roles.includes('admin')        
         if (!isAllowed) {
             return (
                 <div>
@@ -146,6 +131,7 @@ function RequireAuthorization({
                 </div>
             )
         }
+
         return children ? children : <Outlet />; // to use as wrapping component
 }
 
