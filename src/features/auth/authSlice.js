@@ -59,7 +59,9 @@ export const login = createAsyncThunk('auth/login', async (crediantials) => {
            const userId = Number(Object.keys(loginResponseData)[0])
            const userInfo = await client.get(`/myApi/users/${userId}/info`)           
            return {token: {...loginResponseData}, userInfo: {...userInfo.data}}
-        } catch {}
+        } catch (err) {
+            throw err
+        }
     }
     const promise = await loginWithUserInfo()
 

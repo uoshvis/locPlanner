@@ -163,7 +163,7 @@ export const handlers = [
         const password = req.body.password
         if(userName && password) {
             const user = users.find(user => user.userName === userName)
-            if (user && user.password === password) {
+            if (user && user.password === password && user.isActive) {
                 const userId = user.id
                 token[userId] = userName + '_token'
                 return res(
@@ -171,7 +171,17 @@ export const handlers = [
                     ctx.status(200),
                     ctx.json(token)
                 )
-            } else {
+            } else if (!user.isActive) {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(
+                        401, 
+                        'User account is not active. Contact Admin.'
+                    ),
+                    ctx.json({})
+                )
+            }
+            else {
                 return res(
                     ctx.delay(ARTIFICIAL_DELAY_MS),
                     ctx.status(401, 'Invalid userName or password'),
