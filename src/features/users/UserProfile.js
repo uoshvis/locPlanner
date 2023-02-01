@@ -1,22 +1,16 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Controller, useController, useForm } from "react-hook-form";
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from "zod"
-import { CirclePicker } from 'react-color';
+import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from "@mui/material/Button";
-import Input from "./formFIelds/Input";
+import Container from '@mui/material/Container'
+import Box from '@mui/material/Box'
 
-import { updateUser } from "../auth/authSlice";
-
+import Button from '@mui/material/Button'
+import Input from './formFIelds/Input'
+import ColorSelectorBtn from './formFIelds/ColorSelectorBtn'
+import { updateUser } from '../auth/authSlice'
 
 const userSchema = z.object({
     userName: z.string().max(15).min(1, { message: 'User Name Required' }),
@@ -27,32 +21,25 @@ const userSchema = z.object({
 
 function UserProfile() {
     const dispatch = useDispatch()
-    const { userDetails } = useSelector(state => state.auth)
-    const { handleSubmit, reset, setValue, getValues, watch, control } = useForm({
-        defaultValues: {
-            'userName': '',
-            'firstName': '',
-            'lastName': '',
-            'userColor': ''
-        },
-        values: userDetails,
-        resolver: zodResolver(userSchema),
-        });
+    const { userDetails } = useSelector((state) => state.auth)
+    const { handleSubmit, reset, setValue, getValues, watch, control } =
+        useForm({
+            defaultValues: {
+                userName: '',
+                firstName: '',
+                lastName: '',
+                userColor: '',
+            },
+            values: userDetails,
+            resolver: zodResolver(userSchema),
+        })
 
-    const watchColor = watch("userColor", '');
+    const watchColor = watch('userColor', '')
     const [readOnly, setReadOnly] = React.useState(true)
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const id = open ? 'color-popover' : undefined;
-     
-
-    const handleColorChangeSubmit =() => {
-        setAnchorEl(null)
-    }
 
     const onSaveSubmit = () => {
         const data = getValues()
-        
+
         dispatch(updateUser(data))
             .unwrap()
             .then(() => {
@@ -63,14 +50,6 @@ function UserProfile() {
                 reset(userDetails)
             })
     }
-
-    const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-  
-    const handleClose = () => {
-      setAnchorEl(null);
-    }; 
 
     const handleCancel = () => {
         reset()
@@ -83,7 +62,7 @@ function UserProfile() {
                 component="form"
                 onSubmit={handleSubmit(onSaveSubmit)}
                 sx={{
-                    '& > :not(style)': { m: 1, width: '25ch' },                
+                    '& > :not(style)': { m: 1, width: '25ch' },
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
@@ -94,93 +73,53 @@ function UserProfile() {
             >
                 <Input
                     control={control}
-                    name='userName'
-                    label='User Name'
+                    name="userName"
+                    label="User Name"
                     id="userName"
                     readOnly={readOnly}
                 />
                 <Input
                     control={control}
-                    name='firstName'
-                    label='First Name'
+                    name="firstName"
+                    label="First Name"
                     id="firstName"
                     readOnly={readOnly}
                 />
                 <Input
                     control={control}
-                    name='lastName'
-                    label='Last Name'
+                    name="lastName"
+                    label="Last Name"
                     id="lastName"
                     readOnly={readOnly}
                 />
 
+                <ColorSelectorBtn
+                    control={control}
+                    name="userColor"
+                    label="User Color"
+                    readOnly={readOnly}
+                    id="userColor"
+                    watchColor={watchColor}
+                    setValue={setValue}
+                />
 
-                <Button aria-describedby={id}
-                    required
-                    name="color"
-                    variant="contained"  
-                    sx={{
-                        "&.Mui-disabled": {
-                        background: watchColor,
-                        color: "#fff"
-                        },
-                        backgroundColor: watchColor,
-                        "&.MuiButton-root:hover": {
-                            background: watchColor
-                        }
-                    }}
-                    onClick={handleClick}
-                    disabled={readOnly}
-                    >
-                    Your color
+                <Button
+                    disabled={!readOnly}
+                    onClick={() => setReadOnly((prev) => !prev)}
+                >
+                    Edit
                 </Button>
 
-                <Popover
-                    id={id}
-                    open={open}
-                    anchorEl={anchorEl}
-                    onClose={handleClose}
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
-                    }}
-                >
-                    <Card sx={{ minWidth: 275 }}>
-                        <CardContent>
-                            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                Select your color
-                            </Typography>
+                <Button type="submit" disabled={readOnly}>
+                    Save
+                </Button>
 
-                            <Controller
-                                control={control}
-                                name="userColor"
-                                render={({ field: { onChange, value, name } }) => (
-                                    <CirclePicker
-                                        color={value}
-                                        onChange={(e) => setValue(name, e.hex) }
-                                    />                          
-                                )}
-                            />
-                        </CardContent>
-                        <CardActions sx={{ justifyContent: "center" }}>
-                            <Button size="small" onClick={handleColorChangeSubmit}>
-                                Ok
-                            </Button>
-                        </CardActions>
-                    </Card>
-                </Popover>    
-
-            <Button disabled={!readOnly} onClick={() => setReadOnly(prev => !prev)}>Edit</Button>
-            
-            <Button type="submit" disabled={readOnly}>Save</Button>
-
-            <Button disabled={readOnly} onClick={handleCancel}>Cancel</Button>
-
+                <Button disabled={readOnly} onClick={handleCancel}>
+                    Cancel
+                </Button>
             </Box>
-        
         </Container>
-    );
-  }
+    )
+}
 
-
-  export default UserProfile
+export default UserProfile
