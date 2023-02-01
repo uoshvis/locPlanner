@@ -8,12 +8,12 @@ import moment from "moment";
 import "moment/locale/lt";
 import styles from './Calendar.module.css'
 import { 
-    setFormType, selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation, filterEventsByLocation } from "./calendarSlice";
+    setFormType, selectCurrentEvent, toggleShowModal, updateEventData, fetchEventsByLocation, filterEventsByLocation } from "../events/eventsSlice";
 import { setNotification, 
     isNotificationOpen } from "../notification/notificationSlice";
 import { fetchUsers, getUserColors } from "../users/usersSlice";
 import LocationBtn from "./LocationBtn";
-import { EventForm } from "./EventForm";
+import { EventForm } from "../events/EventForm";
 
 
 moment.locale('lt', {

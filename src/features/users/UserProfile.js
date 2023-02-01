@@ -7,15 +7,15 @@ import { CirclePicker } from 'react-color';
 
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from "@mui/material/Button";
+import Input from "./formFIelds/Input";
 
-import { updateUser } from "../features/auth/authSlice";
+import { updateUser } from "../auth/authSlice";
 
 
 const userSchema = z.object({
@@ -24,35 +24,6 @@ const userSchema = z.object({
     lastName: z.string().min(1, { message: 'Last Name Required' }),
     userColor: z.string().startsWith('#').max(7),
 })
-
-function Input( {control, name, label, readOnly, id}) { 
-    const {
-        field,
-        fieldState: { error }
-    } = useController({
-        name,
-        control,
-    })
-
-    return (
-        <TextField 
-            onChange={field.onChange} // send value to hook form 
-            onBlur={field.onBlur} // notify when input is touched/blur
-            value={field.value || ''} // input value
-            name={field.name} // send down the input name
-            inputRef={field.ref} // send input ref, so we can focus on input when error appearhelperText
-            id={id}
-            label={label}
-            error={Boolean(error)}
-            helperText={error?.message}
-            InputProps={{
-                        readOnly
-                    }}
-            // InputLabelProps={{ shrink: true }}  
-        />
-    )
-}  
-
 
 function UserProfile() {
     const dispatch = useDispatch()

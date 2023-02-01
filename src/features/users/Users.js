@@ -5,7 +5,7 @@ import { Route, Routes, Outlet, useNavigate,
 import React from "react";
 import UserList from './UserList'
 import UserItem from './UserItem'
-import { fetchUsers } from "../features/users/usersSlice";
+import { fetchUsers } from "./usersSlice";
 import { useSelector } from "react-redux";
 
 

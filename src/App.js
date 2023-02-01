@@ -24,10 +24,10 @@ import NoMatch from './components/NoMatch';
 import DashboardLayout from './components/Dashboard';
 import SignIn from './features/auth/SignIn';
 import Logout from './features/auth/Logout';
-import Users from './components/Users';
+import Users from './features/users/Users';
 import Info from './components/Info';
 import Events from './components/Events';
-import UserProfile from './components/UserProfile';
+import UserProfile from './features/users/UserProfile';
 import BackDropLoader from './components/BackDropLoader';
 
 const About = loadable(() => import('./components/About'));

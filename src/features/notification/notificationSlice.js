@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSlice, isAnyOf } from '@reduxjs/toolkit';
-import { fetchEventsByLocation, addEventData, updateEventData, deleteEvent } from '../calendar/calendarSlice';
+import { fetchEventsByLocation, addEventData, updateEventData, deleteEvent } from '../events/eventsSlice';
 import { fetchUsers } from '../users/usersSlice';
 import { login, logout, fetchUserDetails, fetchUserInfo, updateUser } from '../auth/authSlice';
 

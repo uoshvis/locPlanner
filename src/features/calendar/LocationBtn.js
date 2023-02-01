@@ -3,7 +3,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { setCurrentLocation } from './calendarSlice'
+import { setCurrentLocation } from '../events/eventsSlice'
 
 
 function LocationBtn() {

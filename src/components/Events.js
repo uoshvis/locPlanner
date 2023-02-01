@@ -6,11 +6,11 @@ import {
     setFormType,
     selectCurrentEvent,
     toggleShowModal
- } from "../features/calendar/calendarSlice";
+ } from "../features/events/eventsSlice";
 
 import { DataGrid } from '@mui/x-data-grid/';
 import Box from "@mui/material/Box";
-import { EventForm } from "../features/calendar/EventForm";
+import { EventForm } from "../features/events/EventForm";
  
 const Events = ({ handleUserItemClick}) => {
     const dispatch = useDispatch()
