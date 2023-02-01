@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { client } from '../../mocks/client.js';
-import { jsonDateTimeConverter } from './calendarHelpers.js'
+import { jsonDateTimeConverter } from './eventsHelpers.js'
 
 const initialState = {
     items: [],
@@ -12,7 +12,7 @@ const initialState = {
 }
 
 
-export const calendarSlice = createSlice({
+export const eventsSlice = createSlice({
   name: 'calendar',
   initialState,
   reducers: {
@@ -107,9 +107,9 @@ export const {
   selectCurrentEvent,
   updateCurrentEvent,
   updateEvent, 
-} = calendarSlice.actions
+} = eventsSlice.actions
 
-export default calendarSlice.reducer
+export default eventsSlice.reducer
 
 
 export const filterEventsByLocation = (state, location) =>

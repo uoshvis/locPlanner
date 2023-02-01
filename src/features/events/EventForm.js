@@ -18,7 +18,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckIcon from '@mui/icons-material/Check';
-import { addEventData, updateEventData, toggleShowModal, deleteEvent } from './calendarSlice';
+import { addEventData, updateEventData, toggleShowModal, deleteEvent } from './eventsSlice';
 import { LocationInputDropDown }  from './LocationInputDropdown';
 import { UserSelectDropdown } from './UserSelectDropdown';
 
