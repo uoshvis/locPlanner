@@ -28,16 +28,11 @@ const UserItem = ({ handleRemoveUser }) => {
         <>
             <h2>UserId: {userId} </h2>
 
-            <Button variant="outlined" component={Link} to={'/dashboard/users'}>
-                <ArrowBackIosIcon />
-                Back to users
-            </Button>
-
             <Box
                 component="form"
                 onSubmit={handleSubmit(onSubmit)}
                 sx={{
-                    '& > :not(style)': { m: 1, width: '30%' },
+                    '& > :not(style)': { m: 1, width: '25ch' },
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
@@ -50,25 +45,21 @@ const UserItem = ({ handleRemoveUser }) => {
                 <Input control={control} name="lastName" label="Last Name" />
                 <ControlledCheckbox label="Active" />
 
-                <Box
-                    sx={{
-                        '& > :not(style)': { m: 1, width: '25ch' },
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Button variant="outlined" type="submit">
-                        Save
-                    </Button>
+                <Button variant="outlined" type="submit">
+                    Save
+                </Button>
 
-                    <Button
-                        variant="outlined"
-                        onClick={() => handleRemoveUser(userId)}
-                    >
-                        Delete
-                    </Button>
-                </Box>
+                <Button
+                    variant="outlined"
+                    onClick={() => handleRemoveUser(userId)}
+                >
+                    Delete
+                </Button>
+
+                <Button component={Link} to={'/dashboard/users'}>
+                    <ArrowBackIosIcon />
+                    Back to users
+                </Button>
             </Box>
         </>
     )
