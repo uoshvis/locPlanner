@@ -8,8 +8,8 @@ import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 
 import Button from '@mui/material/Button'
-import Input from './formFIelds/Input'
-import ColorSelectorBtn from './formFIelds/ColorSelectorBtn'
+import Input from './formFields/Input'
+import ColorSelectorBtn from './formFields/ColorSelectorBtn'
 import { updateUser } from '../auth/authSlice'
 
 const userSchema = z.object({

@@ -24,6 +24,7 @@ function Input({ control, name, label, readOnly, id }) {
             InputProps={{
                 readOnly,
             }}
+            variant="outlined"
             // InputLabelProps={{ shrink: true }}
         />
     )

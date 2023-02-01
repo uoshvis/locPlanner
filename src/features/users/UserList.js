@@ -7,7 +7,8 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import { Button } from '@mui/material'
+import Chip from '@mui/material/Chip'
+import Button from '@mui/material/Button'
 
 export default function UserList({ users = [] }) {
     const navigate = useNavigate()
@@ -33,7 +34,6 @@ export default function UserList({ users = [] }) {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Id</TableCell>
                             <TableCell align="left">User Color</TableCell>
                             <TableCell align="left">Firstname</TableCell>
                             <TableCell align="left">Lastname</TableCell>
@@ -60,11 +60,21 @@ export default function UserList({ users = [] }) {
                                     }}
                                     hover={true}
                                 >
-                                    <TableCell component="th" scope="row">
-                                        {user.id}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                        {user.userColor}
+                                    <TableCell
+                                        align="left"
+                                        component="th"
+                                        scope="row"
+                                    >
+                                        <Chip
+                                            size="small"
+                                            sx={{
+                                                bgcolor: user.userColor,
+                                                color: 'white',
+                                                width: '30%',
+                                            }}
+                                        />
+
+                                        {/* {user.userColor} */}
                                     </TableCell>
                                     <TableCell align="left">
                                         {user.firstName}
