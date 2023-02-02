@@ -230,6 +230,26 @@ export const handlers = [
         }
     }),
 
+    rest.post('/myApi/users', (req, res, ctx) => {
+        const id = Number(new Date())
+        const data = req.body
+
+        if (data.title === 'error') {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(500, 'Item not added'),
+                ctx.json({})
+            )
+        }
+        data.id = id
+        users.push(data)
+        return res(
+            ctx.delay(ARTIFICIAL_DELAY_MS),
+            ctx.status(200),
+            ctx.json(data)
+        )
+    }),
+
     rest.put('/myApi/users/:id', (req, res, ctx) => {
         const { id } = req.params
         const data = req.body

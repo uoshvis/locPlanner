@@ -13,6 +13,11 @@ export const deleteUser = createAsyncThunk('users/deleteUser', async (id) => {
     return response.data
 })
 
+export const createUser = createAsyncThunk('users/createUser', async (data) => {
+    const response = await client.post(`/myApi/users`, data)
+    return response.data
+})
+
 const usersSlice = createSlice({
     name: 'users',
     initialState,
@@ -22,6 +27,7 @@ const usersSlice = createSlice({
             .addCase(fetchUsers.fulfilled, (state, action) => {
                 return action.payload
             })
+            .addCase(createUser.fulfilled, (state, action) => {})
             .addCase(deleteUser.fulfilled, (state, action) => {})
     },
 })

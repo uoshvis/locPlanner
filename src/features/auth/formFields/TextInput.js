@@ -3,12 +3,13 @@ import { useController } from 'react-hook-form'
 
 function TextInput({
     control,
-    name,
-    label,
-    id,
+    name = '',
+    label = '',
+    id = '',
     autoComplete = '',
     type = '',
     autoFocus = false,
+    required = true,
 }) {
     const {
         field,
@@ -20,9 +21,9 @@ function TextInput({
 
     return (
         <TextField
-            margin="normal"
-            required
+            required={required}
             fullWidth
+            margin="normal"
             id={id}
             label={label}
             name={name}
