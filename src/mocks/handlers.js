@@ -1,15 +1,15 @@
 import { rest } from 'msw'
-import moment from 'moment';
+import moment from 'moment'
 
 // Add an extra delay to all endpoints, so loading spinners show up.
 const ARTIFICIAL_DELAY_MS = 1000
 
-const items = [      
+const items = [
     {
         id: 10,
         start: moment().toDate(),
-        end: moment().add(1, "hours").toDate(),
-        title: "Bird song 1",
+        end: moment().add(1, 'hours').toDate(),
+        title: 'Bird song 1',
         location: 'loc1',
         userId: 101,
         isCompleted: false,
@@ -17,44 +17,44 @@ const items = [
     {
         id: 11,
         start: moment().toDate(),
-        end: moment().add(6, "hours").toDate(),
-        title: "Full moon 1",
+        end: moment().add(6, 'hours').toDate(),
+        title: 'Full moon 1',
         location: 'loc1',
         userId: 102,
         isCompleted: true,
     },
-    {   
+    {
         id: 20,
-        start: moment().add(2, "days").toDate(),
-        end: moment().add(2, "days").add(3, "hours").toDate(),
-        title: "Sunshine 2",
+        start: moment().add(2, 'days').toDate(),
+        end: moment().add(2, 'days').add(3, 'hours').toDate(),
+        title: 'Sunshine 2',
         location: 'loc2',
         userId: 103,
         isCompleted: true,
     },
-    {   
+    {
         id: 21,
-        start: moment().add(3, "days").toDate(),
-        end: moment().add(3, "days").add(3, "hours").toDate(),
-        title: "Sunrise 2",
+        start: moment().add(3, 'days').toDate(),
+        end: moment().add(3, 'days').add(3, 'hours').toDate(),
+        title: 'Sunrise 2',
         location: 'loc2',
         userId: 104,
         isCompleted: false,
     },
-    {   
+    {
         id: 22,
-        start: moment().add(5, "days").toDate(),
-        end: moment().add(5, "days").add(5, "hours").toDate(),
-        title: "Sunrise 2 again",
+        start: moment().add(5, 'days').toDate(),
+        end: moment().add(5, 'days').add(5, 'hours').toDate(),
+        title: 'Sunrise 2 again',
         location: 'loc2',
         userId: 101,
         isCompleted: false,
     },
-    {   
+    {
         id: 23,
-        start: moment().add(6, "days").toDate(),
-        end: moment().add(6, "days").add(6, "hours").toDate(),
-        title: "Happy hour",
+        start: moment().add(6, 'days').toDate(),
+        end: moment().add(6, 'days').add(6, 'hours').toDate(),
+        title: 'Happy hour',
         location: 'loc2',
         userId: 101,
         isCompleted: true,
@@ -92,7 +92,6 @@ const userInfo = [
         userId: 999,
         roles: ['superAdmin', 'admin'],
     },
-    
 ]
 
 const users = [
@@ -150,19 +149,17 @@ const users = [
         userColor: '#3f51b5',
         password: '123',
     },
-    
 ]
 
 export const handlers = [
-    
     // #################### Login-logout handlers #############################
 
     rest.post('/myApi/login', (req, res, ctx) => {
         const token = {}
         const userName = req.body.userName
         const password = req.body.password
-        if(userName && password) {
-            const user = users.find(user => user.userName === userName)
+        if (userName && password) {
+            const user = users.find((user) => user.userName === userName)
             if (user && user.password === password && user.isActive) {
                 const userId = user.id
                 token[userId] = userName + '_token'
@@ -171,24 +168,22 @@ export const handlers = [
                     ctx.status(200),
                     ctx.json(token)
                 )
-            } else if (!user.isActive) {
+            } else if (user && !user.isActive) {
                 return res(
                     ctx.delay(ARTIFICIAL_DELAY_MS),
                     ctx.status(
-                        401, 
+                        401,
                         'User account is not active. Contact Admin.'
                     ),
                     ctx.json({})
                 )
-            }
-            else {
+            } else {
                 return res(
                     ctx.delay(ARTIFICIAL_DELAY_MS),
                     ctx.status(401, 'Invalid userName or password'),
                     ctx.json({})
                 )
             }
-
         } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
@@ -212,22 +207,21 @@ export const handlers = [
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
-            ctx.json(users),
-            )
+            ctx.json(users)
+        )
     }),
 
     rest.get('/myApi/users/:id', (req, res, ctx) => {
         const { id } = req.params
-        const user = users.find(user => user.id === Number(id))
-        
+        const user = users.find((user) => user.id === Number(id))
+
         if (user) {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(200),
-                ctx.json(user),
-                )
-        }
-        else {
+                ctx.json(user)
+            )
+        } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(404, 'User not found'),
@@ -236,20 +230,39 @@ export const handlers = [
         }
     }),
 
+    rest.post('/myApi/users', (req, res, ctx) => {
+        const id = Number(new Date())
+        const data = req.body
+
+        if (data.title === 'error') {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(500, 'Item not added'),
+                ctx.json({})
+            )
+        }
+        data.id = id
+        users.push(data)
+        return res(
+            ctx.delay(ARTIFICIAL_DELAY_MS),
+            ctx.status(200),
+            ctx.json(data)
+        )
+    }),
+
     rest.put('/myApi/users/:id', (req, res, ctx) => {
         const { id } = req.params
         const data = req.body
-        const itemIdx = users.findIndex(obj => obj.id === Number(id))
+        const itemIdx = users.findIndex((obj) => obj.id === Number(id))
         // const itemIdx = -1
         if (itemIdx !== -1) {
-            users[itemIdx] = {...data}
+            users[itemIdx] = { ...data }
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(200),
                 ctx.json(users[itemIdx])
             )
-        }
-        else {
+        } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(404, 'Update item not found'),
@@ -258,18 +271,37 @@ export const handlers = [
         }
     }),
 
+    rest.delete('/myApi/users/:id', (req, res, ctx) => {
+        const { id } = req.params
+        // const itemIdx = users.findIndex((obj) => obj.id === Number(id))
+        const itemIdx = -1
+        if (itemIdx !== -1) {
+            users.splice(itemIdx, 1)
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(200),
+                ctx.json({ id })
+            )
+        } else {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(404, 'Item not found'),
+                ctx.json({})
+            )
+        }
+    }),
+
     rest.get('/myApi/users/:id/info', (req, res, ctx) => {
         const { id } = req.params
-        const info = userInfo.find(item => item.userId === Number(id))
-        
+        const info = userInfo.find((item) => item.userId === Number(id))
+
         if (info) {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(200),
-                ctx.json(info),
-                )
-        }
-        else {
+                ctx.json(info)
+            )
+        } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(404, 'UserInfo not found'),
@@ -286,32 +318,29 @@ export const handlers = [
         const validLocation = ['all', 'loc1', 'loc2'].includes(location)
 
         if (validLocation) {
-            if(location === 'all') {
+            if (location === 'all') {
                 events = items
+            } else {
+                events = items.filter((item) => item.location === location)
             }
-            else {
-                events = items.filter(item => item.location === location)
-            }   
-        return res(
-            ctx.delay(ARTIFICIAL_DELAY_MS),
-            ctx.status(200),
-            ctx.json(events),
-            )         
-        }
-        else {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(200),
+                ctx.json(events)
+            )
+        } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(404, 'Location not found'),
                 ctx.json({})
             )
         }
-
     }),
 
     rest.put('/myApi/events/:id', (req, res, ctx) => {
         const { id } = req.params
         const data = req.body
-        const itemIdx = items.findIndex(obj => obj.id === Number(id))
+        const itemIdx = items.findIndex((obj) => obj.id === Number(id))
         // const itemIdx = -1
         if (itemIdx !== -1) {
             items[itemIdx] = data
@@ -320,8 +349,7 @@ export const handlers = [
                 ctx.status(200),
                 ctx.json(items[itemIdx])
             )
-        }
-        else {
+        } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(404, 'Update item not found'),
@@ -334,7 +362,7 @@ export const handlers = [
         const id = Number(new Date())
         const data = req.body
 
-        if(data.title === 'error') {
+        if (data.title === 'error') {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(500, 'Item not added'),
@@ -348,23 +376,21 @@ export const handlers = [
             ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
             ctx.json(data)
-            )
-        }
-    ),
+        )
+    }),
 
     rest.delete('/myApi/events/:id', (req, res, ctx) => {
         const { id } = req.params
-        const itemIdx = items.findIndex(obj => obj.id === Number(id))
+        const itemIdx = items.findIndex((obj) => obj.id === Number(id))
         // const itemIdx = -1
         if (itemIdx !== -1) {
             items.splice(itemIdx, 1)
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(200),
-                ctx.json({id})
+                ctx.json({ id })
             )
-        }
-        else {
+        } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(404, 'Item not found'),
@@ -372,5 +398,4 @@ export const handlers = [
             )
         }
     }),
-
 ]

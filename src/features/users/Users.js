@@ -1,20 +1,17 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { Route, Routes, Outlet, useNavigate,
-} from "react-router-dom";
-import React from "react";
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { Route, Routes, Outlet, useNavigate } from 'react-router-dom'
+import React from 'react'
 import UserList from './UserList'
 import UserItem from './UserItem'
-import { fetchUsers } from "./usersSlice";
-import { useSelector } from "react-redux";
-
+import { deleteUser, fetchUsers } from './usersSlice'
+import { useSelector } from 'react-redux'
 
 const Users = () => {
-    const navigate = useNavigate();
+    const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const users = useSelector(state => state.users)
-
+    const users = useSelector((state) => state.users)
 
     useEffect(() => {
         let didCancel = false
@@ -22,30 +19,33 @@ const Users = () => {
         async function dofetchUsers() {
             try {
                 await dispatch(fetchUsers()).unwrap()
-            }
-            catch {
+            } catch {
                 // error catched in reject case
                 // swallow error
             }
-            if (!didCancel) {}
+            if (!didCancel) {
+            }
         }
         dofetchUsers()
 
-        return () => {didCancel = true}
-           
-    }, [dispatch, ])
+        return () => {
+            didCancel = true
+        }
+    }, [dispatch])
 
     const handleRemoveUser = (userId) => {
-        navigate('/dashboard/users');
-    };
-    
+        dispatch(deleteUser(userId))
+            .then(() => dispatch(fetchUsers()))
+            .then(() => navigate('/dashboard/users'))
+    }
 
     return (
         <>
             <Routes>
                 <Route index element={<UserList users={users} />} />
-                <Route path=":userId" element={
-                    <UserItem handleRemoveUser={handleRemoveUser}  />}
+                <Route
+                    path=":userId"
+                    element={<UserItem handleRemoveUser={handleRemoveUser} />}
                 />
             </Routes>
 

@@ -1,80 +1,73 @@
-import React from "react";
-import {
-    Routes,
-    Route,
-    Navigate,
-    Outlet, 
-    useLocation
-    } from "react-router-dom";
-import { useSelector} from 'react-redux';
-import loadable from '@loadable/component';
+import React from 'react'
+import { Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import loadable from '@loadable/component'
 
-import './App.css';
-import MainCalendar from './features/calendar/Calendar';
-import Notification from './features/notification/Notification';
-import { 
+import './App.css'
+import MainCalendar from './features/calendar/Calendar'
+import Notification from './features/notification/Notification'
+import {
     getApiStatus,
     getNotificationType,
     isNotificationOpen,
-    getNotificationMsg
-    } from './features/notification/notificationSlice';
+    getNotificationMsg,
+} from './features/notification/notificationSlice'
 import Navbar from './components/Navbar'
 import Home from './components/Home'
-import NoMatch from './components/NoMatch';
-import DashboardLayout from './components/Dashboard';
-import SignIn from './features/auth/SignIn';
-import Logout from './features/auth/Logout';
-import Users from './features/users/Users';
-import Info from './components/Info';
-import Events from './components/Events';
-import UserProfile from './features/users/UserProfile';
-import BackDropLoader from './components/BackDropLoader';
+import NoMatch from './components/NoMatch'
+import DashboardLayout from './components/Dashboard'
+import SignIn from './features/auth/SignIn'
+import SignUp from './features/auth/SignUp'
+import Logout from './features/auth/Logout'
+import Users from './features/users/Users'
+import Info from './components/Info'
+import Events from './components/Events'
+import UserProfile from './features/users/UserProfile'
+import BackDropLoader from './components/BackDropLoader'
 
-const About = loadable(() => import('./components/About'));
+const About = loadable(() => import('./components/About'))
 
- 
-function App() {      
-
+function App() {
     const notificationIsOpen = useSelector(isNotificationOpen)
     const notificationType = useSelector(getNotificationType)
     const notificationMsg = useSelector(getNotificationMsg)
     const apiStatus = useSelector(getApiStatus)
-    const open = useSelector(state => state.calendar.showModal)
-    const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
+    const open = useSelector((state) => state.calendar.showModal)
+    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn)
 
     return (
         <div className="App">
             <React.Fragment>
-                {
-                    notificationIsOpen &&
-                    !open && 
-                    <Notification 
+                {notificationIsOpen && !open && (
+                    <Notification
                         type={notificationType}
                         message={notificationMsg}
                     />
-                }
+                )}
 
-                <BackDropLoader apiStatus={apiStatus}/>
-                            
+                <BackDropLoader apiStatus={apiStatus} />
             </React.Fragment>
 
             <Routes>
                 <Route element={<Layout />}>
                     <Route path="/login" element={<SignIn />} />
+                    <Route path="/register" element={<SignUp />} />
+
                     <Route path="/logout" element={<Logout />} />
                     <Route element={<RequireAuth isAllowed={!!isLoggedIn} />}>
                         <Route index element={<Home />} />
                         <Route path="/calendar" element={<MainCalendar />} />
                         <Route path="/events" element={<Events />} />
                         <Route path="/profile" element={<UserProfile />} />
-                    
-                        <Route element={
-                                    <RequireAuthorization
-                                        redirectPath="/"
-                                    />}
+
+                        <Route
+                            element={<RequireAuthorization redirectPath="/" />}
                         >
-                            <Route path="dashboard" element={<DashboardLayout />}>
-                                <Route path="users/*" element={<Users />}/>
+                            <Route
+                                path="dashboard"
+                                element={<DashboardLayout />}
+                            >
+                                <Route path="users/*" element={<Users />} />
                                 <Route path="info" element={<Info />} />
                                 <Route path="*" element={<NoMatch />} />
                             </Route>
@@ -85,12 +78,10 @@ function App() {
                 </Route>
             </Routes>
         </div>
-    );
+    )
 }
 
-
 function Layout() {
-
     return (
         <div>
             <Navbar />
@@ -99,40 +90,29 @@ function Layout() {
     )
 }
 
-
-function RequireAuth({
-    isAllowed,
-    redirectPath = '/login',
-    children }) {
-       // isAllowed = true  // uncomment for dev
-        let location = useLocation()     
-        if (!isAllowed) {
-            return <Navigate 
-                to={redirectPath}
-                state={{from: location}}
-                replace/>
-        }
-        return children ? children : <Outlet />; // to use as wrapping component
+function RequireAuth({ isAllowed, redirectPath = '/login', children }) {
+    // isAllowed = true  // uncomment for dev
+    let location = useLocation()
+    if (!isAllowed) {
+        return <Navigate to={redirectPath} state={{ from: location }} replace />
+    }
+    return children ? children : <Outlet /> // to use as wrapping component
 }
 
+function RequireAuthorization({ redirectPath = '/', children }) {
+    const { isLoggedIn, userInfo } = useSelector((state) => state.auth)
+    const isAllowed = isLoggedIn && userInfo.roles.includes('admin')
 
+    if (!isAllowed) {
+        return (
+            <div>
+                <h1>You dont have permissions</h1>
+                <span>Contact admin</span>
+            </div>
+        )
+    }
 
-function RequireAuthorization({
-    redirectPath = '/',
-    children }) {
-        const { isLoggedIn, userInfo } = useSelector((state) => state.auth)
-        const isAllowed = isLoggedIn && userInfo.roles.includes('admin')
-
-        if (!isAllowed) {
-            return (
-                <div>
-                    <h1>You dont have permissions</h1>
-                    <span>Contact admin</span>
-                </div>
-            )
-        }
-
-        return children ? children : <Outlet />; // to use as wrapping component
+    return children ? children : <Outlet /> // to use as wrapping component
 }
 
-export default App;
+export default App
