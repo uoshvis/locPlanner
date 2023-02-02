@@ -73,8 +73,6 @@ export default function UserList({ users = [] }) {
                                                 width: '30%',
                                             }}
                                         />
-
-                                        {/* {user.userColor} */}
                                     </TableCell>
                                     <TableCell align="left">
                                         {user.firstName}
