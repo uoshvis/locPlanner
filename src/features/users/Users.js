@@ -1,6 +1,13 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { Route, Routes, Outlet, useNavigate } from 'react-router-dom'
+import {
+    Route,
+    Routes,
+    Outlet,
+    Navigate,
+    useNavigate,
+    useLocation,
+} from 'react-router-dom'
 import React from 'react'
 import UserList from './UserList'
 import UserItem from './UserItem'
@@ -74,19 +81,38 @@ const Users = () => {
                     }
                 />
                 <Route
-                    path=":userId"
                     element={
-                        <UserItem
-                            handleRemoveUser={handleRemoveUser}
+                        <RequireSuper
                             isSuperAdminUser={isSuperAdminUser}
+                            redirectPath="/dashboard/users"
                         />
                     }
-                />
+                >
+                    <Route
+                        path=":userId"
+                        element={
+                            <UserItem
+                                handleRemoveUser={handleRemoveUser}
+                                isSuperAdminUser={isSuperAdminUser}
+                            />
+                        }
+                    />
+                </Route>
             </Routes>
 
             <Outlet />
         </>
     )
+}
+
+function RequireSuper({ redirectPath = '/', isSuperAdminUser, children }) {
+    let location = useLocation()
+
+    if (!isSuperAdminUser) {
+        return <Navigate to={redirectPath} state={{ from: location }} replace />
+    }
+
+    return children ? children : <Outlet /> // to use as wrapping component
 }
 
 export default Users
