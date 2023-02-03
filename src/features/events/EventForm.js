@@ -67,7 +67,9 @@ export const EventForm = (props) => {
     }
 
     useEffect(() => {
-        if (userDetails.roles.includes('admin')) {
+        const adminRoles = ['admin', 'superAdmin']
+
+        if (adminRoles.includes(userDetails.role)) {
             setUsersList(users)
         } else {
             setUsersList(users.filter((user) => user.id === event.userId))

@@ -91,7 +91,7 @@ const users = [
         isActive: true,
         userColor: '#f44336',
         password: '123',
-        roles: ['superAdmin', 'admin'],
+        role: 'superAdmin',
     },
     {
         id: 100,
@@ -101,7 +101,7 @@ const users = [
         isActive: true,
         userColor: '#f44336',
         password: '123',
-        roles: ['admin', 'user'],
+        role: 'admin',
     },
     {
         id: 101,
@@ -111,7 +111,7 @@ const users = [
         isActive: true,
         userColor: '#e91e63',
         password: '123',
-        roles: ['user'],
+        role: 'user',
     },
     {
         id: 102,
@@ -121,7 +121,7 @@ const users = [
         isActive: false,
         userColor: '#9c27b0',
         password: '123',
-        roles: ['user'],
+        role: 'user',
     },
     {
         id: 103,
@@ -131,7 +131,7 @@ const users = [
         isActive: true,
         userColor: '#673ab7',
         password: '123',
-        roles: ['user'],
+        role: 'user',
     },
     {
         id: 104,
@@ -141,7 +141,7 @@ const users = [
         isActive: false,
         userColor: '#3f51b5',
         password: '123',
-        roles: ['user'],
+        role: 'user',
     },
 ]
 
@@ -229,7 +229,7 @@ export const handlers = [
         const data = {
             ...req.body,
             isActive: false,
-            roles: ['user'],
+            role: 'user',
             userColor: circlePickerDefaultColors[0],
         }
         if (data.title === 'error') {
