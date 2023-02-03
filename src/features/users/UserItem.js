@@ -14,7 +14,7 @@ import Input from './formFields/Input'
 import CheckBox from './formFields/CheckBox'
 import SelectTextField from './formFields/SelectTextField'
 
-const UserItem = ({ handleRemoveUser }) => {
+const UserItem = ({ handleRemoveUser, isSuperAdminUser }) => {
     const { userId } = useParams()
     const dispatch = useDispatch()
     const users = useSelector((state) => state.users)
@@ -66,18 +66,48 @@ const UserItem = ({ handleRemoveUser }) => {
                     label="User Id"
                     defaultValue={userId}
                 />
-                <Input control={control} name="userName" label="User Name" />
-                <Input control={control} name="firstName" label="First Name" />
-                <Input control={control} name="lastName" label="Last Name" />
-                <CheckBox control={control} name="isActive" label="Active" />
-                <SelectTextField control={control} name="role" label="Role" />
+                <Input
+                    control={control}
+                    name="userName"
+                    label="User Name"
+                    readOnly={!isSuperAdminUser}
+                />
+                <Input
+                    control={control}
+                    name="firstName"
+                    label="First Name"
+                    readOnly={!isSuperAdminUser}
+                />
+                <Input
+                    control={control}
+                    name="lastName"
+                    label="Last Name"
+                    readOnly={!isSuperAdminUser}
+                />
+                <CheckBox
+                    control={control}
+                    name="isActive"
+                    label="Active"
+                    readOnly={!isSuperAdminUser}
+                />
+                <SelectTextField
+                    control={control}
+                    name="role"
+                    label="Role"
+                    readOnly={!isSuperAdminUser}
+                />
 
-                <Button variant="outlined" type="submit">
+                <Button
+                    variant="outlined"
+                    type="submit"
+                    disabled={!isSuperAdminUser}
+                >
                     Save
                 </Button>
 
                 <Button
                     variant="outlined"
+                    disabled={!isSuperAdminUser}
                     onClick={() => handleRemoveUser(userId)}
                 >
                     Delete

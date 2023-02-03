@@ -271,8 +271,8 @@ export const handlers = [
 
     rest.delete('/myApi/users/:id', (req, res, ctx) => {
         const { id } = req.params
-        // const itemIdx = users.findIndex((obj) => obj.id === Number(id))
-        const itemIdx = -1
+        const itemIdx = users.findIndex((obj) => obj.id === Number(id))
+        // const itemIdx = -1
         if (itemIdx !== -1) {
             users.splice(itemIdx, 1)
             return res(

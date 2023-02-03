@@ -6,12 +6,16 @@ import UserList from './UserList'
 import UserItem from './UserItem'
 import { deleteUser, fetchUsers } from './usersSlice'
 import { useSelector } from 'react-redux'
+import { setNotification } from '../notification/notificationSlice'
 
 const Users = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
     const users = useSelector((state) => state.users)
+    const { userDetails } = useSelector((state) => state.auth)
+
+    const isSuperAdminUser = userDetails.role === 'superAdmin'
 
     useEffect(() => {
         let didCancel = false
@@ -34,18 +38,49 @@ const Users = () => {
     }, [dispatch])
 
     const handleRemoveUser = (userId) => {
-        dispatch(deleteUser(userId))
-            .then(() => dispatch(fetchUsers()))
-            .then(() => navigate('/dashboard/users'))
+        if (Number(userDetails.id) === Number(userId)) {
+            dispatch(
+                setNotification({
+                    message: "Can't delete self User",
+                    type: 'error',
+                    open: true,
+                })
+            )
+        } else if (!isSuperAdminUser) {
+            dispatch(
+                setNotification({
+                    message: 'Only Super Admin can delete users',
+                    type: 'error',
+                    open: true,
+                })
+            )
+        } else if (isSuperAdminUser) {
+            dispatch(deleteUser(userId))
+                .then(() => dispatch(fetchUsers()))
+                .then(() => navigate('/dashboard/users'))
+        }
     }
 
     return (
         <>
             <Routes>
-                <Route index element={<UserList users={users} />} />
+                <Route
+                    index
+                    element={
+                        <UserList
+                            users={users}
+                            isSuperAdminUser={isSuperAdminUser}
+                        />
+                    }
+                />
                 <Route
                     path=":userId"
-                    element={<UserItem handleRemoveUser={handleRemoveUser} />}
+                    element={
+                        <UserItem
+                            handleRemoveUser={handleRemoveUser}
+                            isSuperAdminUser={isSuperAdminUser}
+                        />
+                    }
                 />
             </Routes>
 
