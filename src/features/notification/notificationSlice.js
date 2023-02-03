@@ -6,13 +6,7 @@ import {
     deleteEvent,
 } from '../events/eventsSlice'
 import { fetchUsers, deleteUser } from '../users/usersSlice'
-import {
-    login,
-    logout,
-    fetchUserDetails,
-    fetchUserInfo,
-    updateUser,
-} from '../auth/authSlice'
+import { login, logout, fetchUserDetails, updateUser } from '../auth/authSlice'
 
 const notificationAdapter = createEntityAdapter()
 
@@ -56,7 +50,6 @@ export const notificationSlice = createSlice({
                     logout.pending,
                     fetchUsers.pending,
                     fetchUserDetails.pending,
-                    fetchUserInfo.pending,
                     fetchEventsByLocation.pending,
                     addEventData.pending,
                     updateEventData.pending,
@@ -77,7 +70,6 @@ export const notificationSlice = createSlice({
                     logout.fulfilled,
                     fetchUsers.fulfilled,
                     fetchUserDetails.fulfilled,
-                    fetchUserInfo.fulfilled,
                     fetchEventsByLocation.fulfilled,
                     addEventData.fulfilled,
                     updateEventData.fulfilled,
@@ -95,7 +87,6 @@ export const notificationSlice = createSlice({
                     logout.rejected,
                     fetchUsers.rejected,
                     fetchUserDetails.rejected,
-                    fetchUserInfo.rejected,
                     fetchEventsByLocation.rejected,
                     addEventData.rejected,
                     updateEventData.rejected,
