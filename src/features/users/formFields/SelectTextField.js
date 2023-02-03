@@ -1,8 +1,16 @@
+import React, { useEffect, useState } from 'react'
 import { useController } from 'react-hook-form'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 
-const roles = [
+const superAdminRole = [
+    {
+        value: 'superAdmin',
+        label: 'Super Admin',
+    },
+]
+
+const userAdminRoles = [
     {
         value: 'user',
         label: 'User',
@@ -11,13 +19,11 @@ const roles = [
         value: 'admin',
         label: 'Admin',
     },
-    {
-        value: 'superAdmin',
-        label: 'Super Admin',
-    },
 ]
 
-function SelectTextField({ control, name, label, readOnly, id }) {
+function SelectTextField({ control, name, label, id, readOnly }) {
+    const [options, setOptions] = useState(userAdminRoles)
+
     const {
         field,
         fieldState: { error },
@@ -26,9 +32,16 @@ function SelectTextField({ control, name, label, readOnly, id }) {
         control,
     })
 
+    useEffect(() => {
+        if (field.value === 'superAdmin') {
+            setOptions(superAdminRole)
+        }
+    }, [field.value])
+
     return (
         <TextField
             select
+            disabled={readOnly}
             onChange={field.onChange}
             onBlur={field.onBlur}
             value={field.value || ''}
@@ -39,7 +52,7 @@ function SelectTextField({ control, name, label, readOnly, id }) {
             error={Boolean(error)}
             helperText={error?.message}
         >
-            {roles.map((option) => (
+            {options.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                     {option.label}
                 </MenuItem>
