@@ -4,6 +4,27 @@ import moment from 'moment'
 // Add an extra delay to all endpoints, so loading spinners show up.
 const ARTIFICIAL_DELAY_MS = 1000
 
+const circlePickerDefaultColors = [
+    '#f44336',
+    '#e91e63',
+    '#9c27b0',
+    '#673ab7',
+    '#3f51b5',
+    '#2196f3',
+    '#03a9f4',
+    '#00bcd4',
+    '#009688',
+    '#4caf50',
+    '#8bc34a',
+    '#cddc39',
+    '#ffeb3b',
+    '#ffc107',
+    '#ff9800',
+    '#ff5722',
+    '#795548',
+    '#607d8b',
+]
+
 const items = [
     {
         id: 10,
@@ -205,7 +226,12 @@ export const handlers = [
 
     rest.post('/myApi/users', (req, res, ctx) => {
         const id = Number(new Date())
-        const data = { ...req.body, roles: ['user'] }
+        const data = {
+            ...req.body,
+            isActive: false,
+            roles: ['user'],
+            userColor: circlePickerDefaultColors[0],
+        }
         if (data.title === 'error') {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
