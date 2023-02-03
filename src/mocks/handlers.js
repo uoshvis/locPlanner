@@ -205,8 +205,7 @@ export const handlers = [
 
     rest.post('/myApi/users', (req, res, ctx) => {
         const id = Number(new Date())
-        const data = req.body
-
+        const data = { ...req.body, roles: ['user'] }
         if (data.title === 'error') {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
