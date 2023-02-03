@@ -61,39 +61,6 @@ const items = [
     },
 ]
 
-const userInfo = [
-    {
-        id: 1,
-        userId: 100,
-        roles: ['admin', 'user'],
-    },
-    {
-        id: 2,
-        userId: 101,
-        roles: ['user'],
-    },
-    {
-        id: 3,
-        userId: 102,
-        roles: ['user'],
-    },
-    {
-        id: 4,
-        userId: 103,
-        roles: ['user'],
-    },
-    {
-        id: 5,
-        userId: 104,
-        roles: ['user'],
-    },
-    {
-        id: 9,
-        userId: 999,
-        roles: ['superAdmin', 'admin'],
-    },
-]
-
 const users = [
     {
         id: 999,
@@ -103,6 +70,7 @@ const users = [
         isActive: true,
         userColor: '#f44336',
         password: '123',
+        roles: ['superAdmin', 'admin'],
     },
     {
         id: 100,
@@ -112,6 +80,7 @@ const users = [
         isActive: true,
         userColor: '#f44336',
         password: '123',
+        roles: ['admin', 'user'],
     },
     {
         id: 101,
@@ -121,6 +90,7 @@ const users = [
         isActive: true,
         userColor: '#e91e63',
         password: '123',
+        roles: ['user'],
     },
     {
         id: 102,
@@ -130,6 +100,7 @@ const users = [
         isActive: false,
         userColor: '#9c27b0',
         password: '123',
+        roles: ['user'],
     },
     {
         id: 103,
@@ -139,6 +110,7 @@ const users = [
         isActive: true,
         userColor: '#673ab7',
         password: '123',
+        roles: ['user'],
     },
     {
         id: 104,
@@ -148,6 +120,7 @@ const users = [
         isActive: false,
         userColor: '#3f51b5',
         password: '123',
+        roles: ['user'],
     },
 ]
 
@@ -286,25 +259,6 @@ export const handlers = [
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(404, 'Item not found'),
-                ctx.json({})
-            )
-        }
-    }),
-
-    rest.get('/myApi/users/:id/info', (req, res, ctx) => {
-        const { id } = req.params
-        const info = userInfo.find((item) => item.userId === Number(id))
-
-        if (info) {
-            return res(
-                ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(200),
-                ctx.json(info)
-            )
-        } else {
-            return res(
-                ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(404, 'UserInfo not found'),
                 ctx.json({})
             )
         }
