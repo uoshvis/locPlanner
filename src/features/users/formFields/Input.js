@@ -21,10 +21,8 @@ function Input({ control, name, label, readOnly, id }) {
             label={label}
             error={Boolean(error)}
             helperText={error?.message}
-            InputProps={{
-                readOnly,
-            }}
             variant="outlined"
+            disabled={readOnly}
             // InputLabelProps={{ shrink: true }}
         />
     )
