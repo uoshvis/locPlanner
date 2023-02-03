@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
@@ -15,7 +15,6 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
-import { fetchUserDetails } from '../features/auth/authSlice'
 
 const pages = [
     { text: 'Calendar', href: '/calendar' },
@@ -29,19 +28,10 @@ const settings = [
     { text: 'Logout', href: '/logout' },
 ]
 const ResponsiveAppBar = () => {
-    const dispatch = useDispatch()
-    const { isLoggedIn, userId, userDetails } = useSelector(
-        (state) => state.auth
-    )
+    const { isLoggedIn, userDetails } = useSelector((state) => state.auth)
 
     const [anchorElNav, setAnchorElNav] = React.useState(null)
     const [anchorElUser, setAnchorElUser] = React.useState(null)
-
-    useEffect(() => {
-        if (isLoggedIn) {
-            dispatch(fetchUserDetails(userId))
-        }
-    }, [isLoggedIn, userId, dispatch])
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget)
