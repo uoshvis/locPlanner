@@ -38,6 +38,7 @@ export default function UserList({ users = [] }) {
                             <TableCell align="left">Firstname</TableCell>
                             <TableCell align="left">Lastname</TableCell>
                             <TableCell align="left">UserName</TableCell>
+                            <TableCell align="left">Role</TableCell>
                             <TableCell align="left">Active</TableCell>
                             <TableCell align="left"></TableCell>
                         </TableRow>
@@ -82,6 +83,9 @@ export default function UserList({ users = [] }) {
                                     </TableCell>
                                     <TableCell align="left">
                                         {user.userName}
+                                    </TableCell>
+                                    <TableCell align="left">
+                                        {user.role}
                                     </TableCell>
                                     <TableCell align="left">
                                         {user.isActive ? ' Yes' : 'No'}
