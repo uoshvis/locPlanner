@@ -24,8 +24,8 @@ import {
     toggleShowModal,
     deleteEvent,
 } from './eventsSlice'
-import { LocationInputDropDown } from './LocationInputDropdown'
-import { UserSelectDropdown } from './UserSelectDropdown'
+import { LocationInputDropDown } from './formFields/LocationInputDropdown'
+import { UserSelectDropdown } from './formFields/UserSelectDropdown'
 
 export const EventForm = (props) => {
     const dispatch = useDispatch()
