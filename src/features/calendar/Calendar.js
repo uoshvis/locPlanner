@@ -43,6 +43,7 @@ function MainCalendar() {
     const notificationIsOpen = useSelector(isNotificationOpen)
     const userColors = useSelector((state) => getUserColors(state))
     const { userDetails } = useSelector((state) => state.auth)
+    const adminRoles = ['admin', 'superAdmin']
 
     useEffect(() => {
         // https://github.com/facebook/react/issues/14326
@@ -107,7 +108,7 @@ function MainCalendar() {
     const handleSelectEvent = (data) => {
         if (data.userId === userDetails.id) {
             dispatch(setFormType('update'))
-        } else if (userDetails.roles.includes('admin')) {
+        } else if (adminRoles.includes(userDetails.role)) {
             dispatch(setFormType('update'))
         } else {
             dispatch(setFormType('view'))

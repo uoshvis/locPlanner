@@ -21,7 +21,7 @@ import SignUp from './features/auth/SignUp'
 import Logout from './features/auth/Logout'
 import Users from './features/users/Users'
 import Info from './components/Info'
-import Events from './components/Events'
+import Events from './features/events/Events'
 import UserProfile from './features/users/UserProfile'
 import BackDropLoader from './components/BackDropLoader'
 
@@ -100,8 +100,14 @@ function RequireAuth({ isAllowed, redirectPath = '/login', children }) {
 }
 
 function RequireAuthorization({ redirectPath = '/', children }) {
-    const { isLoggedIn, userDetails } = useSelector((state) => state.auth)
-    const isAllowed = isLoggedIn && userDetails.roles.includes('admin')
+    const adminRoles = ['admin', 'superAdmin']
+
+    const {
+        isLoggedIn,
+        userDetails: { role },
+    } = useSelector((state) => state.auth)
+
+    const isAllowed = isLoggedIn && adminRoles.includes(role)
 
     if (!isAllowed) {
         return (

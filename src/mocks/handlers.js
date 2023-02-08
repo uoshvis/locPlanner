@@ -4,6 +4,27 @@ import moment from 'moment'
 // Add an extra delay to all endpoints, so loading spinners show up.
 const ARTIFICIAL_DELAY_MS = 1000
 
+const circlePickerDefaultColors = [
+    '#f44336',
+    '#e91e63',
+    '#9c27b0',
+    '#673ab7',
+    '#3f51b5',
+    '#2196f3',
+    '#03a9f4',
+    '#00bcd4',
+    '#009688',
+    '#4caf50',
+    '#8bc34a',
+    '#cddc39',
+    '#ffeb3b',
+    '#ffc107',
+    '#ff9800',
+    '#ff5722',
+    '#795548',
+    '#607d8b',
+]
+
 const items = [
     {
         id: 10,
@@ -70,7 +91,7 @@ const users = [
         isActive: true,
         userColor: '#f44336',
         password: '123',
-        roles: ['superAdmin', 'admin'],
+        role: 'superAdmin',
     },
     {
         id: 100,
@@ -80,7 +101,7 @@ const users = [
         isActive: true,
         userColor: '#f44336',
         password: '123',
-        roles: ['admin', 'user'],
+        role: 'admin',
     },
     {
         id: 101,
@@ -90,7 +111,7 @@ const users = [
         isActive: true,
         userColor: '#e91e63',
         password: '123',
-        roles: ['user'],
+        role: 'user',
     },
     {
         id: 102,
@@ -100,7 +121,7 @@ const users = [
         isActive: false,
         userColor: '#9c27b0',
         password: '123',
-        roles: ['user'],
+        role: 'user',
     },
     {
         id: 103,
@@ -110,7 +131,7 @@ const users = [
         isActive: true,
         userColor: '#673ab7',
         password: '123',
-        roles: ['user'],
+        role: 'user',
     },
     {
         id: 104,
@@ -120,7 +141,7 @@ const users = [
         isActive: false,
         userColor: '#3f51b5',
         password: '123',
-        roles: ['user'],
+        role: 'user',
     },
 ]
 
@@ -205,7 +226,12 @@ export const handlers = [
 
     rest.post('/myApi/users', (req, res, ctx) => {
         const id = Number(new Date())
-        const data = { ...req.body, roles: ['user'] }
+        const data = {
+            ...req.body,
+            isActive: false,
+            role: 'user',
+            userColor: circlePickerDefaultColors[0],
+        }
         if (data.title === 'error') {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
@@ -245,8 +271,8 @@ export const handlers = [
 
     rest.delete('/myApi/users/:id', (req, res, ctx) => {
         const { id } = req.params
-        // const itemIdx = users.findIndex((obj) => obj.id === Number(id))
-        const itemIdx = -1
+        const itemIdx = users.findIndex((obj) => obj.id === Number(id))
+        // const itemIdx = -1
         if (itemIdx !== -1) {
             users.splice(itemIdx, 1)
             return res(
@@ -348,6 +374,31 @@ export const handlers = [
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(404, 'Item not found'),
                 ctx.json({})
+            )
+        }
+    }),
+    rest.delete('/myApi/events', (req, res, ctx) => {
+        const data = req.body
+        const idsArray = data.split(';')
+        const itemsIdxsToDelete = []
+        for (const id of idsArray) {
+            let itemIdx = items.findIndex((obj) => obj.id === Number(id))
+
+            if (itemIdx === -1) {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(404, 'One of item was not found'),
+                    ctx.json({})
+                )
+            }
+            itemsIdxsToDelete.push(itemIdx)
+        }
+        if (itemsIdxsToDelete.length === idsArray.length) {
+            itemsIdxsToDelete.forEach((idx) => items.splice(idx, 1))
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(200),
+                ctx.json({ ids: data })
             )
         }
     }),

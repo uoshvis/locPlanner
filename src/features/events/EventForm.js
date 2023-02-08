@@ -24,8 +24,8 @@ import {
     toggleShowModal,
     deleteEvent,
 } from './eventsSlice'
-import { LocationInputDropDown } from './LocationInputDropdown'
-import { UserSelectDropdown } from './UserSelectDropdown'
+import { LocationInputDropDown } from './formFields/LocationInputDropdown'
+import { UserSelectDropdown } from './formFields/UserSelectDropdown'
 
 export const EventForm = (props) => {
     const dispatch = useDispatch()
@@ -67,7 +67,9 @@ export const EventForm = (props) => {
     }
 
     useEffect(() => {
-        if (userDetails.roles.includes('admin')) {
+        const adminRoles = ['admin', 'superAdmin']
+
+        if (adminRoles.includes(userDetails.role)) {
             setUsersList(users)
         } else {
             setUsersList(users.filter((user) => user.id === event.userId))
