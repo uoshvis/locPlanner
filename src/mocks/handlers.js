@@ -377,4 +377,29 @@ export const handlers = [
             )
         }
     }),
+    rest.delete('/myApi/events', (req, res, ctx) => {
+        const data = req.body
+        const idsArray = data.split(';')
+        const itemsIdxsToDelete = []
+        for (const id of idsArray) {
+            let itemIdx = items.findIndex((obj) => obj.id === Number(id))
+
+            if (itemIdx === -1) {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(404, 'One of item was not found'),
+                    ctx.json({})
+                )
+            }
+            itemsIdxsToDelete.push(itemIdx)
+        }
+        if (itemsIdxsToDelete.length === idsArray.length) {
+            itemsIdxsToDelete.forEach((idx) => items.splice(idx, 1))
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(200),
+                ctx.json({ ids: data })
+            )
+        }
+    }),
 ]
