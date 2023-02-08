@@ -4,6 +4,7 @@ import {
     addEventData,
     updateEventData,
     deleteEvent,
+    deleteEvents,
 } from '../events/eventsSlice'
 import { fetchUsers, deleteUser } from '../users/usersSlice'
 import { login, logout, fetchUserDetails, updateUser } from '../auth/authSlice'
@@ -55,7 +56,8 @@ export const notificationSlice = createSlice({
                     updateEventData.pending,
                     deleteEvent.pending,
                     updateUser.pending,
-                    deleteUser.pending
+                    deleteUser.pending,
+                    deleteEvents.pending
                 ),
                 (state, action) => {
                     state.apiStatus = 'loading'
@@ -75,7 +77,8 @@ export const notificationSlice = createSlice({
                     updateEventData.fulfilled,
                     deleteEvent.fulfilled,
                     deleteUser.fulfilled,
-                    updateUser.fulfilled
+                    updateUser.fulfilled,
+                    deleteEvents.fulfilled
                 ),
                 (state, action) => {
                     state.apiStatus = 'idle'
@@ -92,7 +95,8 @@ export const notificationSlice = createSlice({
                     updateEventData.rejected,
                     deleteEvent.rejected,
                     deleteUser.rejected,
-                    updateUser.rejected
+                    updateUser.rejected,
+                    deleteEvents.rejected
                 ),
                 // set rejected status as 'idle' for now
                 (state, action) => {

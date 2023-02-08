@@ -1,24 +1,74 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import {
+    DataGrid,
+    gridPageCountSelector,
+    gridPageSelector,
+    useGridApiContext,
+    useGridSelector,
+    selectedGridRowsCountSelector,
+} from '@mui/x-data-grid'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Pagination from '@mui/material/Pagination'
+import Grid from '@mui/material/Grid'
 import {
     fetchEventsByLocation,
     filterEventsByLocation,
     setFormType,
     selectCurrentEvent,
     toggleShowModal,
+    deleteEvents,
 } from './eventsSlice'
-
-import { DataGrid } from '@mui/x-data-grid/'
-import Box from '@mui/material/Box'
 import { EventForm } from './EventForm'
 
-const Events = ({ handleUserItemClick }) => {
+function CustomFooterComponent({ handleDeleteEvents }) {
+    const apiRef = useGridApiContext()
+    const page = useGridSelector(apiRef, gridPageSelector)
+    const pageCount = useGridSelector(apiRef, gridPageCountSelector)
+    const selectedCount = useGridSelector(apiRef, selectedGridRowsCountSelector)
+
+    return (
+        <Box sx={{ p: 1 }}>
+            <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+            >
+                {
+                    <Box sx={{ width: 150, p: 0 }}>
+                        {selectedCount > 0
+                            ? `${selectedCount} events selected`
+                            : ''}
+                    </Box>
+                }
+                <Button
+                    variant="contained"
+                    onClick={handleDeleteEvents}
+                    disabled={selectedCount === 0}
+                >
+                    Delete
+                </Button>
+                <Pagination
+                    color="primary"
+                    count={pageCount}
+                    page={page + 1}
+                    onChange={(event, value) =>
+                        apiRef.current.setPage(value - 1)
+                    }
+                />
+            </Grid>
+        </Box>
+    )
+}
+
+const Events = () => {
     const dispatch = useDispatch()
     const events = useSelector((state) => filterEventsByLocation(state, 'all'))
     const user = useSelector((state) => state.auth.userDetails)
     const open = useSelector((state) => state.calendar.showModal)
-
-    const [selectedIds, setSelectedIds] = React.useState(new Set())
+    const [selectedIds, setSelectedIds] = useState(new Set())
 
     // https://stackoverflow.com/questions/67100027/dispatch-multiple-async-actions-with-redux-toolkit
     useEffect(() => {
@@ -46,6 +96,12 @@ const Events = ({ handleUserItemClick }) => {
         dispatch(setFormType('update'))
         dispatch(selectCurrentEvent(selectedEvent))
         dispatch(toggleShowModal())
+    }
+    const handleDeleteEvents = () => {
+        const idsString = [...selectedIds].join(';')
+        dispatch(deleteEvents(idsString)).then(() => {
+            setSelectedIds([])
+        })
     }
 
     const columns = [
@@ -76,17 +132,24 @@ const Events = ({ handleUserItemClick }) => {
         <div>
             <h2>My Events</h2>
 
-            <Box sx={{ height: 400 }}>
+            <Box sx={{ height: 400, width: '100%' }}>
                 <DataGrid
                     sx={{ width: '80%', margin: 'auto' }}
                     rows={createData(events, user)}
                     columns={columns}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
+                    pagination
                     checkboxSelection
                     disableSelectionOnClick
                     onSelectionModelChange={handleSelection}
                     onRowDoubleClick={handleRowDoubleClick}
+                    components={{
+                        Footer: CustomFooterComponent,
+                    }}
+                    componentsProps={{
+                        footer: { handleDeleteEvents },
+                    }}
                 />
             </Box>
 
