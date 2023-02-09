@@ -110,21 +110,21 @@ const Events = () => {
         {
             field: 'start',
             headerName: 'Start Date',
-            width: 300,
+            width: 200,
             type: 'dateTime',
         },
-        { field: 'location', headerName: 'Location', width: 100 },
+        { field: 'location', headerName: 'Location', width: 80 },
         {
             field: 'userFullName',
             headerName: 'User',
-            width: 200,
+            width: 150,
         },
         {
             field: 'isCompleted',
             headerName: 'Completed',
             type: 'boolean',
             description: 'This column has a value getter and is not sortable.',
-            width: 100,
+            width: 90,
         },
     ]
 
@@ -132,9 +132,8 @@ const Events = () => {
         <div>
             <h2>My Events</h2>
 
-            <Box sx={{ height: 400, width: '100%' }}>
+            <Box sx={{ height: 700, width: 840, m: 'auto' }}>
                 <DataGrid
-                    sx={{ width: '80%', margin: 'auto' }}
                     rows={createData(events, user)}
                     columns={columns}
                     pageSize={5}

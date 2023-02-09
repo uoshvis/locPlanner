@@ -22,6 +22,7 @@ import Logout from './features/auth/Logout'
 import Users from './features/users/Users'
 import Info from './components/Info'
 import Events from './features/events/Events'
+import Meetings from './features/meetings/Meetings'
 import UserProfile from './features/users/UserProfile'
 import BackDropLoader from './components/BackDropLoader'
 
@@ -58,6 +59,8 @@ function App() {
                         <Route index element={<Home />} />
                         <Route path="/calendar" element={<MainCalendar />} />
                         <Route path="/events" element={<Events />} />
+                        <Route path="/meetings" element={<Meetings />} />
+
                         <Route path="/profile" element={<UserProfile />} />
 
                         <Route

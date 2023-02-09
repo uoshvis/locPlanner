@@ -19,6 +19,7 @@ import AdbIcon from '@mui/icons-material/Adb'
 const pages = [
     { text: 'Calendar', href: '/calendar' },
     { text: 'Events', href: '/events' },
+    { text: 'Meetings', href: '/meetings' },
     { text: 'About', href: '/about' },
 ]
 

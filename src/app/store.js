@@ -1,14 +1,15 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import calendarReducer from '../features/events/eventsSlice';
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import calendarReducer from '../features/events/eventsSlice'
 import notificationReducer from '../features/notification/notificationSlice'
 import usersReducer from '../features/users/usersSlice'
+import meetingsReducer from '../features/meetings/meetingsSlice'
 import authReducer from '../features/auth/authSlice'
-
 
 const combineReducer = combineReducers({
     calendar: calendarReducer,
     notification: notificationReducer,
     users: usersReducer,
+    meetings: meetingsReducer,
     auth: authReducer,
 })
 
@@ -17,29 +18,28 @@ const rootReducer = (state, action) => {
         state = undefined
     }
     return combineReducer(state, action)
-
 }
 export const store = configureStore({
-  reducer: rootReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        // Ignore these action types
-        ignoredActions: ['calendar/fetchEventsByLocation/fulfilled'],
-        // Ignore these field paths in all actions
-        ignoredActionPaths: [
-          'payload.start',
-          'payload.end',
-          'meta.arg.start',
-          'meta.arg.end',
-          'payload.value'
-        ],
-        // Ignore these paths in the state
-        ignoredPaths: [
-          'calendar.items', 
-          'calendar.currentItem.start',
-          'calendar.currentItem.end',     
-        ],
-      },
-    }),
-});
+    reducer: rootReducer,
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                // Ignore these action types
+                ignoredActions: ['calendar/fetchEventsByLocation/fulfilled'],
+                // Ignore these field paths in all actions
+                ignoredActionPaths: [
+                    'payload.start',
+                    'payload.end',
+                    'meta.arg.start',
+                    'meta.arg.end',
+                    'payload.value',
+                ],
+                // Ignore these paths in the state
+                ignoredPaths: [
+                    'calendar.items',
+                    'calendar.currentItem.start',
+                    'calendar.currentItem.end',
+                ],
+            },
+        }),
+})
