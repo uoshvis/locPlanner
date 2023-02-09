@@ -12,27 +12,52 @@ import {
     deleteEvents,
 } from './eventsSlice'
 import { EventForm } from './EventForm'
+import { fetchUsers } from '../users/usersSlice'
 
 const Events = () => {
     const dispatch = useDispatch()
     const events = useSelector((state) => filterEventsByLocation(state, 'all'))
     const user = useSelector((state) => state.auth.userDetails)
     const open = useSelector((state) => state.calendar.showModal)
+    const users = useSelector((state) => state.users)
+
     const [selectedIds, setSelectedIds] = useState(new Set())
+    const adminRoles = ['admin', 'superAdmin']
+    const adminPermission = adminRoles.includes(user.role)
 
     // https://stackoverflow.com/questions/67100027/dispatch-multiple-async-actions-with-redux-toolkit
+    useEffect(() => {
+        if (adminPermission) {
+            console.log('fetching users')
+            dispatch(fetchUsers())
+        }
+    }, [dispatch, adminPermission])
+
     useEffect(() => {
         dispatch(fetchEventsByLocation('all'))
     }, [dispatch])
 
     function createData(events, userId) {
         let userEvents = []
+
         if (user) {
-            userEvents = events.filter((event) => event.userId === user.id)
-            userEvents = userEvents.map((event) => ({
-                ...event,
-                userFullName: user.firstName + ' ' + user.lastName,
-            }))
+            if (!adminPermission) {
+                userEvents = events.filter((event) => event.userId === user.id)
+                userEvents = userEvents.map((event) => ({
+                    ...event,
+                    userFullName: user.firstName + ' ' + user.lastName,
+                }))
+                return userEvents
+            } else {
+                userEvents = events.map((event) => ({
+                    ...event,
+                    userFullName:
+                        users.find((user) => user.id === event.userId)
+                            .firstName +
+                        ' ' +
+                        users.find((user) => user.id === event.userId).lastName,
+                }))
+            }
         }
         return userEvents
     }
