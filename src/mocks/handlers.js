@@ -1,6 +1,6 @@
 import { rest } from 'msw'
 import moment from 'moment'
-
+import { meetingsData } from './data/meetingsData'
 // Add an extra delay to all endpoints, so loading spinners show up.
 const ARTIFICIAL_DELAY_MS = 1000
 
@@ -401,5 +401,14 @@ export const handlers = [
                 ctx.json({ ids: data })
             )
         }
+    }),
+
+    // meetings
+    rest.get('/myApi/meetings', (req, res, ctx) => {
+        return res(
+            ctx.delay(ARTIFICIAL_DELAY_MS),
+            ctx.status(200),
+            ctx.json(meetingsData)
+        )
     }),
 ]

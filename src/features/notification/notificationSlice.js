@@ -8,6 +8,7 @@ import {
 } from '../events/eventsSlice'
 import { fetchUsers, deleteUser } from '../users/usersSlice'
 import { login, logout, fetchUserDetails, updateUser } from '../auth/authSlice'
+import { fetchMeetings } from '../meetings/meetingsSlice'
 
 const notificationAdapter = createEntityAdapter()
 
@@ -57,7 +58,8 @@ export const notificationSlice = createSlice({
                     deleteEvent.pending,
                     updateUser.pending,
                     deleteUser.pending,
-                    deleteEvents.pending
+                    deleteEvents.pending,
+                    fetchMeetings.pending
                 ),
                 (state, action) => {
                     state.apiStatus = 'loading'
@@ -78,7 +80,8 @@ export const notificationSlice = createSlice({
                     deleteEvent.fulfilled,
                     deleteUser.fulfilled,
                     updateUser.fulfilled,
-                    deleteEvents.fulfilled
+                    deleteEvents.fulfilled,
+                    fetchMeetings.fulfilled
                 ),
                 (state, action) => {
                     state.apiStatus = 'idle'
@@ -96,7 +99,8 @@ export const notificationSlice = createSlice({
                     deleteEvent.rejected,
                     deleteUser.rejected,
                     updateUser.rejected,
-                    deleteEvents.rejected
+                    deleteEvents.rejected,
+                    fetchMeetings.rejected
                 ),
                 // set rejected status as 'idle' for now
                 (state, action) => {
