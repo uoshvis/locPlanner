@@ -1,17 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import {
-    DataGrid,
-    gridPageCountSelector,
-    gridPageSelector,
-    useGridApiContext,
-    useGridSelector,
-    selectedGridRowsCountSelector,
-} from '@mui/x-data-grid'
+import { DataGrid } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Pagination from '@mui/material/Pagination'
-import Grid from '@mui/material/Grid'
+import CustomFooterComponent from './CustomFooter'
 import {
     fetchEventsByLocation,
     filterEventsByLocation,
@@ -21,47 +12,6 @@ import {
     deleteEvents,
 } from './eventsSlice'
 import { EventForm } from './EventForm'
-
-function CustomFooterComponent({ handleDeleteEvents }) {
-    const apiRef = useGridApiContext()
-    const page = useGridSelector(apiRef, gridPageSelector)
-    const pageCount = useGridSelector(apiRef, gridPageCountSelector)
-    const selectedCount = useGridSelector(apiRef, selectedGridRowsCountSelector)
-
-    return (
-        <Box sx={{ p: 1 }}>
-            <Grid
-                container
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-            >
-                {
-                    <Box sx={{ width: 150, p: 0 }}>
-                        {selectedCount > 0
-                            ? `${selectedCount} events selected`
-                            : ''}
-                    </Box>
-                }
-                <Button
-                    variant="contained"
-                    onClick={handleDeleteEvents}
-                    disabled={selectedCount === 0}
-                >
-                    Delete
-                </Button>
-                <Pagination
-                    color="primary"
-                    count={pageCount}
-                    page={page + 1}
-                    onChange={(event, value) =>
-                        apiRef.current.setPage(value - 1)
-                    }
-                />
-            </Grid>
-        </Box>
-    )
-}
 
 const Events = () => {
     const dispatch = useDispatch()
