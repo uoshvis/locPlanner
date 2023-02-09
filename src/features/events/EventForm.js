@@ -48,7 +48,7 @@ export const EventForm = (props) => {
         isCompleted: false,
     }
 
-    const { handleSubmit, control, setValue, getValues, watch } = useForm({
+    const { handleSubmit, control, setValue, getValues } = useForm({
         defaultValues,
         values: { ...defaultValues, ...event },
     })
@@ -93,8 +93,6 @@ export const EventForm = (props) => {
             dispatch(toggleShowModal())
         }
     }
-    const useWatch = watch()
-    console.log('🚀 ~ file: EventForm.js:90 ~ EventForm ~ watch', useWatch)
 
     return (
         <Dialog open={props.open}>
