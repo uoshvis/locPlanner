@@ -43,6 +43,11 @@ export const authSlice = createSlice({
     },
 })
 
+export const register = createAsyncThunk('auth/register', async (data) => {
+    const response = await client.post(`/myApi/register`, data)
+    return response.data
+})
+
 export const login = createAsyncThunk('auth/login', async (crediantials) => {
     async function loginWithUserDetails() {
         try {
@@ -67,7 +72,7 @@ export const logout = createAsyncThunk('auth/logout', async (crediantials) => {
     localStorage.removeItem('userToken')
     return response.data
 })
-
+// ToDo move this to users
 export const fetchUserDetails = createAsyncThunk(
     'users/fetchUser',
     async (id) => {
@@ -75,6 +80,7 @@ export const fetchUserDetails = createAsyncThunk(
         return response.data
     }
 )
+// ToDo move this to user
 
 export const updateUser = createAsyncThunk('users/updateUser', async (data) => {
     const response = await client.put(`/myApi/users/${data.id}`, data)
