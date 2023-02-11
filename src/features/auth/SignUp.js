@@ -20,7 +20,7 @@ import { useDispatch } from 'react-redux'
 import { createUser } from '../users/usersSlice'
 import { useNavigate } from 'react-router-dom'
 
-const schema = z
+export const userCreateSchema = z
     .object({
         userName: z
             .string()
@@ -72,7 +72,7 @@ export default function SignUp() {
             password: '',
             passwordConfirm: '',
         },
-        resolver: zodResolver(schema),
+        resolver: zodResolver(userCreateSchema),
     })
 
     const onSubmit = (data, event) => {

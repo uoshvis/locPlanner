@@ -1,7 +1,7 @@
 import TextField from '@mui/material/TextField'
 import { useController } from 'react-hook-form'
 
-function Input({ control, name, label, readOnly, id }) {
+function Input({ control, name, label, readOnly, id, required = false }) {
     const {
         field,
         fieldState: { error },
@@ -23,6 +23,7 @@ function Input({ control, name, label, readOnly, id }) {
             helperText={error?.message}
             variant="outlined"
             disabled={readOnly}
+            required={required}
             // InputLabelProps={{ shrink: true }}
         />
     )
