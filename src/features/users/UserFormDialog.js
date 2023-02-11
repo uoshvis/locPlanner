@@ -9,10 +9,9 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
-// import UserFormFields from './UserFormFields'
 import { createUser, fetchUsers } from './usersSlice'
 import * as z from 'zod'
-import UserCreateFormFields from '../auth/CreateUserFormFields'
+import UserFormFields from './UserFormFields'
 import { userCreateSchema } from '../auth/SignUp'
 
 const roleSchema = z.object({
@@ -76,7 +75,7 @@ export default function UserFormDialog({ isSuperAdminUser }) {
                         To add a new user fill the form.
                     </DialogContentText>
 
-                    <UserCreateFormFields control={control} />
+                    <UserFormFields control={control} />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>

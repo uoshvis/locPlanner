@@ -1,9 +1,9 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import TextInput from './formFields/TextInput'
-import SelectTextField from '../users/formFields/SelectTextField'
+import TextInput from '../auth/formFields/TextInput'
+import SelectTextField from './formFields/SelectTextField'
 
-export default function CreateFormFields({ control }) {
+export default function UserFormFields({ control }) {
     return (
         <Box component="form" noValidate sx={{ mt: 3 }}>
             <Grid container spacing={1}>
