@@ -2,8 +2,9 @@ import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import TextInput from '../auth/formFields/TextInput'
 import SelectTextField from './formFields/SelectTextField'
+import CheckBox from './formFields/CheckBox'
 
-export default function UserFormFields({ control }) {
+export default function UserFormFields({ control, handleSubmit }) {
     return (
         <Box component="form" noValidate sx={{ mt: 3 }}>
             <Grid container spacing={1}>
@@ -37,17 +38,6 @@ export default function UserFormFields({ control }) {
                 </Grid>
 
                 <Grid item xs={12}>
-                    <SelectTextField
-                        control={control}
-                        name="role"
-                        label="Role"
-                        id="role"
-                        readOnly={false}
-                        required={true}
-                    />
-                </Grid>
-
-                <Grid item xs={12}>
                     <TextInput
                         control={control}
                         name="email"
@@ -75,6 +65,24 @@ export default function UserFormFields({ control }) {
                         type="password"
                         id="passwordMatch"
                         autoComplete="new-password"
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <SelectTextField
+                        control={control}
+                        name="role"
+                        label="Role"
+                        id="role"
+                        readOnly={false}
+                        required={true}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6} container justifyContent="center">
+                    <CheckBox
+                        control={control}
+                        name="isActive"
+                        label="Active"
+                        // readOnly={!isSuperAdminUser}
                     />
                 </Grid>
             </Grid>

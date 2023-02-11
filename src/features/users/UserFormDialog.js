@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
+import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -9,13 +10,18 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
-import { createUser, fetchUsers } from './usersSlice'
-import * as z from 'zod'
-import UserFormFields from './UserFormFields'
+import FormControl from '@mui/material/FormControl'
+
 import { userCreateSchema } from '../auth/SignUp'
+import { createUser, fetchUsers } from './usersSlice'
+import UserFormFields from './UserFormFields'
 
 const roleSchema = z.object({
     role: z.string().min(1, { message: 'Select role' }),
+    isActive: z.boolean({
+        required_error: 'isActive is required',
+        invalid_type_error: 'isActive must be a boolean',
+    }),
 })
 const userCreateSchemaWithRole = userCreateSchema.and(roleSchema)
 
@@ -31,7 +37,7 @@ export default function UserFormDialog({ isSuperAdminUser }) {
             password: '',
             passwordConfirm: '',
             role: '',
-            isActive: '',
+            isActive: false,
         },
         resolver: zodResolver(userCreateSchemaWithRole),
     })
@@ -69,20 +75,29 @@ export default function UserFormDialog({ isSuperAdminUser }) {
             </Button>
 
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Add New User</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        To add a new user fill the form.
-                    </DialogContentText>
+                <FormControl>
+                    <DialogTitle>Add New User</DialogTitle>
 
-                    <UserFormFields control={control} />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button type="submit" onClick={handleSubmit(onSaveSubmit)}>
-                        Submit
-                    </Button>
-                </DialogActions>
+                    <DialogContent>
+                        <DialogContentText>
+                            To add a new user fill the form.
+                        </DialogContentText>
+
+                        <UserFormFields
+                            control={control}
+                            handleSubmit={handleSubmit}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button
+                            type="submit"
+                            onClick={handleSubmit(onSaveSubmit)}
+                        >
+                            Submit
+                        </Button>
+                    </DialogActions>
+                </FormControl>
             </Dialog>
         </div>
     )
