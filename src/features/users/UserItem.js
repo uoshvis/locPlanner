@@ -20,7 +20,7 @@ const UserItem = ({ handleRemoveUser, isSuperAdminUser }) => {
         return '' + user.id === '' + userId
     })
 
-    const [isOpen, setIsOpen] = useState(false)
+    const [isDialogOpen, setDialogIsOpen] = useState(false)
 
     const { control, handleSubmit, getValues, reset, setValue } = useForm({
         defaultValues: {
@@ -53,15 +53,15 @@ const UserItem = ({ handleRemoveUser, isSuperAdminUser }) => {
 
     const onDelete = () => {
         handleRemoveUser(userId)
-        setIsOpen(false)
+        setDialogIsOpen(false)
     }
 
     return (
         <Box>
-            {isOpen && (
+            {isDialogOpen && (
                 <AlertDialog
-                    isOpen={isOpen}
-                    setIsOpen={setIsOpen}
+                    isDialogOpen={isDialogOpen}
+                    setDialogIsOpen={setDialogIsOpen}
                     onDelete={onDelete}
                 />
             )}
@@ -87,7 +87,10 @@ const UserItem = ({ handleRemoveUser, isSuperAdminUser }) => {
                     Save
                 </Button>
 
-                <Button variant="outlined" onClick={() => setIsOpen(true)}>
+                <Button
+                    variant="outlined"
+                    onClick={() => setDialogIsOpen(true)}
+                >
                     Delete
                 </Button>
 
