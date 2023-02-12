@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
@@ -10,22 +10,34 @@ import Typography from '@mui/material/Typography'
 import { updateUser } from '../auth/authSlice'
 import { fetchUsers } from './usersSlice'
 import UserFormFields from './formFields/UserFormFields'
+import AlertDialog from '../../components/DeleteAlertDialog'
 
 const UserItem = ({ handleRemoveUser, isSuperAdminUser }) => {
     const { userId } = useParams()
     const dispatch = useDispatch()
     const users = useSelector((state) => state.users)
-    const user = users.find((user) => '' + user.id === '' + userId)
+    const user = users.find((user) => {
+        return '' + user.id === '' + userId
+    })
 
-    const { control, handleSubmit, getValues, reset } = useForm({
+    const [isOpen, setIsOpen] = useState(false)
+
+    const { control, handleSubmit, getValues, reset, setValue } = useForm({
         defaultValues: {
             userName: '',
             firstName: '',
             lastName: '',
             isActive: '',
+            passwordConfirm: '',
         },
-        values: { ...user, passwordConfirm: user.password },
+        values: user,
     })
+
+    useEffect(() => {
+        if (user) {
+            setValue('passwordConfirm', user.password)
+        }
+    }, [user, setValue])
 
     const onSaveSubmit = () => {
         const data = getValues()
@@ -39,8 +51,20 @@ const UserItem = ({ handleRemoveUser, isSuperAdminUser }) => {
             })
     }
 
+    const onDelete = () => {
+        handleRemoveUser(userId)
+        setIsOpen(false)
+    }
+
     return (
         <Box>
+            {isOpen && (
+                <AlertDialog
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen}
+                    onDelete={onDelete}
+                />
+            )}
             <Typography variant="h6" component="h1" sx={{ mb: '2rem' }}>
                 Edit User
             </Typography>
@@ -63,10 +87,7 @@ const UserItem = ({ handleRemoveUser, isSuperAdminUser }) => {
                     Save
                 </Button>
 
-                <Button
-                    variant="outlined"
-                    onClick={() => handleRemoveUser(userId)}
-                >
+                <Button variant="outlined" onClick={() => setIsOpen(true)}>
                     Delete
                 </Button>
 
