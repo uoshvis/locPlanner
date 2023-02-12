@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import TextInput from '../auth/formFields/TextInput'
-import SelectTextField from './formFields/SelectTextField'
-import CheckBox from './formFields/CheckBox'
+import TextInput from '../../auth/formFields/TextInput'
+import SelectTextField from './SelectTextField'
+import CheckBox from './CheckBox'
 
 export default function UserFormFields({ control, handleSubmit }) {
     return (

@@ -14,7 +14,7 @@ import FormControl from '@mui/material/FormControl'
 
 import { userCreateSchema } from '../auth/SignUp'
 import { createUser, fetchUsers } from './usersSlice'
-import UserFormFields from './UserFormFields'
+import UserFormFields from './formFields/UserFormFields'
 
 const roleSchema = z.object({
     role: z.string().min(1, { message: 'Select role' }),
