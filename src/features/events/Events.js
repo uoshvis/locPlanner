@@ -13,6 +13,7 @@ import {
 } from './eventsSlice'
 import { EventForm } from './EventForm'
 import { fetchUsers } from '../users/usersSlice'
+import AlertDialog from '../../components/DeleteAlertDialog'
 
 const Events = () => {
     const dispatch = useDispatch()
@@ -20,6 +21,7 @@ const Events = () => {
     const user = useSelector((state) => state.auth.userDetails)
     const open = useSelector((state) => state.calendar.showModal)
     const users = useSelector((state) => state.users)
+    const [isDialogOpen, setDialogIsOpen] = useState(false)
 
     const [selectedIds, setSelectedIds] = useState(new Set())
     const adminRoles = ['admin', 'superAdmin']
@@ -28,7 +30,6 @@ const Events = () => {
     // https://stackoverflow.com/questions/67100027/dispatch-multiple-async-actions-with-redux-toolkit
     useEffect(() => {
         if (adminPermission) {
-            console.log('fetching users')
             dispatch(fetchUsers())
         }
     }, [dispatch, adminPermission])
@@ -77,6 +78,7 @@ const Events = () => {
         dispatch(deleteEvents(idsString)).then(() => {
             setSelectedIds([])
         })
+        setDialogIsOpen(false)
     }
 
     const columns = [
@@ -105,8 +107,14 @@ const Events = () => {
 
     return (
         <div>
+            {isDialogOpen && (
+                <AlertDialog
+                    isDialogOpen={isDialogOpen}
+                    setDialogIsOpen={setDialogIsOpen}
+                    onDelete={handleDeleteEvents}
+                />
+            )}
             <h2>My Events</h2>
-
             <Box sx={{ height: 700, width: 840, m: 'auto' }}>
                 <DataGrid
                     rows={createData(events, user)}
@@ -122,7 +130,7 @@ const Events = () => {
                         Footer: CustomFooterComponent,
                     }}
                     componentsProps={{
-                        footer: { handleDeleteEvents },
+                        footer: { setDialogIsOpen },
                     }}
                 />
             </Box>

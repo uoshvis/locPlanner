@@ -10,7 +10,7 @@ import Button from '@mui/material/Button'
 import Pagination from '@mui/material/Pagination'
 import Grid from '@mui/material/Grid'
 
-function CustomFooterComponent({ handleDeleteEvents }) {
+function CustomFooterComponent({ setDialogIsOpen }) {
     const apiRef = useGridApiContext()
     const page = useGridSelector(apiRef, gridPageSelector)
     const pageCount = useGridSelector(apiRef, gridPageCountSelector)
@@ -33,7 +33,7 @@ function CustomFooterComponent({ handleDeleteEvents }) {
                 }
                 <Button
                     variant="contained"
-                    onClick={handleDeleteEvents}
+                    onClick={() => setDialogIsOpen(true)}
                     disabled={selectedCount === 0}
                 >
                     Delete

@@ -6,21 +6,25 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 
-export default function AlertDialog({ isOpen, setIsOpen, onDelete }) {
+export default function AlertDialog({
+    isDialogOpen,
+    setDialogIsOpen,
+    onDelete,
+}) {
     const handleClose = () => {
-        setIsOpen(false)
+        setDialogIsOpen(false)
     }
 
     return (
         <div>
             <Dialog
-                open={isOpen}
+                open={isDialogOpen}
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">
-                    {'Do you want to delete this item?'}
+                    {'Do you want to delete?'}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
