@@ -15,7 +15,7 @@ import UserFormDialog from './UserFormDialog'
 import TextField from '@mui/material/TextField'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 
-export default function UserList({ users = [], isSuperAdminUser }) {
+export default function UserList({ users = [], isSuperAdmin }) {
     const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams()
 
@@ -30,6 +30,7 @@ export default function UserList({ users = [], isSuperAdminUser }) {
             setSearchParams({})
         }
     }
+
     return (
         <Box>
             <h2>Users</h2>
@@ -58,7 +59,7 @@ export default function UserList({ users = [], isSuperAdminUser }) {
                     />
                 </Box>
 
-                <UserFormDialog isSuperAdminUser={isSuperAdminUser} />
+                {isSuperAdmin && <UserFormDialog />}
             </Stack>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -122,7 +123,7 @@ export default function UserList({ users = [], isSuperAdminUser }) {
                                     </TableCell>
                                     <TableCell align="left">
                                         <Button
-                                            disabled={!isSuperAdminUser}
+                                            disabled={!isSuperAdmin}
                                             onClick={() => {
                                                 navigate(`${user.id}/`)
                                             }}

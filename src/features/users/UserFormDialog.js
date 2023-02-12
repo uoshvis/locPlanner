@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -25,8 +25,8 @@ const roleSchema = z.object({
 })
 const userCreateSchemaWithRole = userCreateSchema.and(roleSchema)
 
-export default function UserFormDialog({ isSuperAdminUser }) {
-    const [open, setOpen] = React.useState(false)
+export default function UserFormDialog() {
+    const [open, setOpen] = useState(false)
     const dispatch = useDispatch()
 
     const { control, handleSubmit, reset } = useForm({

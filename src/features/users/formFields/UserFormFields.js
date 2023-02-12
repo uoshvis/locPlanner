@@ -4,7 +4,7 @@ import TextInput from '../../auth/formFields/TextInput'
 import SelectTextField from './SelectTextField'
 import CheckBox from './CheckBox'
 
-export default function UserFormFields({ control, handleSubmit }) {
+export default function UserFormFields({ control }) {
     return (
         <Box component="form" noValidate sx={{ mt: 3 }}>
             <Grid container spacing={1}>
@@ -82,7 +82,6 @@ export default function UserFormFields({ control, handleSubmit }) {
                         control={control}
                         name="isActive"
                         label="Active"
-                        // readOnly={!isSuperAdminUser}
                     />
                 </Grid>
             </Grid>
