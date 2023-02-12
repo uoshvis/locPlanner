@@ -22,7 +22,7 @@ const Users = () => {
     const users = useSelector((state) => state.users)
     const { userDetails } = useSelector((state) => state.auth)
 
-    const isSuperAdminUser = userDetails.role === 'superAdmin'
+    const isSuperAdmin = userDetails.role === 'superAdmin'
 
     useEffect(() => {
         let didCancel = false
@@ -53,7 +53,7 @@ const Users = () => {
                     open: true,
                 })
             )
-        } else if (!isSuperAdminUser) {
+        } else if (!isSuperAdmin) {
             dispatch(
                 setNotification({
                     message: 'Only Super Admin can delete users',
@@ -61,7 +61,7 @@ const Users = () => {
                     open: true,
                 })
             )
-        } else if (isSuperAdminUser) {
+        } else if (isSuperAdmin) {
             dispatch(deleteUser(userId))
                 .then(() => dispatch(fetchUsers()))
                 .then(() => navigate('/dashboard/users'))
@@ -74,16 +74,13 @@ const Users = () => {
                 <Route
                     index
                     element={
-                        <UserList
-                            users={users}
-                            isSuperAdminUser={isSuperAdminUser}
-                        />
+                        <UserList users={users} isSuperAdmin={isSuperAdmin} />
                     }
                 />
                 <Route
                     element={
                         <RequireSuper
-                            isSuperAdminUser={isSuperAdminUser}
+                            isSuperAdmin={isSuperAdmin}
                             redirectPath="/dashboard/users"
                         />
                     }
@@ -93,7 +90,7 @@ const Users = () => {
                         element={
                             <UserItem
                                 handleRemoveUser={handleRemoveUser}
-                                isSuperAdminUser={isSuperAdminUser}
+                                isSuperAdmin={isSuperAdmin}
                             />
                         }
                     />
@@ -105,10 +102,10 @@ const Users = () => {
     )
 }
 
-function RequireSuper({ redirectPath = '/', isSuperAdminUser, children }) {
+function RequireSuper({ redirectPath = '/', isSuperAdmin, children }) {
     let location = useLocation()
 
-    if (!isSuperAdminUser) {
+    if (!isSuperAdmin) {
         return <Navigate to={redirectPath} state={{ from: location }} replace />
     }
 

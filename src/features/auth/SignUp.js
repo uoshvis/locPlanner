@@ -1,5 +1,10 @@
 import * as React from 'react'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -12,15 +17,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
+
 import TextInput from './formFields/TextInput'
+import { register } from './authSlice'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { useDispatch } from 'react-redux'
-import { createUser } from '../users/usersSlice'
-import { useNavigate } from 'react-router-dom'
-
-const schema = z
+export const userCreateSchema = z
     .object({
         userName: z
             .string()
@@ -72,11 +73,11 @@ export default function SignUp() {
             password: '',
             passwordConfirm: '',
         },
-        resolver: zodResolver(schema),
+        resolver: zodResolver(userCreateSchema),
     })
 
     const onSubmit = (data, event) => {
-        dispatch(createUser(data)).then(() => navigate('/login'))
+        dispatch(register(data)).then(() => navigate('/login'))
     }
 
     return (

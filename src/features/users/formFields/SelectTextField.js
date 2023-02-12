@@ -21,7 +21,14 @@ const userAdminRoles = [
     },
 ]
 
-function SelectTextField({ control, name, label, id, readOnly }) {
+function SelectTextField({
+    control,
+    name,
+    label,
+    id,
+    readOnly,
+    required = false,
+}) {
     const [options, setOptions] = useState(userAdminRoles)
 
     const {
@@ -51,6 +58,8 @@ function SelectTextField({ control, name, label, id, readOnly }) {
             label={label}
             error={Boolean(error)}
             helperText={error?.message}
+            required={required}
+            fullWidth
         >
             {options.map((option) => (
                 <MenuItem key={option.value} value={option.value}>

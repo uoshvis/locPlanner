@@ -10,8 +10,12 @@ import Paper from '@mui/material/Paper'
 import Chip from '@mui/material/Chip'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import UserFormDialog from './UserFormDialog'
+import TextField from '@mui/material/TextField'
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 
-export default function UserList({ users = [], isSuperAdminUser }) {
+export default function UserList({ users = [], isSuperAdmin }) {
     const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams()
 
@@ -30,13 +34,33 @@ export default function UserList({ users = [], isSuperAdminUser }) {
     return (
         <Box>
             <h2>Users</h2>
-            <label for="search">User Search </label>
-            <input
-                type="text"
-                id="search"
-                value={searchTerm}
-                onChange={handleSearch}
-            />
+            <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="baseline"
+                spacing={3}
+            >
+                <Box
+                    component="div"
+                    noValidate
+                    autoComplete="off"
+                    sx={{ display: 'flex', alignItems: 'flex-end', my: 0.5 }}
+                >
+                    <SearchOutlinedIcon
+                        sx={{ color: 'action.active', mr: 1, my: 0.5 }}
+                    />
+
+                    <TextField
+                        id="user-search"
+                        label="Search..."
+                        value={searchTerm}
+                        onChange={handleSearch}
+                        variant="standard"
+                    />
+                </Box>
+
+                {isSuperAdmin && <UserFormDialog />}
+            </Stack>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
@@ -99,7 +123,7 @@ export default function UserList({ users = [], isSuperAdminUser }) {
                                     </TableCell>
                                     <TableCell align="left">
                                         <Button
-                                            disabled={!isSuperAdminUser}
+                                            disabled={!isSuperAdmin}
                                             onClick={() => {
                                                 navigate(`${user.id}/`)
                                             }}

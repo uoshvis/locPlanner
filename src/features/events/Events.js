@@ -1,17 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import {
-    DataGrid,
-    gridPageCountSelector,
-    gridPageSelector,
-    useGridApiContext,
-    useGridSelector,
-    selectedGridRowsCountSelector,
-} from '@mui/x-data-grid'
+import { DataGrid } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Pagination from '@mui/material/Pagination'
-import Grid from '@mui/material/Grid'
+import CustomFooterComponent from './CustomFooter'
 import {
     fetchEventsByLocation,
     filterEventsByLocation,
@@ -21,68 +12,53 @@ import {
     deleteEvents,
 } from './eventsSlice'
 import { EventForm } from './EventForm'
-
-function CustomFooterComponent({ handleDeleteEvents }) {
-    const apiRef = useGridApiContext()
-    const page = useGridSelector(apiRef, gridPageSelector)
-    const pageCount = useGridSelector(apiRef, gridPageCountSelector)
-    const selectedCount = useGridSelector(apiRef, selectedGridRowsCountSelector)
-
-    return (
-        <Box sx={{ p: 1 }}>
-            <Grid
-                container
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-            >
-                {
-                    <Box sx={{ width: 150, p: 0 }}>
-                        {selectedCount > 0
-                            ? `${selectedCount} events selected`
-                            : ''}
-                    </Box>
-                }
-                <Button
-                    variant="contained"
-                    onClick={handleDeleteEvents}
-                    disabled={selectedCount === 0}
-                >
-                    Delete
-                </Button>
-                <Pagination
-                    color="primary"
-                    count={pageCount}
-                    page={page + 1}
-                    onChange={(event, value) =>
-                        apiRef.current.setPage(value - 1)
-                    }
-                />
-            </Grid>
-        </Box>
-    )
-}
+import { fetchUsers } from '../users/usersSlice'
+import AlertDialog from '../../components/DeleteAlertDialog'
 
 const Events = () => {
     const dispatch = useDispatch()
     const events = useSelector((state) => filterEventsByLocation(state, 'all'))
     const user = useSelector((state) => state.auth.userDetails)
     const open = useSelector((state) => state.calendar.showModal)
+    const users = useSelector((state) => state.users)
+    const [isDialogOpen, setDialogIsOpen] = useState(false)
+
     const [selectedIds, setSelectedIds] = useState(new Set())
+    const adminRoles = ['admin', 'superAdmin']
+    const adminPermission = adminRoles.includes(user.role)
 
     // https://stackoverflow.com/questions/67100027/dispatch-multiple-async-actions-with-redux-toolkit
+    useEffect(() => {
+        if (adminPermission) {
+            dispatch(fetchUsers())
+        }
+    }, [dispatch, adminPermission])
+
     useEffect(() => {
         dispatch(fetchEventsByLocation('all'))
     }, [dispatch])
 
     function createData(events, userId) {
         let userEvents = []
+
         if (user) {
-            userEvents = events.filter((event) => event.userId === user.id)
-            userEvents = userEvents.map((event) => ({
-                ...event,
-                userFullName: user.firstName + ' ' + user.lastName,
-            }))
+            if (!adminPermission) {
+                userEvents = events.filter((event) => event.userId === user.id)
+                userEvents = userEvents.map((event) => ({
+                    ...event,
+                    userFullName: user.firstName + ' ' + user.lastName,
+                }))
+                return userEvents
+            } else {
+                userEvents = events.map((event) => ({
+                    ...event,
+                    userFullName:
+                        users.find((user) => user.id === event.userId)
+                            .firstName +
+                        ' ' +
+                        users.find((user) => user.id === event.userId).lastName,
+                }))
+            }
         }
         return userEvents
     }
@@ -102,6 +78,7 @@ const Events = () => {
         dispatch(deleteEvents(idsString)).then(() => {
             setSelectedIds([])
         })
+        setDialogIsOpen(false)
     }
 
     const columns = [
@@ -130,8 +107,14 @@ const Events = () => {
 
     return (
         <div>
+            {isDialogOpen && (
+                <AlertDialog
+                    isDialogOpen={isDialogOpen}
+                    setDialogIsOpen={setDialogIsOpen}
+                    onDelete={handleDeleteEvents}
+                />
+            )}
             <h2>My Events</h2>
-
             <Box sx={{ height: 700, width: 840, m: 'auto' }}>
                 <DataGrid
                     rows={createData(events, user)}
@@ -147,7 +130,7 @@ const Events = () => {
                         Footer: CustomFooterComponent,
                     }}
                     componentsProps={{
-                        footer: { handleDeleteEvents },
+                        footer: { setDialogIsOpen },
                     }}
                 />
             </Box>

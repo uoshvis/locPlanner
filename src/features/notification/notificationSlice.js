@@ -6,8 +6,14 @@ import {
     deleteEvent,
     deleteEvents,
 } from '../events/eventsSlice'
-import { fetchUsers, deleteUser } from '../users/usersSlice'
-import { login, logout, fetchUserDetails, updateUser } from '../auth/authSlice'
+import { createUser, fetchUsers, deleteUser } from '../users/usersSlice'
+import {
+    login,
+    register,
+    logout,
+    fetchUserDetails,
+    updateUser,
+} from '../auth/authSlice'
 import { fetchMeetings } from '../meetings/meetingsSlice'
 
 const notificationAdapter = createEntityAdapter()
@@ -48,6 +54,7 @@ export const notificationSlice = createSlice({
             // match pending, fulfilled and rejected
             .addMatcher(
                 isAnyOf(
+                    register.pending,
                     login.pending,
                     logout.pending,
                     fetchUsers.pending,
@@ -56,6 +63,7 @@ export const notificationSlice = createSlice({
                     addEventData.pending,
                     updateEventData.pending,
                     deleteEvent.pending,
+                    createUser.pending,
                     updateUser.pending,
                     deleteUser.pending,
                     deleteEvents.pending,
@@ -70,6 +78,7 @@ export const notificationSlice = createSlice({
             )
             .addMatcher(
                 isAnyOf(
+                    register.fulfilled,
                     login.fulfilled,
                     logout.fulfilled,
                     fetchUsers.fulfilled,
@@ -78,6 +87,7 @@ export const notificationSlice = createSlice({
                     addEventData.fulfilled,
                     updateEventData.fulfilled,
                     deleteEvent.fulfilled,
+                    createUser.fulfilled,
                     deleteUser.fulfilled,
                     updateUser.fulfilled,
                     deleteEvents.fulfilled,
@@ -89,6 +99,7 @@ export const notificationSlice = createSlice({
             )
             .addMatcher(
                 isAnyOf(
+                    register.rejected,
                     login.rejected,
                     logout.rejected,
                     fetchUsers.rejected,
@@ -97,6 +108,7 @@ export const notificationSlice = createSlice({
                     addEventData.rejected,
                     updateEventData.rejected,
                     deleteEvent.rejected,
+                    createUser.rejected,
                     deleteUser.rejected,
                     updateUser.rejected,
                     deleteEvents.rejected,

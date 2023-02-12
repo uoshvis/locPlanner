@@ -148,6 +148,30 @@ const users = [
 export const handlers = [
     // #################### Login-logout handlers #############################
 
+    rest.post('/myApi/register', (req, res, ctx) => {
+        const id = Number(new Date())
+        const data = {
+            ...req.body,
+            isActive: false,
+            role: 'user',
+            userColor: circlePickerDefaultColors[0],
+        }
+        if (data.title === 'error') {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(500, 'Item not added'),
+                ctx.json({})
+            )
+        }
+        data.id = id
+        users.push(data)
+        return res(
+            ctx.delay(ARTIFICIAL_DELAY_MS),
+            ctx.status(200),
+            ctx.json(data)
+        )
+    }),
+
     rest.post('/myApi/login', (req, res, ctx) => {
         const token = {}
         const userName = req.body.userName
@@ -228,8 +252,6 @@ export const handlers = [
         const id = Number(new Date())
         const data = {
             ...req.body,
-            isActive: false,
-            role: 'user',
             userColor: circlePickerDefaultColors[0],
         }
         if (data.title === 'error') {
