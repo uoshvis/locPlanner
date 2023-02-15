@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
@@ -11,6 +12,7 @@ import { updateUser } from '../auth/authSlice'
 import { fetchUsers } from './usersSlice'
 import UserFormFields from './formFields/UserFormFields'
 import AlertDialog from '../../components/DeleteAlertDialog'
+import { userSchema } from './formFields/userSchema'
 
 const UserItem = ({ handleRemoveUser, isSuperAdminUser }) => {
     const { userId } = useParams()
@@ -31,6 +33,7 @@ const UserItem = ({ handleRemoveUser, isSuperAdminUser }) => {
             passwordConfirm: '',
         },
         values: user,
+        resolver: zodResolver(userSchema),
     })
 
     useEffect(() => {

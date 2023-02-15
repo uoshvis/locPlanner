@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
-import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -12,18 +11,9 @@ import DialogTitle from '@mui/material/DialogTitle'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import FormControl from '@mui/material/FormControl'
 
-import { userCreateSchema } from '../auth/SignUp'
 import { createUser, fetchUsers } from './usersSlice'
 import UserFormFields from './formFields/UserFormFields'
-
-const roleSchema = z.object({
-    role: z.string().min(1, { message: 'Select role' }),
-    isActive: z.boolean({
-        required_error: 'isActive is required',
-        invalid_type_error: 'isActive must be a boolean',
-    }),
-})
-const userCreateSchemaWithRole = userCreateSchema.and(roleSchema)
+import { userSchema } from './formFields/userSchema'
 
 export default function UserFormDialog() {
     const [open, setOpen] = useState(false)
@@ -39,7 +29,7 @@ export default function UserFormDialog() {
             role: '',
             isActive: false,
         },
-        resolver: zodResolver(userCreateSchemaWithRole),
+        resolver: zodResolver(userSchema),
     })
 
     const handleClickOpen = () => {
