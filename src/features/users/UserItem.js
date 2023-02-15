@@ -61,13 +61,12 @@ const UserItem = ({ handleRemoveUser, isSuperAdminUser }) => {
 
     return (
         <Box>
-            {isDialogOpen && (
-                <AlertDialog
-                    isDialogOpen={isDialogOpen}
-                    setDialogIsOpen={setDialogIsOpen}
-                    onDelete={onDelete}
-                />
-            )}
+            <AlertDialog
+                isDialogOpen={isDialogOpen}
+                setDialogIsOpen={setDialogIsOpen}
+                onDelete={onDelete}
+            />
+
             <Typography variant="h6" component="h1" sx={{ mb: '2rem' }}>
                 Edit User
             </Typography>

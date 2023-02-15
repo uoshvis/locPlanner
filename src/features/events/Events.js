@@ -107,13 +107,12 @@ const Events = () => {
 
     return (
         <div>
-            {isDialogOpen && (
-                <AlertDialog
-                    isDialogOpen={isDialogOpen}
-                    setDialogIsOpen={setDialogIsOpen}
-                    onDelete={handleDeleteEvents}
-                />
-            )}
+            <AlertDialog
+                isDialogOpen={isDialogOpen}
+                setDialogIsOpen={setDialogIsOpen}
+                onDelete={handleDeleteEvents}
+            />
+
             <h2>My Events</h2>
             <Box sx={{ height: 700, width: 840, m: 'auto' }}>
                 <DataGrid
