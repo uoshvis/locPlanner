@@ -19,7 +19,7 @@ const Users = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const users = useSelector((state) => state.users)
+    const users = useSelector((state) => state.users.items)
     const { userDetails } = useSelector((state) => state.auth)
 
     const isSuperAdmin = userDetails.role === 'superAdmin'

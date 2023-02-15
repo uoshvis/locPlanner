@@ -17,7 +17,7 @@ import { userSchema } from './formFields/userSchema'
 const UserItem = ({ handleRemoveUser, isSuperAdminUser }) => {
     const { userId } = useParams()
     const dispatch = useDispatch()
-    const users = useSelector((state) => state.users)
+    const users = useSelector((state) => state.users.items)
     const user = users.find((user) => {
         return '' + user.id === '' + userId
     })

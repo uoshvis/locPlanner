@@ -32,9 +32,7 @@ export const authSlice = createSlice({
             .addCase(logout.fulfilled, (state, action) => {
                 state.isLoggedIn = false
             })
-            .addCase(fetchUserDetails.fulfilled, (state, action) => {
-                state.userDetails = action.payload
-            })
+
             .addCase(updateUser.fulfilled, (state, action) => {
                 if (state.userDetails.id === action.payload.id) {
                     state.userDetails = action.payload
@@ -72,14 +70,7 @@ export const logout = createAsyncThunk('auth/logout', async (crediantials) => {
     localStorage.removeItem('userToken')
     return response.data
 })
-// ToDo move this to users
-export const fetchUserDetails = createAsyncThunk(
-    'users/fetchUser',
-    async (id) => {
-        const response = await client.get(`/myApi/users/${id}`)
-        return response.data
-    }
-)
+
 // ToDo move this to user
 
 export const updateUser = createAsyncThunk('users/updateUser', async (data) => {

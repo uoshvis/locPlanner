@@ -20,7 +20,7 @@ const Events = () => {
     const events = useSelector((state) => filterEventsByLocation(state, 'all'))
     const user = useSelector((state) => state.auth.userDetails)
     const open = useSelector((state) => state.calendar.showModal)
-    const users = useSelector((state) => state.users)
+    const users = useSelector((state) => state.users.items)
     const [isDialogOpen, setDialogIsOpen] = useState(false)
 
     const [selectedIds, setSelectedIds] = useState(new Set())

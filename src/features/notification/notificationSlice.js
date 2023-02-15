@@ -6,14 +6,13 @@ import {
     deleteEvent,
     deleteEvents,
 } from '../events/eventsSlice'
-import { createUser, fetchUsers, deleteUser } from '../users/usersSlice'
 import {
-    login,
-    register,
-    logout,
+    fetchUsers,
     fetchUserDetails,
-    updateUser,
-} from '../auth/authSlice'
+    createUser,
+    deleteUser,
+} from '../users/usersSlice'
+import { login, register, logout, updateUser } from '../auth/authSlice'
 import { fetchMeetings } from '../meetings/meetingsSlice'
 
 const notificationAdapter = createEntityAdapter()

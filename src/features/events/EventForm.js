@@ -34,7 +34,7 @@ export const EventForm = (props) => {
     const { userDetails } = useSelector((state) => state.auth)
     const { apiStatus } = useSelector((state) => state.notification)
     const { formType } = useSelector((state) => state.calendar)
-    const users = useSelector((state) => state.users)
+    const users = useSelector((state) => state.users.items)
 
     const [usersList, setUsersList] = useState([])
     const [readOnly] = useState(formType === 'view' ? true : false)
