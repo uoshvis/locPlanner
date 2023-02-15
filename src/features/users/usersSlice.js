@@ -12,7 +12,7 @@ const usersSlice = createSlice({
             .addCase(fetchUsers.fulfilled, (state, action) => {
                 state.items = action.payload
             })
-            .addCase(fetchUserDetails.fulfilled, (state, action) => {
+            .addCase(fetchUser.fulfilled, (state, action) => {
                 state.item = action.payload
             })
     },
@@ -23,13 +23,10 @@ export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
     return response.data
 })
 
-export const fetchUserDetails = createAsyncThunk(
-    'users/fetchUser',
-    async (id) => {
-        const response = await client.get(`/myApi/users/${id}`)
-        return response.data
-    }
-)
+export const fetchUser = createAsyncThunk('users/fetchUser', async (id) => {
+    const response = await client.get(`/myApi/users/${id}`)
+    return response.data
+})
 
 export const deleteUser = createAsyncThunk('users/deleteUser', async (id) => {
     const response = await client.delete(`/myApi/users/${id}`, id)

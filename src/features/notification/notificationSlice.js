@@ -8,7 +8,7 @@ import {
 } from '../events/eventsSlice'
 import {
     fetchUsers,
-    fetchUserDetails,
+    fetchUser,
     createUser,
     deleteUser,
 } from '../users/usersSlice'
@@ -57,7 +57,7 @@ export const notificationSlice = createSlice({
                     login.pending,
                     logout.pending,
                     fetchUsers.pending,
-                    fetchUserDetails.pending,
+                    fetchUser.pending,
                     fetchEventsByLocation.pending,
                     addEventData.pending,
                     updateEventData.pending,
@@ -81,7 +81,7 @@ export const notificationSlice = createSlice({
                     login.fulfilled,
                     logout.fulfilled,
                     fetchUsers.fulfilled,
-                    fetchUserDetails.fulfilled,
+                    fetchUser.fulfilled,
                     fetchEventsByLocation.fulfilled,
                     addEventData.fulfilled,
                     updateEventData.fulfilled,
@@ -102,7 +102,7 @@ export const notificationSlice = createSlice({
                     login.rejected,
                     logout.rejected,
                     fetchUsers.rejected,
-                    fetchUserDetails.rejected,
+                    fetchUser.rejected,
                     fetchEventsByLocation.rejected,
                     addEventData.rejected,
                     updateEventData.rejected,
