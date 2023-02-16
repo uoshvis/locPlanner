@@ -23,7 +23,7 @@ import { fetchUsers, getUserColors } from '../users/usersSlice'
 import LocationBtn from './LocationBtn'
 import { EventForm } from '../events/EventForm'
 
-moment.locale('lt', {
+moment.updateLocale('lt', {
     week: {
         dow: 1,
         doy: 1,
