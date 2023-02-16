@@ -6,8 +6,8 @@ function TextInput({
     name = '',
     label = '',
     id = '',
+    type = 'text',
     autoComplete = '',
-    type = '',
     autoFocus = false,
     required = true,
 }) {
