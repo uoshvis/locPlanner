@@ -14,7 +14,8 @@ import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
-import AdbIcon from '@mui/icons-material/Adb'
+
+import Logo from '../logo.svg'
 
 const pages = [
     { text: 'Calendar', href: '/calendar' },
@@ -53,9 +54,17 @@ const ResponsiveAppBar = () => {
         <AppBar position="static">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <AdbIcon
-                        sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}
+                    <Box
+                        component="img"
+                        sx={{
+                            display: { xs: 'none', md: 'flex' },
+                            mr: 1,
+                            height: '2em',
+                        }}
+                        alt="Logo"
+                        src={Logo}
                     />
+
                     <Typography
                         variant="h6"
                         noWrap
@@ -71,9 +80,8 @@ const ResponsiveAppBar = () => {
                             textDecoration: 'none',
                         }}
                     >
-                        LOGO Big
+                        LocPlanner
                     </Typography>
-
                     <Box
                         sx={{
                             flexGrow: 1,
@@ -122,8 +130,15 @@ const ResponsiveAppBar = () => {
                             ))}
                         </Menu>
                     </Box>
-                    <AdbIcon
-                        sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }}
+                    <Box
+                        component="img"
+                        sx={{
+                            display: { xs: 'flex', md: 'none' },
+                            mr: 1,
+                            height: '2em',
+                        }}
+                        alt="Logo"
+                        src={Logo}
                     />
                     <Typography
                         variant="h5"
@@ -141,7 +156,7 @@ const ResponsiveAppBar = () => {
                             textDecoration: 'none',
                         }}
                     >
-                        LOGO Small
+                        LocPlanner
                     </Typography>
                     <Box
                         sx={{
