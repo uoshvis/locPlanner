@@ -18,7 +18,7 @@ import AlertDialog from '../../components/DeleteAlertDialog'
 const Events = () => {
     const dispatch = useDispatch()
     const events = useSelector((state) => filterEventsByLocation(state, 'all'))
-    const user = useSelector((state) => state.auth.userDetails)
+    const user = useSelector((state) => state.users.userDetails)
     const open = useSelector((state) => state.calendar.showModal)
     const users = useSelector((state) => state.users.items)
     const [isDialogOpen, setDialogIsOpen] = useState(false)

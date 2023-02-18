@@ -31,7 +31,7 @@ export const EventForm = (props) => {
     const dispatch = useDispatch()
 
     const event = useSelector((state) => state.calendar.currentItem)
-    const { userDetails } = useSelector((state) => state.auth)
+    const { userDetails } = useSelector((state) => state.users)
     const { apiStatus } = useSelector((state) => state.notification)
     const { formType } = useSelector((state) => state.calendar)
     const users = useSelector((state) => state.users.items)

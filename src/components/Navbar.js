@@ -30,7 +30,8 @@ const settings = [
     { text: 'Logout', href: '/logout' },
 ]
 const ResponsiveAppBar = () => {
-    const { isLoggedIn, userDetails } = useSelector((state) => state.auth)
+    const { isLoggedIn } = useSelector((state) => state.auth)
+    const { userDetails } = useSelector((state) => state.users)
 
     const [anchorElNav, setAnchorElNav] = React.useState(null)
     const [anchorElUser, setAnchorElUser] = React.useState(null)

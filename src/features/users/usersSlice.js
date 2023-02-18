@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { client } from '../../mocks/client'
 
-const initialState = { items: [], item: {} }
+const initialState = { items: [], userDetails: {} }
 
 const usersSlice = createSlice({
     name: 'users',
@@ -13,7 +13,12 @@ const usersSlice = createSlice({
                 state.items = action.payload
             })
             .addCase(fetchUser.fulfilled, (state, action) => {
-                state.item = action.payload
+                state.userDetails = action.payload
+            })
+            .addCase(updateUser.fulfilled, (state, action) => {
+                if (state.userDetails.id === action.payload.id) {
+                    state.userDetails = action.payload
+                }
             })
     },
 })
@@ -27,14 +32,18 @@ export const fetchUser = createAsyncThunk('users/fetchUser', async (id) => {
     const response = await client.get(`/myApi/users/${id}`)
     return response.data
 })
-
-export const deleteUser = createAsyncThunk('users/deleteUser', async (id) => {
-    const response = await client.delete(`/myApi/users/${id}`, id)
+export const createUser = createAsyncThunk('users/createUser', async (data) => {
+    const response = await client.post(`/myApi/users`, data)
     return response.data
 })
 
-export const createUser = createAsyncThunk('users/createUser', async (data) => {
-    const response = await client.post(`/myApi/users`, data)
+export const updateUser = createAsyncThunk('users/updateUser', async (data) => {
+    const response = await client.put(`/myApi/users/${data.id}`, data)
+    return response.data
+})
+
+export const deleteUser = createAsyncThunk('users/deleteUser', async (id) => {
+    const response = await client.delete(`/myApi/users/${id}`, id)
     return response.data
 })
 

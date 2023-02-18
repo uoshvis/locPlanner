@@ -10,9 +10,10 @@ import {
     fetchUsers,
     fetchUser,
     createUser,
+    updateUser,
     deleteUser,
 } from '../users/usersSlice'
-import { login, register, logout, updateUser } from '../auth/authSlice'
+import { login, register, logout } from '../auth/authSlice'
 import { fetchMeetings } from '../meetings/meetingsSlice'
 
 const notificationAdapter = createEntityAdapter()

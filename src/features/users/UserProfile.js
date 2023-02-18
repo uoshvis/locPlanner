@@ -6,11 +6,11 @@ import { z } from 'zod'
 
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
-
 import Button from '@mui/material/Button'
+
 import Input from './formFields/Input'
 import ColorSelectorBtn from './formFields/ColorSelectorBtn'
-import { updateUser } from '../auth/authSlice'
+import { updateUser } from './usersSlice'
 
 const userSchema = z.object({
     userName: z.string().max(15).min(1, { message: 'User Name Required' }),
@@ -21,7 +21,7 @@ const userSchema = z.object({
 
 function UserProfile() {
     const dispatch = useDispatch()
-    const { userDetails } = useSelector((state) => state.auth)
+    const { userDetails } = useSelector((state) => state.users)
     const { handleSubmit, reset, setValue, getValues, watch, control } =
         useForm({
             defaultValues: {

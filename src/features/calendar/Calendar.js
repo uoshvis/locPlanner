@@ -42,7 +42,7 @@ function MainCalendar() {
     const open = useSelector((state) => state.calendar.showModal)
     const notificationIsOpen = useSelector(isNotificationOpen)
     const userColors = useSelector((state) => getUserColors(state))
-    const { userDetails } = useSelector((state) => state.auth)
+    const { userDetails } = useSelector((state) => state.users)
     const adminRoles = ['admin', 'superAdmin']
 
     useEffect(() => {
