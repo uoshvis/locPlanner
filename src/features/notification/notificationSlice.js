@@ -43,14 +43,6 @@ export const notificationSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addMatcher(
-                isAnyOf(fetchEventsByLocation.rejected),
-                (state, action) => {
-                    state.message = action.error.message
-                    state.type = 'error'
-                    state.open = true
-                }
-            )
             // match pending, fulfilled and rejected
             .addMatcher(
                 isAnyOf(
