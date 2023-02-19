@@ -71,16 +71,16 @@ const UserItem = ({ handleRemoveUser, isSuperAdminUser }) => {
             </Typography>
 
             <Box
-                component="form"
                 onSubmit={handleSubmit(onSaveSubmit)}
+                component="form"
+                noValidate
+                autoComplete="off"
                 sx={{
                     '& > :not(style)': { m: 1, width: '50ch' },
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                 }}
-                noValidate
-                autoComplete="off"
             >
                 <UserFormFields control={control} />
 

@@ -65,14 +65,13 @@ export default function UserFormDialog() {
             </Button>
 
             <Dialog open={open} onClose={handleClose}>
-                <FormControl>
+                <FormControl component="form" noValidate autoComplete="off">
                     <DialogTitle>Add New User</DialogTitle>
 
                     <DialogContent>
                         <DialogContentText>
                             To add a new user fill the form.
                         </DialogContentText>
-
                         <UserFormFields
                             control={control}
                             handleSubmit={handleSubmit}
