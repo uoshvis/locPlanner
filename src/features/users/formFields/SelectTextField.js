@@ -60,6 +60,7 @@ function SelectTextField({
             helperText={error?.message}
             required={required}
             fullWidth
+            margin="normal"
         >
             {options.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
