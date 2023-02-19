@@ -1,28 +1,35 @@
-import React from "react";
-import {  MenuItem, TextField } from "@mui/material";
-import { Controller } from "react-hook-form";
+import React from 'react'
+import { MenuItem, TextField } from '@mui/material'
+import { Controller } from 'react-hook-form'
 
-
-export const UserSelectDropdown = ({name, control, label, usersList, disabled}) => {
-
+export const UserSelectDropdown = ({
+    name,
+    control,
+    label,
+    usersList,
+    disabled,
+}) => {
     const generateSingleOptions = (usersList) => {
-        return usersList.map((user) => {            
+        return usersList.map((user) => {
             return (
                 <MenuItem key={user.id} value={user.id}>
-                    { user.firstName + ' ' + user.lastName }
+                    {user.firstName + ' ' + user.lastName}
                 </MenuItem>
-            );
-        });
-    };
+            )
+        })
+    }
 
     return (
         <Controller
             control={control}
             name={name}
             rules={{
-                required: "Please select user"
+                required: 'Please select user',
             }}
-            render={({ field: { onChange, value, ref }, fieldState: {error}}) => (
+            render={({
+                field: { onChange, value, ref },
+                fieldState: { error },
+            }) => (
                 <TextField
                     onChange={onChange}
                     value={value}
@@ -38,5 +45,5 @@ export const UserSelectDropdown = ({name, control, label, usersList, disabled}) 
                 </TextField>
             )}
         />
-    );
-};
+    )
+}
