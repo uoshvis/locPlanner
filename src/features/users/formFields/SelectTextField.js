@@ -21,6 +21,8 @@ const userAdminRoles = [
     },
 ]
 
+const rolesAll = userAdminRoles.concat(superAdminRole)
+
 function SelectTextField({
     control,
     name,
@@ -29,7 +31,7 @@ function SelectTextField({
     readOnly,
     required = false,
 }) {
-    const [options, setOptions] = useState(userAdminRoles)
+    const [options, setOptions] = useState(rolesAll)
 
     const {
         field,
@@ -40,8 +42,12 @@ function SelectTextField({
     })
 
     useEffect(() => {
-        if (field.value === 'superAdmin') {
-            setOptions(superAdminRole)
+        if (field.value) {
+            if (field.value === 'superAdmin') {
+                setOptions(superAdminRole)
+            } else {
+                setOptions(userAdminRoles)
+            }
         }
     }, [field.value])
 
