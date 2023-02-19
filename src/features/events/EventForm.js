@@ -36,7 +36,7 @@ export const EventForm = (props) => {
     const { formType } = useSelector((state) => state.calendar)
     const users = useSelector((state) => state.users.items)
 
-    const [usersList, setUsersList] = useState([])
+    const [usersList, setUsersList] = useState(users)
     const [readOnly] = useState(formType === 'view' ? true : false)
 
     const defaultValues = {
