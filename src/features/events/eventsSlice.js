@@ -37,7 +37,6 @@ export const eventsSlice = createSlice({
             const { key, value } = action.payload
             state.currentItem[key] = value
         },
-        deleteEvent: {},
     },
     extraReducers(builder) {
         builder
