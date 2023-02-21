@@ -26,13 +26,14 @@ import {
 } from './eventsSlice'
 import { LocationInputDropDown } from './formFields/LocationInputDropdown'
 import { UserSelectDropdown } from './formFields/UserSelectDropdown'
+import { getApiStatus } from '../notification/notificationSlice'
 
 export const EventForm = (props) => {
     const dispatch = useDispatch()
 
+    const apiStatus = useSelector(getApiStatus)
     const event = useSelector((state) => state.calendar.currentItem)
     const { userDetails } = useSelector((state) => state.users)
-    const { apiStatus } = useSelector((state) => state.notification)
     const { formType } = useSelector((state) => state.calendar)
     const users = useSelector((state) => state.users.items)
 
