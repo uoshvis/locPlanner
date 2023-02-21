@@ -8,7 +8,7 @@ import Box from '@mui/material/Box'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import Typography from '@mui/material/Typography'
 
-import { fetchUsers, updateUser } from './usersSlice'
+import { fetchUsers, getUserById, updateUser } from './usersSlice'
 import UserFormFields from './formFields/UserFormFields'
 import AlertDialog from '../../components/DeleteAlertDialog'
 import { userSchema } from './formFields/userSchema'
@@ -16,10 +16,7 @@ import { userSchema } from './formFields/userSchema'
 const UserItem = ({ handleRemoveUser, isSuperAdminUser }) => {
     const { userId } = useParams()
     const dispatch = useDispatch()
-    const users = useSelector((state) => state.users.items)
-    const user = users.find((user) => {
-        return '' + user.id === '' + userId
-    })
+    const user = useSelector((state) => getUserById(state, userId))
 
     const [isDialogOpen, setDialogIsOpen] = useState(false)
 
