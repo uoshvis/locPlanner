@@ -8,23 +8,23 @@ import calendarReducer, {
 describe('calendar reducer', () => {
     const initialState = {
         items: [],
-        currentItem : {},
+        currentItem: {},
         currentLocation: 'all',
         showModal: false,
         status: 'idle',
-        error: null, 
-        eventStatus: '' 
+        error: null,
+        eventStatus: '',
     }
 
     it('should handle initial state', () => {
         expect(calendarReducer(undefined, { type: 'unknown' })).toEqual({
             items: [],
-            currentItem : {},
+            currentItem: {},
             currentLocation: 'all',
             showModal: false,
             status: 'idle',
-            error: null, 
-            eventStatus: '' 
+            error: null,
+            eventStatus: '',
         })
     })
 
@@ -37,8 +37,8 @@ describe('calendar reducer', () => {
         const event = {
             id: 10,
             start: moment().toDate(),
-            end: moment().add(1, "hours").toDate(),
-            title: "Some title 1",
+            end: moment().add(1, 'hours').toDate(),
+            title: 'Some title 1',
             location: 'loc1',
         }
         const actual = calendarReducer(initialState, selectCurrentEvent(event))
@@ -49,18 +49,21 @@ describe('calendar reducer', () => {
         const event = {
             id: 10,
             start: moment().toDate(),
-            end: moment().add(1, "hours").toDate(),
-            title: "Some title 1",
+            end: moment().add(1, 'hours').toDate(),
+            title: 'Some title 1',
             location: 'loc1',
         }
-        const stateOne = calendarReducer(initialState, selectCurrentEvent(event))
+        const stateOne = calendarReducer(
+            initialState,
+            selectCurrentEvent(event)
+        )
         const stateTwo = calendarReducer(stateOne, toggleShowModal())
         expect(stateTwo.showModal).toBe(true)
         const actual = calendarReducer(stateTwo, toggleShowModal())
         expect(actual.currentItem).toEqual({})
         expect(actual.showModal).toBe(false)
     })
-    
+
     it('should set currentEventLocation', () => {
         const actual = calendarReducer(initialState, setCurrentLocation('loc1'))
         expect(actual.currentLocation).toEqual('loc1')

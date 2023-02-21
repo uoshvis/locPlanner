@@ -1,9 +1,9 @@
 function Info() {
     return (
-      <>
-        <h2>Info page</h2>
-      </>
-    );
-  }
+        <>
+            <h2>Info page</h2>
+        </>
+    )
+}
 
-  export default Info
+export default Info
