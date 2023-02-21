@@ -50,7 +50,6 @@ export const deleteUser = createAsyncThunk('users/deleteUser', async (id) => {
 export default usersSlice.reducer
 
 // Custom getters
-// ToDo remove if unsused
 export const getUserById = (state, userId) => {
     return state.users.items.find((user) => user.id === Number(userId))
 }
