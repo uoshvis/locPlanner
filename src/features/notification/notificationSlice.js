@@ -35,6 +35,7 @@ export const notificationSlice = createSlice({
             state.open = false
         },
     },
+    // https://stackoverflow.com/questions/68721734/how-can-i-change-state-of-another-reducer-from-extra-reducers-add-cases
     extraReducers: (builder) => {
         builder
             .addMatcher(isPendingAction, (state, action) => {
@@ -48,7 +49,7 @@ export const notificationSlice = createSlice({
             })
             .addMatcher(isRejectedAction, (state, action) => {
                 state.apiStatus = 'idle'
-                state.message = action.error.message
+                state.message = action?.error?.message
                 state.type = 'error'
                 state.open = true
             })
