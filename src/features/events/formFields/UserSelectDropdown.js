@@ -35,7 +35,7 @@ export const UserSelectDropdown = ({
                     value={value}
                     ref={ref}
                     label={label}
-                    id="outlined-select-location"
+                    id="select-user"
                     select
                     error={!!error}
                     helperText={error?.message}
