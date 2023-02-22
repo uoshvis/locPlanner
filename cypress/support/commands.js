@@ -24,6 +24,18 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('visitLocal', () => {
+Cypress.Commands.add('login', (loginData) => {
     cy.visit('/')
+    cy.get('input[name="userName"]').click().type(loginData.userName)
+    cy.get('input#password').type(loginData.password)
+    cy.get('button').should('be.enabled')
+    cy.get('form').submit()
+
+    // ASSERT
+    cy.get('.MuiToolbar-root').within(() => {
+        cy.get('p').should(
+            'contain.text',
+            `Welcome back ${loginData.firstName}`
+        )
+    })
 })
