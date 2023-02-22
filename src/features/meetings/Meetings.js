@@ -1,8 +1,7 @@
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchMeetings } from './meetingsSlice'
+import React, { useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
+import { useGetAllMeetingsQuery } from './meetingsApi'
 
 const { useEffect } = React
 
@@ -43,12 +42,15 @@ const columns = [
     },
 ]
 function Meetings() {
-    const dispatch = useDispatch()
-    const rows = useSelector((state) => state.meetings)
+    // Using a query hook automatically fetches data and returns query values
+    const { data, error, isLoading } = useGetAllMeetingsQuery()
+    const [rows, setRows] = useState([])
 
     useEffect(() => {
-        dispatch(fetchMeetings())
-    }, [dispatch])
+        if (data) {
+            setRows(data)
+        }
+    }, [error, isLoading, data])
 
     return (
         <Box
@@ -64,7 +66,7 @@ function Meetings() {
                 rows={rows}
                 columns={columns}
                 pageSize={10}
-                rowsPerPageOptions={[5]}
+                rowsPerPageOptions={[5, 10]}
                 checkboxSelection
                 sortModel={[{ field: 'id', sort: 'desc' }]}
             />

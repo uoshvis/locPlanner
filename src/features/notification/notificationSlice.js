@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+const conditionError = 'ConditionError'
+
 // Available types: error, warning, info, success
 const initialState = {
     message: null,
@@ -48,10 +50,13 @@ export const notificationSlice = createSlice({
                 state.apiStatus = 'idle'
             })
             .addMatcher(isRejectedAction, (state, action) => {
-                state.apiStatus = 'idle'
-                state.message = action?.error?.message
-                state.type = 'error'
-                state.open = true
+                // Skip "Aborted due to condition callback returning false."
+                if (action.error.name !== conditionError) {
+                    state.apiStatus = 'idle'
+                    state.message = action?.error?.message
+                    state.type = 'error'
+                    state.open = true
+                }
             })
     },
 })

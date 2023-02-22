@@ -2,15 +2,16 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import calendarReducer from '../features/events/eventsSlice'
 import notificationReducer from '../features/notification/notificationSlice'
 import usersReducer from '../features/users/usersSlice'
-import meetingsReducer from '../features/meetings/meetingsSlice'
 import authReducer from '../features/auth/authSlice'
+import { meetingsApi } from '../features/meetings/meetingsApi'
 
 const combineReducer = combineReducers({
     calendar: calendarReducer,
     notification: notificationReducer,
     users: usersReducer,
-    meetings: meetingsReducer,
     auth: authReducer,
+    // Add the generated reducer as a specific top-level slice
+    [meetingsApi.reducerPath]: meetingsApi.reducer,
 })
 
 const rootReducer = (state, action) => {
@@ -41,5 +42,9 @@ export const store = configureStore({
                     'calendar.currentItem.end',
                 ],
             },
-        }),
+        })
+            /*
+                Adding the api middleware enables caching, invalidation, polling, and other useful features of `rtk-query`.
+            */
+            .concat(meetingsApi.middleware),
 })
