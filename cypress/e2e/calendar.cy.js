@@ -1,5 +1,6 @@
 describe('main calendar', () => {
     const userAuthData = Cypress.env('userAuthData')
+
     before(() => {
         cy.login(userAuthData)
     })
