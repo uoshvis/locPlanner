@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
@@ -32,9 +32,16 @@ const settings = [
 const ResponsiveAppBar = () => {
     const { isLoggedIn } = useSelector((state) => state.auth)
     const { userDetails } = useSelector((state) => state.users)
+    const [avatarString, setAvatarString] = useState('')
 
     const [anchorElNav, setAnchorElNav] = React.useState(null)
     const [anchorElUser, setAnchorElUser] = React.useState(null)
+
+    useEffect(() => {
+        if (Object.keys(userDetails).length !== 0) {
+            setAvatarString(userDetails.firstName[0] + userDetails.lastName[0])
+        }
+    }, [userDetails])
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget)
@@ -198,9 +205,14 @@ const ResponsiveAppBar = () => {
                                         sx={{ p: 0 }}
                                     >
                                         <Avatar
-                                            alt="Remy Sharp"
-                                            src="https://mui.com/static/images/avatar/1.jpg"
-                                        />
+                                            sx={{
+                                                bgcolor: userDetails.userColor,
+                                                color: '#fff',
+                                            }}
+                                            alt={userDetails.firstName}
+                                        >
+                                            {avatarString}
+                                        </Avatar>
                                     </IconButton>
                                 </Tooltip>
                                 <Menu
