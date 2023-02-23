@@ -7,7 +7,8 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import Chip from '@mui/material/Chip'
+import Avatar from '@mui/material/Avatar'
+import CardHeader from '@mui/material/CardHeader'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
@@ -65,8 +66,7 @@ export default function UserList({ users = [], isSuperAdmin }) {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell align="left">User Color</TableCell>
-                            <TableCell align="left">Firstname</TableCell>
+                            <TableCell align="center">Firstname</TableCell>
                             <TableCell align="left">Lastname</TableCell>
                             <TableCell align="left">UserName</TableCell>
                             <TableCell align="left">Role</TableCell>
@@ -97,17 +97,17 @@ export default function UserList({ users = [], isSuperAdmin }) {
                                         component="th"
                                         scope="row"
                                     >
-                                        <Chip
-                                            size="small"
-                                            sx={{
-                                                bgcolor: user.userColor,
-                                                color: 'white',
-                                                width: '30%',
-                                            }}
+                                        <CardHeader
+                                            avatar={
+                                                <Avatar
+                                                    sx={{
+                                                        color: user.userColor,
+                                                        bgcolor: '#fff',
+                                                    }}
+                                                />
+                                            }
+                                            title={user.firstName}
                                         />
-                                    </TableCell>
-                                    <TableCell align="left">
-                                        {user.firstName}
                                     </TableCell>
                                     <TableCell align="left">
                                         {user.lastName}
