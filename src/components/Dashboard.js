@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Outlet } from 'react-router-dom'
+import { NavLink, Outlet } from 'react-router-dom'
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
@@ -40,32 +40,27 @@ const Item = styled(Paper)(({ theme }) => ({
     height: '100%',
 }))
 
-const DashboardMenuItem = ({
-    selectedIndex,
-    onListItemClick,
-    menuIdex,
-    text = '',
-    to = '',
-}) => (
+// https://stackoverflow.com/questions/71350481/react-router-dom-v6-navlink-and-mui-listitem-not-working-with-classname?answertab=trending#tab-top
+
+const CustomNavLink = React.forwardRef((props, ref) => (
+    <NavLink
+        ref={ref}
+        {...props}
+        className={({ isActive }) =>
+            isActive ? props.className + ' Mui-selected' : props.className
+        }
+    />
+))
+
+const DashboardMenuItem = ({ text, to }) => (
     <ListItem>
-        <ListItemButton
-            selected={selectedIndex === menuIdex}
-            onClick={() => onListItemClick(menuIdex)}
-            component={Link}
-            to={to}
-        >
+        <ListItemButton component={CustomNavLink} to={to}>
             <ListItemText primary={text} />
         </ListItemButton>
     </ListItem>
 )
 
 function MenuItems() {
-    const [selectedIndex, setSelectedIndex] = React.useState()
-
-    const handleListItemClick = (index) => {
-        setSelectedIndex(index)
-    }
-
     return (
         <Box
             sx={{
@@ -79,9 +74,6 @@ function MenuItems() {
                 {menuItemsData.map((menuItem, idx) => (
                     <DashboardMenuItem
                         key={idx}
-                        selectedIndex={selectedIndex}
-                        onListItemClick={handleListItemClick}
-                        menuIdex={idx}
                         text={menuItem.text}
                         to={menuItem.to}
                     />
