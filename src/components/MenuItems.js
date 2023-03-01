@@ -1,9 +1,6 @@
 import React from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
-import { styled } from '@mui/material/styles'
+import { NavLink } from 'react-router-dom'
 import Box from '@mui/material/Box'
-import Paper from '@mui/material/Paper'
-import Grid from '@mui/material/Grid'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
@@ -31,14 +28,6 @@ const menuItemsData = [
         to: 'about',
     },
 ]
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-    height: '100%',
-}))
 
 // https://stackoverflow.com/questions/71350481/react-router-dom-v6-navlink-and-mui-listitem-not-working-with-classname?answertab=trending#tab-top
 
@@ -83,23 +72,4 @@ function MenuItems() {
     )
 }
 
-function DashboardStyleLayout() {
-    return (
-        <Box sx={{ flexGrow: 1 }}>
-            <Grid container spacing={0}>
-                <Grid item xs={2}>
-                    <Item>
-                        <MenuItems />
-                    </Item>
-                </Grid>
-                <Grid item xs={10}>
-                    <Item>
-                        <Outlet />
-                    </Item>
-                </Grid>
-            </Grid>
-        </Box>
-    )
-}
-
-export default DashboardStyleLayout
+export default MenuItems

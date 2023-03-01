@@ -11,10 +11,9 @@ import {
     isNotificationOpen,
     getNotificationMsg,
 } from './features/notification/notificationSlice'
-import Navbar from './components/Navbar'
 import Home from './components/Home'
 import NoMatch from './components/NoMatch'
-import DashboardStyleLayout from './components/Dashboard'
+import { MainLayout, AppLayout } from './components/Layouts'
 import SignIn from './features/auth/SignIn'
 import SignUp from './features/auth/SignUp'
 import Logout from './features/auth/Logout'
@@ -54,7 +53,7 @@ function App() {
                     <Route path="logout" element={<Logout />} />
                     <Route path="*" element={<NoMatch />} />
                     <Route element={<RequireAuth isAllowed={!!isLoggedIn} />}>
-                        <Route element={<DashboardStyleLayout />}>
+                        <Route element={<AppLayout />}>
                             <Route index element={<Home />} />
                             <Route path="calendar" element={<MainCalendar />} />
                             <Route path="events" element={<Events />} />
@@ -72,15 +71,6 @@ function App() {
                     </Route>
                 </Route>
             </Routes>
-        </div>
-    )
-}
-
-function MainLayout() {
-    return (
-        <div>
-            <Navbar />
-            <Outlet />
         </div>
     )
 }
