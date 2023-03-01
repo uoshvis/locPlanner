@@ -20,7 +20,6 @@ import SignIn from './features/auth/SignIn'
 import SignUp from './features/auth/SignUp'
 import Logout from './features/auth/Logout'
 import Users from './features/users/Users'
-import Info from './components/Info'
 import Events from './features/events/Events'
 import Meetings from './features/meetings/Meetings'
 import UserProfile from './features/users/UserProfile'
@@ -71,8 +70,6 @@ function App() {
                                 element={<DashboardLayout />}
                             >
                                 <Route path="users/*" element={<Users />} />
-                                <Route path="info" element={<Info />} />
-                                <Route path="*" element={<NoMatch />} />
                             </Route>
                         </Route>
                     </Route>
