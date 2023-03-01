@@ -17,16 +17,10 @@ import MenuItem from '@mui/material/MenuItem'
 
 import Logo from '../logo.svg'
 
-const pages = [
-    { text: 'Calendar', href: '/calendar' },
-    { text: 'Events', href: '/events' },
-    { text: 'Meetings', href: '/meetings' },
-    { text: 'About', href: '/about' },
-]
+const pages = []
 
 const settings = [
     { text: 'Profile', href: '/profile' },
-    { text: 'Dashboard', href: '/dashboard' },
     { text: 'Logout', href: '/logout' },
 ]
 const ResponsiveAppBar = () => {
