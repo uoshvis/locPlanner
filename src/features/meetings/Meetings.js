@@ -53,24 +53,25 @@ function Meetings() {
     }, [error, isLoading, data])
 
     return (
-        <Box
-            sx={{
-                height: 700,
-                width: 840,
-                pt: 2,
-                m: 'auto',
-            }}
-        >
+        <div>
             <h2>Meetings</h2>
-            <DataGrid
-                rows={rows}
-                columns={columns}
-                pageSize={10}
-                rowsPerPageOptions={[5, 10]}
-                checkboxSelection
-                sortModel={[{ field: 'id', sort: 'desc' }]}
-            />
-        </Box>
+            <Box
+                sx={{
+                    height: 700,
+                    width: 840,
+                    m: 'auto',
+                }}
+            >
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    pageSize={10}
+                    rowsPerPageOptions={[5, 10]}
+                    checkboxSelection
+                    sortModel={[{ field: 'id', sort: 'desc' }]}
+                />
+            </Box>
+        </div>
     )
 }
 
