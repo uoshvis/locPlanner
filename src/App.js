@@ -2,7 +2,6 @@ import React from 'react'
 import { Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import loadable from '@loadable/component'
-
 import './App.css'
 import MainCalendar from './features/calendar/Calendar'
 import Notification from './features/notification/Notification'
@@ -15,7 +14,7 @@ import {
 import Navbar from './components/Navbar'
 import Home from './components/Home'
 import NoMatch from './components/NoMatch'
-import DashboardLayout from './components/Dashboard'
+import DashboardStyleLayout from './components/Dashboard'
 import SignIn from './features/auth/SignIn'
 import SignUp from './features/auth/SignUp'
 import Logout from './features/auth/Logout'
@@ -49,39 +48,35 @@ function App() {
             </React.Fragment>
 
             <Routes>
-                <Route element={<Layout />}>
-                    <Route path="/login" element={<SignIn />} />
-                    <Route path="/register" element={<SignUp />} />
-
-                    <Route path="/logout" element={<Logout />} />
+                <Route element={<MainLayout />}>
+                    <Route path="login" element={<SignIn />} />
+                    <Route path="register" element={<SignUp />} />
+                    <Route path="logout" element={<Logout />} />
+                    <Route path="*" element={<NoMatch />} />
                     <Route element={<RequireAuth isAllowed={!!isLoggedIn} />}>
-                        <Route index element={<Home />} />
-                        <Route path="/calendar" element={<MainCalendar />} />
-                        <Route path="/events" element={<Events />} />
-                        <Route path="/meetings" element={<Meetings />} />
-
-                        <Route path="/profile" element={<UserProfile />} />
-
-                        <Route
-                            element={<RequireAuthorization redirectPath="/" />}
-                        >
+                        <Route element={<DashboardStyleLayout />}>
+                            <Route index element={<Home />} />
+                            <Route path="calendar" element={<MainCalendar />} />
+                            <Route path="events" element={<Events />} />
+                            <Route path="meetings" element={<Meetings />} />
+                            <Route path="about" element={<About />} />
+                            <Route path="profile" element={<UserProfile />} />
                             <Route
-                                path="dashboard"
-                                element={<DashboardLayout />}
+                                element={
+                                    <RequireAuthorization redirectPath="/" />
+                                }
                             >
                                 <Route path="users/*" element={<Users />} />
                             </Route>
                         </Route>
                     </Route>
-                    <Route path="about" element={<About />} />
-                    <Route path="*" element={<NoMatch />} />
                 </Route>
             </Routes>
         </div>
     )
 }
 
-function Layout() {
+function MainLayout() {
     return (
         <div>
             <Navbar />

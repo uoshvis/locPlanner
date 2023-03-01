@@ -39,6 +39,37 @@ function MenuItems() {
                         selected={selectedIndex === 0}
                         onClick={(event) => handleListItemClick(event, 0)}
                         component={Link}
+                        to={'calendar'}
+                    >
+                        <ListItemText primary="Calendar" />
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem>
+                    <ListItemButton
+                        selected={selectedIndex === 1}
+                        onClick={(event) => handleListItemClick(event, 1)}
+                        component={Link}
+                        to={'events'}
+                    >
+                        <ListItemText primary="Events" />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem>
+                    <ListItemButton
+                        selected={selectedIndex === 2}
+                        onClick={(event) => handleListItemClick(event, 2)}
+                        component={Link}
+                        to={'meetings'}
+                    >
+                        <ListItemText primary="Meetings" />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem>
+                    <ListItemButton
+                        selected={selectedIndex === 3}
+                        onClick={(event) => handleListItemClick(event, 3)}
+                        component={Link}
                         to={'users'}
                     >
                         <ListItemText primary="Users" />
@@ -46,12 +77,12 @@ function MenuItems() {
                 </ListItem>
                 <ListItem>
                     <ListItemButton
-                        selected={selectedIndex === 1}
-                        onClick={(event) => handleListItemClick(event, 1)}
+                        selected={selectedIndex === 4}
+                        onClick={(event) => handleListItemClick(event, 4)}
                         component={Link}
-                        to={'info'}
+                        to={'about'}
                     >
-                        <ListItemText primary="Info" />
+                        <ListItemText primary="About" />
                     </ListItemButton>
                 </ListItem>
             </List>
@@ -59,7 +90,7 @@ function MenuItems() {
     )
 }
 
-function DashboardLayout() {
+function DashboardStyleLayout() {
     return (
         <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={0}>
@@ -78,4 +109,4 @@ function DashboardLayout() {
     )
 }
 
-export default DashboardLayout
+export default DashboardStyleLayout
