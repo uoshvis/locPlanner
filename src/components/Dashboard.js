@@ -9,6 +9,28 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 
+const menuItemsData = [
+    {
+        text: 'Calendar',
+        to: 'calendar',
+    },
+    {
+        text: 'Events',
+        to: 'events',
+    },
+    {
+        text: 'Meetings',
+        to: 'meetings',
+    },
+    {
+        text: 'Users',
+        to: 'users',
+    },
+    {
+        text: 'About',
+        to: 'about',
+    },
+]
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
@@ -18,12 +40,32 @@ const Item = styled(Paper)(({ theme }) => ({
     height: '100%',
 }))
 
+const DashboardMenuItem = ({
+    selectedIndex,
+    onListItemClick,
+    menuIdex,
+    text = '',
+    to = '',
+}) => (
+    <ListItem>
+        <ListItemButton
+            selected={selectedIndex === menuIdex}
+            onClick={() => onListItemClick(menuIdex)}
+            component={Link}
+            to={to}
+        >
+            <ListItemText primary={text} />
+        </ListItemButton>
+    </ListItem>
+)
+
 function MenuItems() {
     const [selectedIndex, setSelectedIndex] = React.useState()
 
-    const handleListItemClick = (event, index) => {
+    const handleListItemClick = (index) => {
         setSelectedIndex(index)
     }
+
     return (
         <Box
             sx={{
@@ -33,58 +75,17 @@ function MenuItems() {
                 bgcolor: 'background.paper',
             }}
         >
-            <List component="nav" aria-label="secondary mailbox folder">
-                <ListItem>
-                    <ListItemButton
-                        selected={selectedIndex === 0}
-                        onClick={(event) => handleListItemClick(event, 0)}
-                        component={Link}
-                        to={'calendar'}
-                    >
-                        <ListItemText primary="Calendar" />
-                    </ListItemButton>
-                </ListItem>
-
-                <ListItem>
-                    <ListItemButton
-                        selected={selectedIndex === 1}
-                        onClick={(event) => handleListItemClick(event, 1)}
-                        component={Link}
-                        to={'events'}
-                    >
-                        <ListItemText primary="Events" />
-                    </ListItemButton>
-                </ListItem>
-                <ListItem>
-                    <ListItemButton
-                        selected={selectedIndex === 2}
-                        onClick={(event) => handleListItemClick(event, 2)}
-                        component={Link}
-                        to={'meetings'}
-                    >
-                        <ListItemText primary="Meetings" />
-                    </ListItemButton>
-                </ListItem>
-                <ListItem>
-                    <ListItemButton
-                        selected={selectedIndex === 3}
-                        onClick={(event) => handleListItemClick(event, 3)}
-                        component={Link}
-                        to={'users'}
-                    >
-                        <ListItemText primary="Users" />
-                    </ListItemButton>
-                </ListItem>
-                <ListItem>
-                    <ListItemButton
-                        selected={selectedIndex === 4}
-                        onClick={(event) => handleListItemClick(event, 4)}
-                        component={Link}
-                        to={'about'}
-                    >
-                        <ListItemText primary="About" />
-                    </ListItemButton>
-                </ListItem>
+            <List component="nav" aria-label="menu nav items">
+                {menuItemsData.map((menuItem, idx) => (
+                    <DashboardMenuItem
+                        key={idx}
+                        selectedIndex={selectedIndex}
+                        onListItemClick={handleListItemClick}
+                        menuIdex={idx}
+                        text={menuItem.text}
+                        to={menuItem.to}
+                    />
+                ))}
             </List>
         </Box>
     )
