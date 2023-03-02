@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import Box from '@mui/material/Box'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
@@ -19,13 +20,17 @@ const menuItemsData = [
         text: 'Meetings',
         to: 'meetings',
     },
-    {
-        text: 'Users',
-        to: 'users',
-    },
+
     {
         text: 'About',
         to: 'about',
+    },
+]
+
+const adminMenuItems = [
+    {
+        text: 'Users',
+        to: 'users',
     },
 ]
 
@@ -50,6 +55,20 @@ const DashboardMenuItem = ({ text, to }) => (
 )
 
 function MenuItems() {
+    const [menuList, setMenuList] = useState(menuItemsData)
+    const user = useSelector((state) => state.users.userDetails)
+
+    useEffect(() => {
+        if (['admin', 'superAdmin'].includes(user.role)) {
+            const adminMenu = [
+                ...menuItemsData.slice(0, 3),
+                ...adminMenuItems,
+                ...menuItemsData.slice(3),
+            ]
+            setMenuList([...adminMenu])
+        }
+    }, [user.role])
+
     return (
         <Box
             sx={{
@@ -60,7 +79,7 @@ function MenuItems() {
             }}
         >
             <List component="nav" aria-label="menu nav items">
-                {menuItemsData.map((menuItem, idx) => (
+                {menuList.map((menuItem, idx) => (
                     <DashboardMenuItem
                         key={idx}
                         text={menuItem.text}
