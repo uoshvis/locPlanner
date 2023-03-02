@@ -5,8 +5,13 @@ describe('user role permissions ', () => {
     })
 
     it('user does not have dashboard permission', () => {
-        cy.contains('.MuiListItemText-root', 'Users').click()
-        cy.contains('You dont have permissions')
+        cy.contains('.MuiButtonBase-root', 'Users').should(
+            'have.class',
+            'Mui-disabled'
+        )
+        cy.contains('You dont have permissions').should('not.exist')
+        cy.visitWithLogin('users', userAuthData)
+        cy.contains('You dont have permissions').should('exist')
     })
 
     it('access user profile page', () => {

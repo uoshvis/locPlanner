@@ -6,7 +6,9 @@ describe('admin role permissions ', () => {
     })
 
     it('admin have dashboard access with disabled edit', () => {
-        cy.contains('.MuiListItemText-root', 'Users').click()
+        cy.contains('.MuiListItemText-root', 'Users')
+            .should('not.be.disabled')
+            .click()
         cy.contains('You dont have permissions').should('not.exist')
         cy.contains('Users').click()
         cy.get('table')

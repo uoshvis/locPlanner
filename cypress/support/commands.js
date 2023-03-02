@@ -39,3 +39,19 @@ Cypress.Commands.add('login', (loginData) => {
         )
     })
 })
+
+Cypress.Commands.add('visitWithLogin', (url, loginData) => {
+    cy.visit(url)
+    cy.get('input[name="userName"]').click().type(loginData.userName)
+    cy.get('input#password').type(loginData.password)
+    cy.get('button').should('be.enabled')
+    cy.get('form').submit()
+
+    // ASSERT
+    cy.get('.MuiToolbar-root').within(() => {
+        cy.get('p').should(
+            'contain.text',
+            `Welcome back ${loginData.firstName}`
+        )
+    })
+})
