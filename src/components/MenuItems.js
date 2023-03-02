@@ -11,26 +11,28 @@ const menuItemsData = [
     {
         text: 'Calendar',
         to: 'calendar',
+        disabled: false,
     },
     {
         text: 'Events',
         to: 'events',
+        disabled: false,
     },
     {
         text: 'Meetings',
         to: 'meetings',
+        disabled: false,
+    },
+    {
+        text: 'Users',
+        to: 'users',
+        disabled: true,
     },
 
     {
         text: 'About',
         to: 'about',
-    },
-]
-
-const adminMenuItems = [
-    {
-        text: 'Users',
-        to: 'users',
+        disabled: false,
     },
 ]
 
@@ -46,9 +48,9 @@ const CustomNavLink = React.forwardRef((props, ref) => (
     />
 ))
 
-const DashboardMenuItem = ({ text, to }) => (
+const DashboardMenuItem = ({ text, to, disabled }) => (
     <ListItem>
-        <ListItemButton component={CustomNavLink} to={to}>
+        <ListItemButton component={CustomNavLink} to={to} disabled={disabled}>
             <ListItemText primary={text} />
         </ListItemButton>
     </ListItem>
@@ -60,12 +62,14 @@ function MenuItems() {
 
     useEffect(() => {
         if (['admin', 'superAdmin'].includes(user.role)) {
-            const adminMenu = [
-                ...menuItemsData.slice(0, 3),
-                ...adminMenuItems,
-                ...menuItemsData.slice(3),
-            ]
-            setMenuList([...adminMenu])
+            const adminMenu = menuItemsData.map((item) => {
+                if (item.to === 'users') {
+                    return { ...item, disabled: false }
+                } else {
+                    return item
+                }
+            })
+            setMenuList(adminMenu)
         }
     }, [user.role])
 
@@ -84,6 +88,7 @@ function MenuItems() {
                         key={idx}
                         text={menuItem.text}
                         to={menuItem.to}
+                        disabled={menuItem.disabled}
                     />
                 ))}
             </List>
