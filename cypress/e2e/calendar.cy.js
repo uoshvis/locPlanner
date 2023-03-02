@@ -6,7 +6,7 @@ describe('main calendar', () => {
     })
 
     it('displays location btns', () => {
-        cy.get('a').contains('.MuiButtonBase-root', 'Calendar').click()
+        cy.get('a').contains('.MuiListItemText-root', 'Calendar').click()
         cy.get('.MuiToggleButtonGroup-root button').should('have.length', 3)
         cy.get('.MuiToggleButtonGroup-root button')
             .first()

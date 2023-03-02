@@ -6,8 +6,7 @@ describe('admin role permissions ', () => {
     })
 
     it('admin have dashboard access with disabled edit', () => {
-        cy.get('.MuiAvatar-root').click()
-        cy.get('[role="menuitem"]').contains('Dashboard').click()
+        cy.contains('.MuiListItemText-root', 'Users').click()
         cy.contains('You dont have permissions').should('not.exist')
         cy.contains('Users').click()
         cy.get('table')
@@ -17,7 +16,7 @@ describe('admin role permissions ', () => {
     })
 
     it('select users for event', () => {
-        cy.get('a').contains('.MuiButtonBase-root', 'Calendar').click()
+        cy.get('a').contains('.MuiListItemText-root', 'Calendar').click()
         cy.get('.rbc-day-bg').eq(20).click()
         cy.contains('Add')
         cy.get('[id="select-user"]').click()
@@ -28,7 +27,7 @@ describe('admin role permissions ', () => {
     })
 
     it('can edit other users event', () => {
-        cy.get('a').contains('.MuiButtonBase-root', 'Calendar').click()
+        cy.get('a').contains('.MuiListItemText-root', 'Calendar').click()
         cy.contains('Sunshine 2').click()
         cy.contains('Update')
         cy.contains('View').should('not.exist')

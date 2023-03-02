@@ -11,6 +11,7 @@ module.exports = defineConfig({
                 userName: 'SantaClaus',
                 password: '123',
                 firstName: 'Santa',
+                lastName: 'Claus',
             },
             adminAuthData: {
                 userName: 'admin',
