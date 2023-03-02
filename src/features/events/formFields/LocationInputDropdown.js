@@ -40,7 +40,7 @@ export const LocationInputDropDown = ({ name, control, label, disabled }) => {
                     value={value}
                     ref={ref}
                     label={label}
-                    id="outlined-select-location"
+                    id="select-location"
                     select
                     error={!!error}
                     helperText={error?.message}

@@ -31,25 +31,7 @@ describe('Login Page', () => {
     })
 
     it('SantaClaus logins and welcomes Santa', () => {
-        //ARRANGE
-        const testUser = {
-            userName: 'SantaClaus',
-            password: '123',
-            firstName: 'Santa',
-        }
-
-        // ACT
-        cy.get('input[name="userName"]').type(testUser.userName)
-        cy.get('input#password').type(testUser.password)
-        cy.get('button').should('be.enabled')
-        cy.get('form').submit()
-
-        // ASSERT
-        cy.get('.MuiToolbar-root').within(() => {
-            cy.get('p').should(
-                'contain.text',
-                `Welcome back ${testUser.firstName}`
-            )
-        })
+        const userAuthData = Cypress.env('userAuthData')
+        cy.login(userAuthData)
     })
 })
