@@ -43,23 +43,25 @@ The main task is to recreate the project and learn using:
 
 ## Usage
 
+### Install Dependencies
+
+Backend & Frontend
+
+```
+  npm install
+  cd frontend
+  npm install
+```
+
 ### Environment Variables
 
-Set environmental variables:
+.env file
 
 ```
-$EDITOR ~/.profile
-# add lines at the bottom of the file:
-    export NODE_ENV=development
-    export PORT=5000
-    export MONGO_URI="your_mongo_uri"
-    export JWT_SECRET="any_string"
-```
-
-Source the file:
-
-```bash
-source ~/.profile
+NODE_ENV = development
+PORT = 5000
+MONGO_URI = 'insert_your_mongodb_uri'
+JWT_SECRET = "any_string"
 ```
 
 ### Available Scripts
