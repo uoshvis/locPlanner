@@ -1,5 +1,5 @@
 {
-  "name": "location-planner-redux",
+  "name": "locPlanner",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
