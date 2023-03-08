@@ -81,17 +81,14 @@ const Users = () => {
                     element={
                         <RequireSuper
                             isSuperAdmin={isSuperAdmin}
-                            redirectPath="/users"
+                            redirectPath="users"
                         />
                     }
                 >
                     <Route
                         path=":userId"
                         element={
-                            <UserItem
-                                handleRemoveUser={handleRemoveUser}
-                                isSuperAdmin={isSuperAdmin}
-                            />
+                            <UserItem handleRemoveUser={handleRemoveUser} />
                         }
                     />
                 </Route>

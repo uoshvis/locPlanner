@@ -13,7 +13,7 @@ import UserFormFields from './formFields/UserFormFields'
 import AlertDialog from '../../components/DeleteAlertDialog'
 import { userSchema } from './formFields/userSchema'
 
-const UserItem = ({ handleRemoveUser, isSuperAdminUser }) => {
+const UserItem = ({ handleRemoveUser }) => {
     const { userId } = useParams()
     const dispatch = useDispatch()
     const user = useSelector((state) => getUserById(state, userId))
