@@ -59,7 +59,10 @@ function App() {
                             <Route path="events" element={<Events />} />
                             <Route path="meetings" element={<Meetings />} />
                             <Route path="about" element={<About />} />
-                            <Route path="profile" element={<UserProfile />} />
+                            <Route
+                                path="user-profile"
+                                element={<UserProfile />}
+                            />
                             <Route
                                 element={
                                     <RequireAuthorization redirectPath="/" />

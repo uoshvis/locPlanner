@@ -92,7 +92,7 @@ const UserItem = ({ handleRemoveUser, isSuperAdminUser }) => {
                     Delete
                 </Button>
 
-                <Button component={Link} to={'/dashboard/users'}>
+                <Button component={Link} to={'/users'}>
                     <ArrowBackIosIcon />
                     Back to users
                 </Button>

@@ -20,7 +20,7 @@ import Logo from '../logo.svg'
 const pages = []
 
 const settings = [
-    { text: 'Profile', href: '/profile' },
+    { text: 'Profile', href: '/user-profile' },
     { text: 'Logout', href: '/logout' },
 ]
 const ResponsiveAppBar = () => {
