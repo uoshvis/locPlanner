@@ -64,7 +64,7 @@ const Users = () => {
         } else if (isSuperAdmin) {
             dispatch(deleteUser(userId))
                 .then(() => dispatch(fetchUsers()))
-                .then(() => navigate('/dashboard/users'))
+                .then(() => navigate('/users'))
         }
     }
 
