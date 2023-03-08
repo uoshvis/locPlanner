@@ -81,7 +81,7 @@ const Users = () => {
                     element={
                         <RequireSuper
                             isSuperAdmin={isSuperAdmin}
-                            redirectPath="/dashboard/users"
+                            redirectPath="/users"
                         />
                     }
                 >
