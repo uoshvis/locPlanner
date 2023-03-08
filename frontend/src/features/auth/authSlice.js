@@ -1,5 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { client } from '../../mocks/client.js'
+import axios from 'axios'
+
+const backendURL = 'http://127.0.0.1:5000'
 
 const userToken = localStorage.getItem('userToken')
     ? localStorage.getItem('userToken') &&
@@ -44,5 +47,30 @@ export const logout = createAsyncThunk('auth/logout', async (crediantials) => {
     localStorage.removeItem('userToken')
     return response.data
 })
+
+export const registerUser = createAsyncThunk(
+    'auth/register',
+    async ({ firstName, email, password }, { rejectWithValue }) => {
+        try {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+            await axios.post(
+                `${backendURL}/api/user/register`,
+                { firstName, email, password },
+                config
+            )
+        } catch (error) {
+            // return custom error message from backend if present
+            if (error.response && error.response.data.message) {
+                return rejectWithValue(error.response.data.message)
+            } else {
+                return rejectWithValue(error.message)
+            }
+        }
+    }
+)
 
 export default authSlice.reducer
