@@ -64,6 +64,14 @@ MONGO_URI = 'insert_your_mongodb_uri'
 JWT_SECRET = "any_string"
 ```
 
+#### Frontend with Mock API
+
+Set environment variable
+
+```
+REACT_APP_MOCK_ENV === 'enabled'
+```
+
 ### Available Scripts
 
 ```bash
