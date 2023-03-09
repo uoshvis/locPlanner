@@ -7,6 +7,7 @@ const initialState = {
     message: null,
     type: null,
     open: false,
+    // loading: true/ false ? may be enough
     apiStatus: 'idle', // 'idle' | 'loading' only 2 <<-- | 'succeeded' | 'failed',
 }
 
