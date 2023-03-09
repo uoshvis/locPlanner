@@ -13,12 +13,7 @@ const Logout = () => {
 
     useEffect(() => {
         dispatch(logout())
-            .then(() => {
-                navigate('/', { replace: true })
-            })
-            .catch(() => {
-                navigate('/', { replace: true })
-            })
+        navigate('/', { replace: true })
     }, [dispatch, navigate])
 
     return (

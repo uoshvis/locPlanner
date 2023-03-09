@@ -2,7 +2,7 @@
 
 ## About
 
-This project is a cloned version of a [Location Planner](https://github.com/uoshvis/location-planner) project.
+This project is a cloned version of a personal [Location Planner](https://github.com/uoshvis/location-planner) project.
 
 The main task is to recreate the project and learn using:
 
@@ -36,7 +36,51 @@ The main task is to recreate the project and learn using:
 -   [x] Users profile (select color)
 -   [x] Display Events by Users (colors)
 -   [x] Login/Logout
--   [ ] Router
+-   [x] Router
 -   [ ] JWT
--   [ ] Roles
+-   [x] Roles
 -   [ ] ! Tests, tests and tests !
+
+## Usage
+
+### Install Dependencies
+
+Backend & Frontend
+
+```
+  npm install
+  cd frontend
+  npm install
+```
+
+### Environment Variables
+
+.env file
+
+```
+NODE_ENV = development
+PORT = 5000
+MONGO_URI = 'insert_your_mongodb_uri'
+JWT_SECRET = "any_string"
+```
+
+#### Frontend with Mock API
+
+Set environment variable
+
+```
+REACT_APP_MOCK_ENV === 'enabled'
+```
+
+### Available Scripts
+
+```bash
+  # Run frontend (:3000) & backend (:5000)
+  npm run dev
+
+  # Run backend only
+  npm run server
+
+  # Run frontend only
+  npm run client
+```

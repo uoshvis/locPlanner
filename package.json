@@ -1,66 +1,42 @@
 {
-  "name": "location-planner-redux",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@emotion/react": "^11.10.0",
-    "@emotion/styled": "^11.10.0",
-    "@hookform/resolvers": "^2.9.10",
-    "@loadable/component": "^5.15.2",
-    "@mui/icons-material": "^5.10.3",
-    "@mui/material": "^5.9.3",
-    "@mui/x-data-grid": "^5.17.14",
-    "@mui/x-date-pickers": "^5.0.0-beta.4",
-    "@reduxjs/toolkit": "^1.8.3",
-    "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.3.0",
-    "@testing-library/user-event": "^14.4.1",
-    "moment": "^2.29.4",
-    "react": "^18.2.0",
-    "react-big-calendar": "^1.5.0",
-    "react-color": "^2.19.3",
-    "react-dom": "^18.2.0",
-    "react-hook-form": "^7.41.5",
-    "react-redux": "^8.0.2",
-    "react-router-dom": "^6.3.0",
-    "react-scripts": "5.0.1",
-    "use-query-params": "^2.1.1",
-    "web-vitals": "^2.1.4",
-    "zod": "^3.20.2"
-  },
+  "name": "loc-planner",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "## About",
+  "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "start": "node backend/server",
+    "server": "nodemon backend/server",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest",
-      "plugin:cypress/recommended"
-    ]
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uoshvis/locPlanner.git"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "keywords": [
+    "React",
+    "Redux",
+    "Express",
+    "Node.js"
+  ],
+  "author": "uoshvis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/uoshvis/locPlanner/issues"
   },
-  "devDependencies": {
-    "cypress": "^10.6.0",
-    "eslint-plugin-cypress": "^2.12.1",
-    "msw": "^0.44.2"
-  },
-  "msw": {
-    "workerDirectory": "public"
+  "homepage": "https://github.com/uoshvis/locPlanner#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "colors": "^1.4.0",
+    "concurrently": "^7.6.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.1",
+    "nodemon": "^2.0.21",
+    "path": "^0.12.7"
   }
 }
