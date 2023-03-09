@@ -1,69 +1,102 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { client } from '../../mocks/client.js'
+// import { client } from '../../mocks/client.js'
 import axios from 'axios'
 
 const backendURL = 'http://127.0.0.1:5000'
 
-const userToken = localStorage.getItem('userToken')
-    ? localStorage.getItem('userToken') &&
-      JSON.parse(localStorage.getItem('userToken'))
-    : null
-
 const initialState = {
     isLoggedIn: false,
+    userInfo: null,
     userId: null,
-    userToken,
+    userToken: null,
 }
 
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
-    reducers: {},
+    reducers: {
+        logout: (state) => {
+            localStorage.removeItem('userToken') // delete token from storage
+            state.isLoggedIn = false
+            state.userInfo = null
+            state.userToken = null
+        },
+    },
     extraReducers(builder) {
-        builder
-            .addCase(login.fulfilled, (state, action) => {
-                state.isLoggedIn = true
-                state.userId = Number(Object.keys(action.payload)[0])
-                state.userToken = action.payload
-            })
-            .addCase(logout.fulfilled, (state, action) => {
-                state.isLoggedIn = false
-            })
+        builder.addCase(login.fulfilled, (state, action) => {
+            state.isLoggedIn = true
+            // ToDo remove userId
+            state.userId = action.payload._id
+            state.userInfo = action.payload
+            state.userToken = action.payload.userToken
+        })
+        // .addCase(logout.fulfilled, (state, action) => {
+        //     state.isLoggedIn = false
+        // })
     },
 })
 
-export const register = createAsyncThunk('auth/register', async (data) => {
-    const response = await client.post(`/myApi/register`, data)
-    return response.data
-})
+// Auth with Mock
 
-export const login = createAsyncThunk('auth/login', async (crediantials) => {
-    const response = await client.post('/myApi/login', crediantials)
-    return response.data
-})
+// export const register = createAsyncThunk('auth/register', async (data) => {
+//     const response = await client.post(`/myApi/register`, data)
+//     return response.data
+// })
 
-export const logout = createAsyncThunk('auth/logout', async (crediantials) => {
-    const response = await client.post('/myApi/logout', crediantials)
-    localStorage.removeItem('userToken')
-    return response.data
-})
+// export const login = createAsyncThunk('auth/login', async (crediantials) => {
+//     const response = await client.post('/myApi/login', crediantials)
+//     return response.data
+// })
 
-export const registerUser = createAsyncThunk(
+// export const logout = createAsyncThunk('auth/logout', async (crediantials) => {
+//     const response = await client.post('/myApi/logout', crediantials)
+//     localStorage.removeItem('userToken')
+//     return response.data
+// })
+
+// Auth with Backend
+
+export const register = createAsyncThunk(
     'auth/register',
-    async ({ firstName, email, password }, { rejectWithValue }) => {
+    async (data, { rejectWithValue }) => {
         try {
             const config = {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             }
-            await axios.post(
-                `${backendURL}/api/user/register`,
-                { firstName, email, password },
-                config
-            )
+            await axios.post(`${backendURL}/api/user/register`, data, config)
         } catch (error) {
             // return custom error message from backend if present
+            if (error.response && error.response.data.message) {
+                return rejectWithValue(error.response.data)
+            } else {
+                return rejectWithValue(error.message)
+            }
+        }
+    }
+)
+
+export const login = createAsyncThunk(
+    'auth/login',
+    async ({ userName, password }, { rejectWithValue }) => {
+        try {
+            // configure header's Content-Type as JSON
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+            const { data } = await axios.post(
+                `${backendURL}/api/user/login`,
+                { userName, password },
+                config
+            )
+            // store user's token in local storage
+            localStorage.setItem('userToken', data.userToken)
+            return data
+        } catch (error) {
+            // return custom error message from API if any
             if (error.response && error.response.data.message) {
                 return rejectWithValue(error.response.data.message)
             } else {
@@ -72,5 +105,7 @@ export const registerUser = createAsyncThunk(
         }
     }
 )
+
+export const { logout } = authSlice.actions
 
 export default authSlice.reducer
