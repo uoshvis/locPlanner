@@ -18,7 +18,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 import TextInput from './formFields/TextInput'
 
 import { login } from './authSlice'
-import { fetchUser } from '../users/usersSlice'
 
 function Copyright(props) {
     return (
@@ -61,13 +60,13 @@ export default function SignIn() {
 
     let from = location.state?.from?.pathname || '/'
 
-    const { isLoggedIn } = useSelector((state) => state.auth)
+    const { userInfo } = useSelector((state) => state.auth)
 
     useEffect(() => {
-        if (isLoggedIn) {
+        if (userInfo && Object.keys(userInfo).length !== 0) {
             navigate(from, { replace: true })
         }
-    })
+    }, [navigate, from, userInfo])
 
     useEffect(() => {
         reset({
@@ -78,11 +77,6 @@ export default function SignIn() {
 
     const onSubmit = ({ userName, password }) => {
         dispatch(login({ userName, password }))
-            .unwrap()
-            .then((originalPromiseResult) => {
-                const id = Object.keys(originalPromiseResult)[0]
-                dispatch(fetchUser(id))
-            })
     }
 
     return (
