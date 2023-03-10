@@ -29,6 +29,7 @@ export const authSlice = createSlice({
         },
         setUserInfo: (state, { payload }) => {
             state.userInfo = payload
+            state.isLoggedIn = true
         },
     },
     extraReducers(builder) {

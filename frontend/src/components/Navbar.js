@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
@@ -17,6 +17,7 @@ import MenuItem from '@mui/material/MenuItem'
 
 import Logo from '../logo.svg'
 import { useGetUserProfileQuery } from '../app/services/auth/authService'
+import { setUserInfo } from '../features/auth/authSlice'
 
 const pages = []
 
@@ -25,8 +26,10 @@ const settings = [
     { text: 'Logout', href: '/logout' },
 ]
 const ResponsiveAppBar = () => {
+    const dispatch = useDispatch()
     const { isLoggedIn, userInfo } = useSelector((state) => state.auth)
-    const [avatarString, setAvatarString] = useState('')
+
+    const avatarString = userInfo?.firstName[0] + userInfo?.lastName[0]
 
     const [anchorElNav, setAnchorElNav] = React.useState(null)
     const [anchorElUser, setAnchorElUser] = React.useState(null)
@@ -37,11 +40,8 @@ const ResponsiveAppBar = () => {
     })
 
     useEffect(() => {
-        if (userInfo && Object.keys(userInfo).length !== 0) {
-            setAvatarString(userInfo.firstName[0] + userInfo.lastName[0])
-        } else {
-        }
-    }, [userInfo])
+        if (data) dispatch(setUserInfo(data))
+    }, [data, dispatch])
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget)
