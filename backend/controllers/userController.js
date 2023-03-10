@@ -41,6 +41,7 @@ const loginUser = asyncHandler(async (req, res) => {
             userName: user.userName,
             firstName: user.firstName,
             lastName: user.lastName,
+            role: user.role,
             userToken: generateToken(user._id),
         })
     } else {
@@ -58,6 +59,8 @@ const getUserProfile = asyncHandler(async (req, res) => {
             id: user._id,
             userName: user.userName,
             firstName: user.firstName,
+            lastName: user.lastName,
+            role: user.role,
         })
     } else {
         res.status(404)
