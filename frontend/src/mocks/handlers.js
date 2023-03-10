@@ -173,18 +173,16 @@ export const handlers = [
     }),
 
     rest.post('/myApi/login', (req, res, ctx) => {
-        const token = {}
         const userName = req.body.userName
         const password = req.body.password
         if (userName && password) {
             const user = users.find((user) => user.userName === userName)
             if (user && user.password === password && user.isActive) {
-                const userId = user.id
-                token[userId] = userName + '_token'
+                const userToken = user.userName + '_token'
                 return res(
                     ctx.delay(ARTIFICIAL_DELAY_MS),
                     ctx.status(200),
-                    ctx.json(token)
+                    ctx.json({ ...user, userToken })
                 )
             } else if (user && !user.isActive) {
                 return res(

@@ -42,7 +42,7 @@ function MainCalendar() {
     const open = useSelector((state) => state.calendar.showModal)
     const notificationIsOpen = useSelector(isNotificationOpen)
     const userColors = useSelector((state) => getUserColors(state))
-    const { userDetails } = useSelector((state) => state.users)
+    const { userInfo } = useSelector((state) => state.auth)
     const adminRoles = ['admin', 'superAdmin']
 
     useEffect(() => {
@@ -106,9 +106,9 @@ function MainCalendar() {
     }
 
     const handleSelectEvent = (data) => {
-        if (data.userId === userDetails.id) {
+        if (data.userId === userInfo.id) {
             dispatch(setFormType('update'))
-        } else if (adminRoles.includes(userDetails.role)) {
+        } else if (adminRoles.includes(userInfo.role)) {
             dispatch(setFormType('update'))
         } else {
             dispatch(setFormType('view'))
@@ -124,7 +124,7 @@ function MainCalendar() {
         dispatch(
             selectCurrentEvent({
                 location: loc,
-                userId: userDetails.id,
+                userId: userInfo.id,
                 start: start.toISOString(),
                 end: end.toISOString(),
             })

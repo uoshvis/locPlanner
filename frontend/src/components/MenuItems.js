@@ -58,10 +58,10 @@ const DashboardMenuItem = ({ text, to, disabled }) => (
 
 function MenuItems() {
     const [menuList, setMenuList] = useState(menuItemsData)
-    const user = useSelector((state) => state.users.userDetails)
+    const { userInfo } = useSelector((state) => state.auth)
 
     useEffect(() => {
-        if (['admin', 'superAdmin'].includes(user.role)) {
+        if (['admin', 'superAdmin'].includes(userInfo.role)) {
             const adminMenu = menuItemsData.map((item) => {
                 if (item.to === 'users') {
                     return { ...item, disabled: false }
@@ -71,7 +71,7 @@ function MenuItems() {
             })
             setMenuList(adminMenu)
         }
-    }, [user.role])
+    }, [userInfo.role])
 
     return (
         <Box

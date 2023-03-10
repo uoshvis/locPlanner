@@ -21,7 +21,7 @@ const userSchema = z.object({
 
 function UserProfile() {
     const dispatch = useDispatch()
-    const { userDetails } = useSelector((state) => state.users)
+    const { userInfo } = useSelector((state) => state.auth)
     const { handleSubmit, reset, setValue, getValues, watch, control } =
         useForm({
             defaultValues: {
@@ -30,7 +30,7 @@ function UserProfile() {
                 lastName: '',
                 userColor: '',
             },
-            values: userDetails,
+            values: userInfo,
             resolver: zodResolver(userSchema),
         })
 
@@ -47,7 +47,7 @@ function UserProfile() {
                 setReadOnly(true)
             })
             .catch(() => {
-                reset(userDetails)
+                reset(userInfo)
             })
     }
 

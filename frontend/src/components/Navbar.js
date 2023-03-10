@@ -24,18 +24,17 @@ const settings = [
     { text: 'Logout', href: '/logout' },
 ]
 const ResponsiveAppBar = () => {
-    const { isLoggedIn } = useSelector((state) => state.auth)
-    const { userDetails } = useSelector((state) => state.users)
+    const { isLoggedIn, userInfo } = useSelector((state) => state.auth)
     const [avatarString, setAvatarString] = useState('')
 
     const [anchorElNav, setAnchorElNav] = React.useState(null)
     const [anchorElUser, setAnchorElUser] = React.useState(null)
 
     useEffect(() => {
-        if (Object.keys(userDetails).length !== 0) {
-            setAvatarString(userDetails.firstName[0] + userDetails.lastName[0])
+        if (userInfo && Object.keys(userInfo).length !== 0) {
+            setAvatarString(userInfo.firstName[0] + userInfo.lastName[0])
         }
-    }, [userDetails])
+    }, [userInfo])
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget)
@@ -189,7 +188,7 @@ const ResponsiveAppBar = () => {
                                     color: 'inherit',
                                 }}
                             >
-                                Welcome back {userDetails.firstName}!
+                                Welcome back {userInfo.firstName}!
                             </Typography>
 
                             <Box sx={{ flexGrow: 0 }}>
@@ -200,10 +199,10 @@ const ResponsiveAppBar = () => {
                                     >
                                         <Avatar
                                             sx={{
-                                                bgcolor: userDetails.userColor,
+                                                bgcolor: userInfo.userColor,
                                                 color: '#fff',
                                             }}
-                                            alt={userDetails.firstName}
+                                            alt={userInfo.firstName}
                                         >
                                             {avatarString}
                                         </Avatar>

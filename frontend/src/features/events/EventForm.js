@@ -33,7 +33,7 @@ export const EventForm = (props) => {
 
     const apiStatus = useSelector(getApiStatus)
     const event = useSelector((state) => state.calendar.currentItem)
-    const { userDetails } = useSelector((state) => state.users)
+    const { userInfo } = useSelector((state) => state.auth)
     const { formType } = useSelector((state) => state.calendar)
     const users = useSelector((state) => state.users.items)
 
@@ -70,12 +70,12 @@ export const EventForm = (props) => {
     useEffect(() => {
         const adminRoles = ['admin', 'superAdmin']
 
-        if (adminRoles.includes(userDetails.role)) {
+        if (adminRoles.includes(userInfo.role)) {
             setUsersList(users)
         } else {
             setUsersList(users.filter((user) => user.id === event.userId))
         }
-    }, [userDetails, users, setValue, event])
+    }, [userInfo, users, setValue, event])
 
     const handleClose = () => {
         dispatch(toggleShowModal())
