@@ -52,12 +52,6 @@ export const authSlice = createSlice({
 //     return response.data
 // })
 
-// export const logout = createAsyncThunk('auth/logout', async (crediantials) => {
-//     const response = await client.post('/myApi/logout', crediantials)
-//     localStorage.removeItem('userToken')
-//     return response.data
-// })
-
 // Auth with Backend
 
 export const register = createAsyncThunk(
