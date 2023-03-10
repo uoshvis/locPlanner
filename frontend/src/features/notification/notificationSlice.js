@@ -54,7 +54,8 @@ export const notificationSlice = createSlice({
                 // Skip "Aborted due to condition callback returning false."
                 if (action.error.name !== conditionError) {
                     state.apiStatus = 'idle'
-                    state.message = action.payload || action.error?.message
+                    state.message =
+                        action.payload || `RejectedAction: ${action?.type}`
                     state.type = 'error'
                     state.open = true
                 }
