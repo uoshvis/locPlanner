@@ -60,13 +60,13 @@ export default function SignIn() {
 
     let from = location.state?.from?.pathname || '/'
 
-    const { userInfo } = useSelector((state) => state.auth)
+    const { userInfo, isLoggedIn } = useSelector((state) => state.auth)
 
     useEffect(() => {
-        if (userInfo && Object.keys(userInfo).length !== 0) {
+        if (isLoggedIn) {
             navigate(from, { replace: true })
         }
-    }, [navigate, from, userInfo])
+    }, [isLoggedIn, navigate, from])
 
     useEffect(() => {
         reset({
