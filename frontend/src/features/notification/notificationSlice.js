@@ -53,6 +53,7 @@ export const notificationSlice = createSlice({
             .addMatcher(isRejectedAction, (state, action) => {
                 // Skip "Aborted due to condition callback returning false."
                 if (action.error.name !== conditionError) {
+                    console.log({ action })
                     state.apiStatus = 'idle'
                     state.message =
                         action.payload || `RejectedAction: ${action?.type}`

@@ -36,6 +36,8 @@ export const store = configureStore({
                     'meta.arg.start',
                     'meta.arg.end',
                     'payload.value',
+                    'meta.baseQueryMeta.request',
+                    'meta.baseQueryMeta.response',
                 ],
                 // Ignore these paths in the state
                 ignoredPaths: [

@@ -16,6 +16,7 @@ import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 
 import Logo from '../logo.svg'
+import { useGetUserProfileQuery } from '../app/services/auth/authService'
 
 const pages = []
 
@@ -30,9 +31,15 @@ const ResponsiveAppBar = () => {
     const [anchorElNav, setAnchorElNav] = React.useState(null)
     const [anchorElUser, setAnchorElUser] = React.useState(null)
 
+    const { data, isFetching } = useGetUserProfileQuery('userProfile', {
+        // perform a refetch every 15mins
+        pollingInterval: 900000,
+    })
+
     useEffect(() => {
         if (userInfo && Object.keys(userInfo).length !== 0) {
             setAvatarString(userInfo.firstName[0] + userInfo.lastName[0])
+        } else {
         }
     }, [userInfo])
 
