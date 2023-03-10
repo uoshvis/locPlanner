@@ -5,11 +5,16 @@ import { updateUser } from '../users/usersSlice.js'
 
 const backendURL = 'http://127.0.0.1:5000'
 
+// initialize userToken from local storage
+const userToken = localStorage.getItem('userToken')
+    ? localStorage.getItem('userToken')
+    : null
+
 const initialState = {
     isLoggedIn: false,
     userInfo: null,
     userId: null,
-    userToken: null,
+    userToken,
 }
 
 export const authSlice = createSlice({
