@@ -20,9 +20,9 @@ const Users = () => {
     const dispatch = useDispatch()
 
     const users = useSelector((state) => state.users.items)
-    const { userDetails } = useSelector((state) => state.users)
+    const { userInfo } = useSelector((state) => state.auth)
 
-    const isSuperAdmin = userDetails.role === 'superAdmin'
+    const isSuperAdmin = userInfo.role === 'superAdmin'
 
     useEffect(() => {
         let didCancel = false
@@ -45,7 +45,7 @@ const Users = () => {
     }, [dispatch])
 
     const handleRemoveUser = (userId) => {
-        if (Number(userDetails.id) === Number(userId)) {
+        if (Number(userInfo.id) === Number(userId)) {
             dispatch(
                 setNotification({
                     message: "Can't delete self User",

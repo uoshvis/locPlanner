@@ -90,10 +90,10 @@ function RequireAuth({ isAllowed, redirectPath = '/login', children }) {
 function RequireAuthorization({ redirectPath = '/', children }) {
     const adminRoles = ['admin', 'superAdmin']
 
-    const { isLoggedIn } = useSelector((state) => state.auth)
     const {
-        userDetails: { role },
-    } = useSelector((state) => state.users)
+        isLoggedIn,
+        userInfo: { role },
+    } = useSelector((state) => state.auth)
 
     const isAllowed = isLoggedIn && adminRoles.includes(role)
 
