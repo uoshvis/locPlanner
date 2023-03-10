@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 // import { client } from '../../mocks/client.js'
 import axios from 'axios'
+import { updateUser } from '../users/usersSlice.js'
 
 const backendURL = 'http://127.0.0.1:5000'
 
@@ -23,16 +24,19 @@ export const authSlice = createSlice({
         },
     },
     extraReducers(builder) {
-        builder.addCase(login.fulfilled, (state, action) => {
-            state.isLoggedIn = true
-            // ToDo remove userId
-            state.userId = action.payload._id
-            state.userInfo = action.payload
-            state.userToken = action.payload.userToken
-        })
-        // .addCase(logout.fulfilled, (state, action) => {
-        //     state.isLoggedIn = false
-        // })
+        builder
+            .addCase(login.fulfilled, (state, action) => {
+                state.isLoggedIn = true
+                // ToDo remove userId
+                state.userId = action.payload._id
+                state.userInfo = action.payload
+                state.userToken = action.payload.userToken
+            })
+            .addCase(updateUser.fulfilled, (state, { payload }) => {
+                if (state.userInfo.id === payload.id) {
+                    state.userInfo = payload
+                }
+            })
     },
 })
 

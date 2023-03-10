@@ -1,25 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { client } from '../../mocks/client'
 
-const initialState = { items: [], userDetails: {} }
+const initialState = { items: [] }
 
 const usersSlice = createSlice({
     name: 'users',
     initialState,
     reducers: {},
     extraReducers(builder) {
-        builder
-            .addCase(fetchUsers.fulfilled, (state, action) => {
-                state.items = action.payload
-            })
-            .addCase(fetchUser.fulfilled, (state, action) => {
-                state.userDetails = action.payload
-            })
-            .addCase(updateUser.fulfilled, (state, action) => {
-                if (state.userDetails.id === action.payload.id) {
-                    state.userDetails = action.payload
-                }
-            })
+        builder.addCase(fetchUsers.fulfilled, (state, action) => {
+            state.items = action.payload
+        })
     },
 })
 
