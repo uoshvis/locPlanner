@@ -4,7 +4,7 @@ import notificationReducer from '../features/notification/notificationSlice'
 import usersReducer from '../features/users/usersSlice'
 import authReducer from '../features/auth/authSlice'
 import { meetingsApi } from '../features/meetings/meetingsApi'
-import { authApi } from './services/auth/authServices'
+import { authApi } from './services/auth/authService'
 
 const combineReducer = combineReducers({
     calendar: calendarReducer,
