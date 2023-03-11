@@ -17,6 +17,7 @@ import Container from '@mui/material/Container'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import TextInput from './formFields/TextInput'
 
+import Spinner from '../../components/Spinner'
 import { login } from './authSlice'
 
 function Copyright(props) {
@@ -61,6 +62,8 @@ export default function SignIn() {
     let from = location.state?.from?.pathname || '/'
 
     const { isLoggedIn } = useSelector((state) => state.auth)
+    const { apiStatus } = useSelector((state) => state.notification)
+    const loading = apiStatus === 'loading'
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -133,7 +136,7 @@ export default function SignIn() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Sign In
+                            {loading ? <Spinner /> : 'Sign In'}
                         </Button>
                         <Grid container>
                             <Grid item xs>

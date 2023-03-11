@@ -1,5 +1,5 @@
 import React from 'react'
-import { Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import loadable from '@loadable/component'
 import './App.css'
@@ -22,6 +22,8 @@ import Events from './features/events/Events'
 import Meetings from './features/meetings/Meetings'
 import UserProfile from './features/users/UserProfile'
 import BackDropLoader from './components/BackDropLoader'
+import RequireLogin from './routing/RequireLogin'
+import RequireAdminRole from './routing/RequireAdmin'
 
 const About = loadable(() => import('./components/About'))
 
@@ -31,7 +33,6 @@ function App() {
     const notificationMsg = useSelector(getNotificationMsg)
     const apiStatus = useSelector(getApiStatus)
     const open = useSelector((state) => state.calendar.showModal)
-    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn)
 
     return (
         <div className="App">
@@ -52,7 +53,7 @@ function App() {
                     <Route path="register" element={<SignUp />} />
                     <Route path="logout" element={<Logout />} />
                     <Route path="*" element={<NoMatch />} />
-                    <Route element={<RequireAuth isAllowed={!!isLoggedIn} />}>
+                    <Route element={<RequireLogin />}>
                         <Route element={<AppLayout />}>
                             <Route index element={<Home />} />
                             <Route path="calendar" element={<MainCalendar />} />
@@ -63,11 +64,7 @@ function App() {
                                 path="user-profile"
                                 element={<UserProfile />}
                             />
-                            <Route
-                                element={
-                                    <RequireAuthorization redirectPath="/" />
-                                }
-                            >
+                            <Route element={<RequireAdminRole />}>
                                 <Route path="users/*" element={<Users />} />
                             </Route>
                         </Route>
@@ -76,37 +73,6 @@ function App() {
             </Routes>
         </div>
     )
-}
-
-function RequireAuth({ isAllowed, redirectPath = '/login', children }) {
-    // isAllowed = true  // uncomment for dev
-    let location = useLocation()
-    if (!isAllowed) {
-        return <Navigate to={redirectPath} state={{ from: location }} replace />
-    }
-    return children ? children : <Outlet /> // to use as wrapping component
-}
-
-function RequireAuthorization({ redirectPath = '/', children }) {
-    const adminRoles = ['admin', 'superAdmin']
-
-    const {
-        isLoggedIn,
-        userInfo: { role },
-    } = useSelector((state) => state.auth)
-
-    const isAllowed = isLoggedIn && adminRoles.includes(role)
-
-    if (!isAllowed) {
-        return (
-            <div>
-                <h1>You dont have permissions</h1>
-                <span>Contact admin</span>
-            </div>
-        )
-    }
-
-    return children ? children : <Outlet /> // to use as wrapping component
 }
 
 export default App

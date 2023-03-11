@@ -1,18 +1,24 @@
+import { useSelector } from 'react-redux'
+
 import { Link } from 'react-router-dom'
 
 function Home() {
-    return (
-        <>
-            <main>
-                <h2>Welcome to the homepage!</h2>
-                <p>You can do this, I believe in you.</p>
+    const { userInfo } = useSelector((state) => state.auth)
 
-                <>Todays review: event names: location</>
+    return (
+        <div>
+            <main>
+                <h2>Welcome {userInfo?.firstName}!</h2>
+
+                <p>You can view this page because you're logged in</p>
+
+                <p>Todays review: event names: location</p>
+                <p>You can do this, I believe in you.</p>
             </main>
             <nav>
                 <Link to="/calendar">View Full Calendar</Link>
             </nav>
-        </>
+        </div>
     )
 }
 
