@@ -2,10 +2,9 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const conditionError = 'ConditionError'
 
-// Available types: error, warning, info, success
 const initialState = {
     message: null,
-    type: null,
+    type: null, // Available types: error, warning, info, success
     open: false,
     // loading: true/ false ? may be enough
     apiStatus: 'idle', // 'idle' | 'loading' only 2 <<-- | 'succeeded' | 'failed',

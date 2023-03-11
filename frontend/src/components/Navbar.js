@@ -18,6 +18,10 @@ import MenuItem from '@mui/material/MenuItem'
 import Logo from '../logo.svg'
 import { useGetUserProfileQuery } from '../app/services/auth/authService'
 import { setUserInfo } from '../features/auth/authSlice'
+import {
+    clearNotification,
+    setNotification,
+} from '../features/notification/notificationSlice'
 
 const pages = []
 
@@ -42,6 +46,26 @@ const ResponsiveAppBar = () => {
     useEffect(() => {
         if (data) dispatch(setUserInfo(data))
     }, [data, dispatch])
+
+    // Show refetch notification
+    useEffect(() => {
+        if (isFetching) {
+            dispatch(
+                setNotification({
+                    message: 'Auto fetching your profile...',
+                    type: 'info',
+                })
+            )
+        } else {
+            const timeId = setTimeout(() => {
+                dispatch(clearNotification())
+            }, 2000)
+
+            return () => {
+                clearTimeout(timeId)
+            }
+        }
+    }, [isFetching, dispatch])
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget)
