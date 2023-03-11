@@ -1,4 +1,5 @@
 import { useDispatch } from 'react-redux'
+import Fade from '@mui/material/Fade'
 import Alert from '@mui/material/Alert'
 import { clearNotification } from './notificationSlice'
 
@@ -10,9 +11,21 @@ const Notification = ({ type, message }) => {
     }
 
     return (
-        <Alert onClose={handleClose} severity={type}>
-            {message}
-        </Alert>
+        <Fade in={true} timeout={1000}>
+            <Alert
+                sx={{
+                    position: 'absolute',
+                    width: 'auto',
+                    bottom: 0,
+                    right: 0,
+                    zIndex: 999,
+                }}
+                onClose={handleClose}
+                severity={type}
+            >
+                {message}
+            </Alert>
+        </Fade>
     )
 }
 
