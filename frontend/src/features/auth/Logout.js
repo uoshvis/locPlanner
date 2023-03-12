@@ -4,12 +4,11 @@ import { useNavigate } from 'react-router-dom'
 import Backdrop from '@mui/material/Backdrop'
 import CircularProgress from '@mui/material/CircularProgress'
 import { logout } from './authSlice'
-import { getApiStatus } from '../notification/notificationSlice'
 
 const Logout = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const apiStatus = useSelector(getApiStatus)
+    const { isLoading } = useSelector((state) => state.notification)
 
     useEffect(() => {
         dispatch(logout())
@@ -19,9 +18,9 @@ const Logout = () => {
     return (
         <Backdrop
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={apiStatus === 'loading'}
+            open={isLoading}
         >
-            {apiStatus === 'loading' && <CircularProgress color="inherit" />}
+            {isLoading && <CircularProgress color="inherit" />}
         </Backdrop>
     )
 }

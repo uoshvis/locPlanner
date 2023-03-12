@@ -26,12 +26,11 @@ import {
 } from './eventsSlice'
 import { LocationInputDropDown } from './formFields/LocationInputDropdown'
 import { UserSelectDropdown } from './formFields/UserSelectDropdown'
-import { getApiStatus } from '../notification/notificationSlice'
 
 export const EventForm = (props) => {
     const dispatch = useDispatch()
 
-    const apiStatus = useSelector(getApiStatus)
+    const { isLoading } = useSelector((state) => state.notification)
     const event = useSelector((state) => state.calendar.currentItem)
     const { userInfo } = useSelector((state) => state.auth)
     const { formType } = useSelector((state) => state.calendar)
@@ -82,14 +81,14 @@ export const EventForm = (props) => {
     }
 
     const onSubmit = (data) => {
-        if (apiStatus === 'idle') {
+        if (!isLoading) {
             dispatch(submitAction(data))
             dispatch(toggleShowModal())
         }
     }
 
     const handleDelete = () => {
-        if (apiStatus === 'idle') {
+        if (!isLoading) {
             dispatch(deleteEvent(event))
             dispatch(toggleShowModal())
         }

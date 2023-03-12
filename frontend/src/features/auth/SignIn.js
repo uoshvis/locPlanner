@@ -62,8 +62,7 @@ export default function SignIn() {
     let from = location.state?.from?.pathname || '/'
 
     const { isLoggedIn } = useSelector((state) => state.auth)
-    const { apiStatus } = useSelector((state) => state.notification)
-    const loading = apiStatus === 'loading'
+    const { isLoading } = useSelector((state) => state.notification)
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -136,7 +135,7 @@ export default function SignIn() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            {loading ? <Spinner /> : 'Sign In'}
+                            {isLoading ? <Spinner /> : 'Sign In'}
                         </Button>
                         <Grid container>
                             <Grid item xs>
