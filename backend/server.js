@@ -4,6 +4,8 @@ import dotenv from 'dotenv'
 import colors from 'colors'
 import connectDB from './config/db.js'
 import userRoutes from './routes/userRoutes.js'
+import meetingsRoutes from './routes/meetingsRoutes.js'
+
 import { errorHandler, notFound } from './middleware/errorMiddleware.js'
 
 dotenv.config()
@@ -29,6 +31,7 @@ app.use(express.json())
 
 // API routes
 app.use('/api/user', userRoutes)
+app.use('/api/meetings', meetingsRoutes)
 
 // deployment configuration
 const __dirname = path.resolve()

@@ -25,4 +25,4 @@ export const meetingsApi = createApi({
     }),
 })
 
-export const { useGetAllMeetingsQuery } = meetingsApi
+export const { useGetMeetingsQuery } = meetingsApi
