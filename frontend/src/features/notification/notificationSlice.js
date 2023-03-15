@@ -6,8 +6,7 @@ const initialState = {
     message: null,
     type: null, // Available types: error, warning, info, success
     open: false,
-    // loading: true/ false ? may be enough
-    apiStatus: 'idle', // 'idle' | 'loading' only 2 <<-- | 'succeeded' | 'failed',
+    isLoading: false,
 }
 
 function isPendingAction(action) {
@@ -41,19 +40,19 @@ export const notificationSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addMatcher(isPendingAction, (state, action) => {
-                state.apiStatus = 'loading'
+                state.isLoading = true
                 state.message = null
                 state.type = null
                 state.open = false
             })
             .addMatcher(isFulfilledAction, (state, action) => {
-                state.apiStatus = 'idle'
+                state.isLoading = false
             })
             .addMatcher(isRejectedAction, (state, action) => {
                 // Skip "Aborted due to condition callback returning false."
                 if (action.error.name !== conditionError) {
                     console.log({ action })
-                    state.apiStatus = 'idle'
+                    state.isLoading = false
                     state.message =
                         action.payload || `RejectedAction: ${action?.type}`
                     state.type = 'error'
@@ -66,7 +65,6 @@ export const notificationSlice = createSlice({
 export const getNotificationMsg = (state) => state.notification.message
 export const getNotificationType = (state) => state.notification.type
 export const isNotificationOpen = (state) => state.notification.open
-export const getApiStatus = (state) => state.notification.apiStatus
 
 export const { clearNotification, setNotification } = notificationSlice.actions
 

@@ -6,7 +6,6 @@ import './App.css'
 import MainCalendar from './features/calendar/Calendar'
 import Notification from './features/notification/Notification'
 import {
-    getApiStatus,
     getNotificationType,
     isNotificationOpen,
     getNotificationMsg,
@@ -31,8 +30,8 @@ function App() {
     const notificationIsOpen = useSelector(isNotificationOpen)
     const notificationType = useSelector(getNotificationType)
     const notificationMsg = useSelector(getNotificationMsg)
-    const apiStatus = useSelector(getApiStatus)
     const open = useSelector((state) => state.calendar.showModal)
+    const { isLoading } = useSelector((state) => state.notification)
 
     return (
         <div className="App">
@@ -44,7 +43,7 @@ function App() {
                     />
                 )}
 
-                <BackDropLoader apiStatus={apiStatus} />
+                <BackDropLoader isLoading={isLoading} />
             </React.Fragment>
 
             <Routes>

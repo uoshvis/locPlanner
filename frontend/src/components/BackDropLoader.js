@@ -1,13 +1,13 @@
 import Backdrop from '@mui/material/Backdrop'
 import CircularProgress from '@mui/material/CircularProgress'
 
-function BackDropLoader({ apiStatus = '' }) {
+function BackDropLoader({ isLoading = false }) {
     return (
         <Backdrop
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={apiStatus === 'loading'}
+            open={isLoading}
         >
-            {apiStatus === 'loading' && <CircularProgress color="inherit" />}
+            {isLoading && <CircularProgress color="inherit" />}
         </Backdrop>
     )
 }

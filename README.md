@@ -68,8 +68,10 @@ JWT_SECRET = "any_string"
 
 Set environment variable
 
+.env file frontend dir
+
 ```
-REACT_APP_MOCK_ENV === 'enabled'
+REACT_APP_MOCK_ENV = 'enabled'
 ```
 
 ### Available Scripts

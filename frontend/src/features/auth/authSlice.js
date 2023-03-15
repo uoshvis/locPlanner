@@ -13,7 +13,6 @@ const userToken = localStorage.getItem('userToken')
 const initialState = {
     isLoggedIn: false,
     userInfo: null,
-    userId: null,
     userToken,
 }
 
@@ -36,8 +35,6 @@ export const authSlice = createSlice({
         builder
             .addCase(login.fulfilled, (state, action) => {
                 state.isLoggedIn = true
-                // ToDo remove userId
-                state.userId = action.payload._id
                 state.userInfo = action.payload
                 state.userToken = action.payload.userToken
             })
