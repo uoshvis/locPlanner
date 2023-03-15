@@ -3,7 +3,7 @@ import calendarReducer from '../features/events/eventsSlice'
 import notificationReducer from '../features/notification/notificationSlice'
 import usersReducer from '../features/users/usersSlice'
 import authReducer from '../features/auth/authSlice'
-import { meetingsApi } from '../features/meetings/meetingsApi'
+import { meetingsApi } from './services/meetings/meetingsService'
 import { authApi } from './services/auth/authService'
 
 const combineReducer = combineReducers({
