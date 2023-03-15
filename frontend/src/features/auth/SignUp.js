@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -19,6 +19,7 @@ import Container from '@mui/material/Container'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 
 import TextInput from './formFields/TextInput'
+import Spinner from '../../components/Spinner'
 import { register } from './authSlice'
 
 export const userCreateSchema = z
@@ -64,6 +65,7 @@ const theme = createTheme()
 export default function SignUp() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const { isLoading } = useSelector((state) => state.notification)
 
     const { handleSubmit, control } = useForm({
         defaultValues: {
@@ -182,7 +184,7 @@ export default function SignUp() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Sign Up
+                            {isLoading ? <Spinner /> : 'Sign Up'}
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
