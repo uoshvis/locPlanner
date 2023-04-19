@@ -4,6 +4,7 @@ import generateToken from '../utils/generateToken.js'
 
 const registerUser = asyncHandler(async (req, res) => {
     const data = req.body
+    const id = Date.now()
 
     // check if email exists in db
     const userExists = await User.findOne({ userName: data.userName })
@@ -14,7 +15,7 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     // create new user document in db
-    const user = await User.create(data)
+    const user = await User.create({ ...data, id })
 
     if (user) {
         res.status(201).json({
@@ -68,4 +69,15 @@ const getUserProfile = asyncHandler(async (req, res) => {
     }
 })
 
-export { registerUser, loginUser, getUserProfile }
+const getUsers = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id)
+    if (['admin', 'superAdmin'].includes(user.role)) {
+        const users = await User.find({})
+        res.json({ users, userInfo: user })
+    } else {
+        res.status(404)
+        throw new Error('No Users')
+    }
+})
+
+export { registerUser, loginUser, getUserProfile, getUsers }

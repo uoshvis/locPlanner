@@ -36,6 +36,11 @@ const userSchema = mongoose.Schema(
             type: String,
             default: '#f44336',
         },
+        id: {
+            type: Number,
+            required: true,
+            unique: true,
+        },
     },
     {
         timestamps: true,
