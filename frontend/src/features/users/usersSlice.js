@@ -37,9 +37,6 @@ export const deleteUser = createAsyncThunk('users/deleteUser', async (id) => {
     const response = await client.delete(`/myApi/users/${id}`, id)
     return response.data
 })
-
-export default usersSlice.reducer
-
 // Custom getters
 export const getUserById = (state, userId) => {
     return state.users.items.find((user) => user.id === Number(userId))
@@ -52,3 +49,5 @@ export const getUserColors = (state) => {
     }, {})
     return userColors
 }
+
+export default usersSlice.reducer
