@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import {
     Route,
@@ -12,17 +12,24 @@ import React from 'react'
 import UserList from './UserList'
 import UserItem from './UserItem'
 import { deleteUser, fetchUsers } from './usersSlice'
-import { useSelector } from 'react-redux'
 import { setNotification } from '../notification/notificationSlice'
+import { useGetUsersQuery } from '../../app/services/users/usersService'
 
 const Users = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const [users, setUsers] = useState([])
+    const [userInfo, setUserInfo] = useState({})
 
-    const users = useSelector((state) => state.users.items)
-    const { userInfo } = useSelector((state) => state.auth)
-
+    const { data, error, isLoading } = useGetUsersQuery()
     const isSuperAdmin = userInfo.role === 'superAdmin'
+
+    useEffect(() => {
+        if (data) {
+            setUsers(data.users)
+            setUserInfo(data.userInfo)
+        }
+    }, [error, isLoading, data])
 
     useEffect(() => {
         let didCancel = false
