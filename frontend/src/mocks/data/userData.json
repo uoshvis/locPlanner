@@ -1,0 +1,62 @@
+[
+    {
+      "id": 999,
+      "userName": "superAdmin",
+      "firstName": "Super",
+      "lastName": "Admin",
+      "isActive": true,
+      "userColor": "#f44336",
+      "password": "123",
+      "role": "superAdmin"
+    },
+    {
+      "id": 100,
+      "userName": "admin",
+      "firstName": "Administrator",
+      "lastName": "Joker",
+      "isActive": true,
+      "userColor": "#f44336",
+      "password": "123",
+      "role": "admin"
+    },
+    {
+      "id": 101,
+      "userName": "SantaClaus",
+      "firstName": "Santa",
+      "lastName": "Claus",
+      "isActive": true,
+      "userColor": "#e91e63",
+      "password": "123",
+      "role": "user"
+    },
+    {
+      "id": 102,
+      "userName": "TeddyBear",
+      "firstName": "Teddy",
+      "lastName": "Bear",
+      "isActive": false,
+      "userColor": "#9c27b0",
+      "password": "123",
+      "role": "user"
+    },
+    {
+      "id": 103,
+      "userName": "RedNose",
+      "firstName": "Rudolf",
+      "lastName": "Red",
+      "isActive": true,
+      "userColor": "#673ab7",
+      "password": "123",
+      "role": "user"
+    },
+    {
+      "id": 104,
+      "userName": "Nobrain",
+      "firstName": "Snowman",
+      "lastName": "White",
+      "isActive": false,
+      "userColor": "#3f51b5",
+      "password": "123",
+      "role": "user"
+    }
+]
