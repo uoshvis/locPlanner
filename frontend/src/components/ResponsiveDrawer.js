@@ -42,7 +42,7 @@ function ResponsiveDrawer(props) {
                 position="fixed"
                 sx={{
                     width: '100%',
-                    ml: { sm: `${drawerWidth}px` },
+                    ml: { md: `${drawerWidth}px` },
                     zIndex: theme.zIndex['drawer'] + 1,
                 }}
             >
@@ -54,7 +54,7 @@ function ResponsiveDrawer(props) {
                         onClick={handleDrawerToggle}
                         sx={{
                             mr: 2,
-                            display: { sm: 'none' },
+                            display: { md: 'none' },
                         }}
                     >
                         <MenuIcon />
@@ -67,8 +67,8 @@ function ResponsiveDrawer(props) {
             <Box
                 component="nav"
                 sx={{
-                    width: { sm: drawerWidth },
-                    flexShrink: { sm: 0 },
+                    width: { md: drawerWidth },
+                    flexShrink: { md: 0 },
                 }}
                 aria-label="mailbox folders"
             >
@@ -82,7 +82,7 @@ function ResponsiveDrawer(props) {
                         keepMounted: true, // Better open performance on mobile.
                     }}
                     sx={{
-                        display: { xs: 'block', sm: 'none' },
+                        display: { xs: 'block', sm: 'block', md: 'none' },
                         '& .MuiDrawer-paper': {
                             boxSizing: 'border-box',
                             width: drawerWidth,
@@ -94,7 +94,7 @@ function ResponsiveDrawer(props) {
                 <Drawer
                     variant="permanent"
                     sx={{
-                        display: { xs: 'none', sm: 'block' },
+                        display: { xs: 'none', sm: 'none', md: 'block' },
                         '& .MuiDrawer-paper': {
                             boxSizing: 'border-box',
                             width: drawerWidth,
@@ -110,7 +110,7 @@ function ResponsiveDrawer(props) {
                 sx={{
                     flexGrow: 1,
                     p: 3,
-                    width: { sm: `calc(100% - ${drawerWidth}px)` },
+                    width: { md: `calc(100% - ${drawerWidth}px)` },
                 }}
             >
                 <Toolbar />
