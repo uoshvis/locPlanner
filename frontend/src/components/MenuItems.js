@@ -6,32 +6,43 @@ import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
+import EventIcon from '@mui/icons-material/Event'
+import GroupsIcon from '@mui/icons-material/Groups'
+import GroupIcon from '@mui/icons-material/Group'
+import InfoIcon from '@mui/icons-material/Info'
 
 const menuItemsData = [
     {
         text: 'Calendar',
         to: 'calendar',
+        icon: <CalendarMonthIcon />,
         disabled: false,
     },
     {
         text: 'Events',
         to: 'events',
+        icon: <EventIcon />,
         disabled: false,
     },
     {
         text: 'Meetings',
         to: 'meetings',
+        icon: <GroupsIcon />,
         disabled: false,
     },
     {
         text: 'Users',
         to: 'users',
+        icon: <GroupIcon />,
         disabled: true,
     },
 
     {
         text: 'About',
         to: 'about',
+        icon: <InfoIcon />,
         disabled: false,
     },
 ]
@@ -48,9 +59,10 @@ const CustomNavLink = React.forwardRef((props, ref) => (
     />
 ))
 
-const DashboardMenuItem = ({ text, to, disabled }) => (
-    <ListItem>
+const DashboardMenuItem = ({ text, to, disabled, icon }) => (
+    <ListItem key={text} disablePadding>
         <ListItemButton component={CustomNavLink} to={to} disabled={disabled}>
+            <ListItemIcon>{icon}</ListItemIcon>
             <ListItemText primary={text} />
         </ListItemButton>
     </ListItem>
@@ -61,7 +73,7 @@ function MenuItems() {
     const { userInfo } = useSelector((state) => state.auth)
 
     useEffect(() => {
-        if (['admin', 'superAdmin'].includes(userInfo.role)) {
+        if (['admin', 'superAdmin'].includes(userInfo?.role)) {
             const adminMenu = menuItemsData.map((item) => {
                 if (item.to === 'users') {
                     return { ...item, disabled: false }
@@ -71,17 +83,10 @@ function MenuItems() {
             })
             setMenuList(adminMenu)
         }
-    }, [userInfo.role])
+    }, [userInfo?.role])
 
     return (
-        <Box
-            sx={{
-                width: '100%',
-                maxWidth: 360,
-                height: '100%',
-                bgcolor: 'background.paper',
-            }}
-        >
+        <Box>
             <List component="nav" aria-label="menu nav items">
                 {menuList.map((menuItem, idx) => (
                     <DashboardMenuItem
@@ -89,6 +94,7 @@ function MenuItems() {
                         text={menuItem.text}
                         to={menuItem.to}
                         disabled={menuItem.disabled}
+                        icon={menuItem.icon}
                     />
                 ))}
             </List>
