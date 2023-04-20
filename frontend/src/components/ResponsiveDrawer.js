@@ -54,7 +54,7 @@ function ResponsiveDrawer(props) {
                         onClick={handleDrawerToggle}
                         sx={{
                             mr: 2,
-                            display: { md: 'none' },
+                            display: { sm: 'none' },
                         }}
                     >
                         <MenuIcon />
