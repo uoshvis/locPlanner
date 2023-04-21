@@ -22,6 +22,10 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useGetUserProfileQuery } from '../app/services/auth/authService'
 import { setUserInfo } from '../features/auth/authSlice'
+import {
+    clearNotification,
+    setNotification,
+} from '../features/notification/notificationSlice'
 
 const drawerWidth = 240
 
@@ -49,6 +53,26 @@ function ResponsiveDrawer(props) {
     useEffect(() => {
         if (data) dispatch(setUserInfo(data))
     }, [data, dispatch])
+
+    // Show refetch notification
+    useEffect(() => {
+        if (isFetching) {
+            dispatch(
+                setNotification({
+                    message: 'Auto fetching your profile...',
+                    type: 'info',
+                })
+            )
+        } else {
+            const timeId = setTimeout(() => {
+                dispatch(clearNotification())
+            }, 2000)
+
+            return () => {
+                clearTimeout(timeId)
+            }
+        }
+    }, [isFetching, dispatch])
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen)
