@@ -12,7 +12,6 @@ import {
 } from './features/notification/notificationSlice'
 import Home from './components/Home'
 import NoMatch from './components/NoMatch'
-import { MainLayout, AppLayout } from './components/Layouts'
 import SignIn from './features/auth/SignIn'
 import SignUp from './features/auth/SignUp'
 import Logout from './features/auth/Logout'
@@ -23,6 +22,7 @@ import UserProfile from './features/users/UserProfile'
 import BackDropLoader from './components/BackDropLoader'
 import RequireLogin from './routing/RequireLogin'
 import RequireAdminRole from './routing/RequireAdmin'
+import ResponsiveDrawerLayout from './components/ResponsiveDrawerLayout'
 
 const About = loadable(() => import('./components/About'))
 
@@ -47,25 +47,20 @@ function App() {
             </React.Fragment>
 
             <Routes>
-                <Route element={<MainLayout />}>
+                <Route element={<ResponsiveDrawerLayout />}>
                     <Route path="login" element={<SignIn />} />
                     <Route path="register" element={<SignUp />} />
                     <Route path="logout" element={<Logout />} />
                     <Route path="*" element={<NoMatch />} />
                     <Route element={<RequireLogin />}>
-                        <Route element={<AppLayout />}>
-                            <Route index element={<Home />} />
-                            <Route path="calendar" element={<MainCalendar />} />
-                            <Route path="events" element={<Events />} />
-                            <Route path="meetings" element={<Meetings />} />
-                            <Route path="about" element={<About />} />
-                            <Route
-                                path="user-profile"
-                                element={<UserProfile />}
-                            />
-                            <Route element={<RequireAdminRole />}>
-                                <Route path="users/*" element={<Users />} />
-                            </Route>
+                        <Route index element={<Home />} />
+                        <Route path="calendar" element={<MainCalendar />} />
+                        <Route path="events" element={<Events />} />
+                        <Route path="meetings" element={<Meetings />} />
+                        <Route path="about" element={<About />} />
+                        <Route path="user-profile" element={<UserProfile />} />
+                        <Route element={<RequireAdminRole />}>
+                            <Route path="users/*" element={<Users />} />
                         </Route>
                     </Route>
                 </Route>

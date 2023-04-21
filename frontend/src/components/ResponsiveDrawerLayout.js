@@ -1,25 +1,23 @@
 import React, { useEffect } from 'react'
-import PropTypes from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, Outlet } from 'react-router-dom'
+// MUI imports
+import { useTheme } from '@mui/material'
 import AppBar from '@mui/material/AppBar'
+import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline'
 import Divider from '@mui/material/Divider'
 import Drawer from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
-
-import MenuIcon from '@mui/icons-material/Menu'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
-import MenuItems from './MenuItems'
-import { Outlet } from 'react-router-dom'
-import { useTheme } from '@mui/material'
-
-import Tooltip from '@mui/material/Tooltip'
-import Avatar from '@mui/material/Avatar'
 import Menu from '@mui/material/Menu'
+import MenuIcon from '@mui/icons-material/Menu'
+import MenuItems from './MenuItems'
 import MenuItem from '@mui/material/MenuItem'
-import { Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import Toolbar from '@mui/material/Toolbar'
+import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
+// Local imports
 import { useGetUserProfileQuery } from '../app/services/auth/authService'
 import { setUserInfo } from '../features/auth/authSlice'
 import {
@@ -34,15 +32,16 @@ const settings = [
     { text: 'Profile', href: '/user-profile' },
     { text: 'Logout', href: '/logout' },
 ]
-function ResponsiveDrawer(props) {
-    const dispatch = useDispatch()
-    const { isLoggedIn, userInfo } = useSelector((state) => state.auth)
 
+function ResponsiveDrawerLayout(props) {
+    const dispatch = useDispatch()
     const theme = useTheme()
     const { window } = props
-    const [mobileOpen, setMobileOpen] = React.useState(false)
 
+    const [mobileOpen, setMobileOpen] = React.useState(false)
     const [anchorElUser, setAnchorElUser] = React.useState(null)
+
+    const { isLoggedIn, userInfo } = useSelector((state) => state.auth)
 
     const avatarString = userInfo?.firstName[0] + userInfo?.lastName[0]
 
@@ -218,7 +217,8 @@ function ResponsiveDrawer(props) {
                     </Toolbar>
                 </AppBar>
             )}
-            {/* Drawer box */}
+
+            {/* Drawers */}
 
             {isLoggedIn && (
                 <Box
@@ -232,6 +232,7 @@ function ResponsiveDrawer(props) {
                     {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
 
                     {/* Temporary drawer */}
+
                     <Drawer
                         container={container}
                         variant="temporary"
@@ -252,6 +253,7 @@ function ResponsiveDrawer(props) {
                     </Drawer>
 
                     {/* Permanent drawer */}
+
                     <Drawer
                         variant="permanent"
                         sx={{
@@ -284,12 +286,4 @@ function ResponsiveDrawer(props) {
     )
 }
 
-ResponsiveDrawer.propTypes = {
-    /**
-     * Injected by the documentation to work in an iframe.
-     * You won't need it on your project.
-     */
-    window: PropTypes.func,
-}
-
-export default ResponsiveDrawer
+export default ResponsiveDrawerLayout
