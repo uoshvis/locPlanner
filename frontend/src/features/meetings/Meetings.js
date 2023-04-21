@@ -58,7 +58,7 @@ function Meetings() {
             <Box
                 sx={{
                     height: 700,
-                    width: 840,
+                    width: '90%',
                     m: 'auto',
                 }}
             >

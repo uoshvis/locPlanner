@@ -114,7 +114,7 @@ const Events = () => {
             />
 
             <h2>My Events</h2>
-            <Box sx={{ height: 700, width: 840, m: 'auto' }}>
+            <Box sx={{ height: 700, width: '90%', m: 'auto' }}>
                 <DataGrid
                     rows={createData(events, user)}
                     columns={columns}
