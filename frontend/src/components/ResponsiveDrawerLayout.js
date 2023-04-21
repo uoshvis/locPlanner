@@ -1,22 +1,14 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 // MUI imports
-import { useTheme } from '@mui/material'
-import AppBar from '@mui/material/AppBar'
-import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline'
 import Divider from '@mui/material/Divider'
 import Drawer from '@mui/material/Drawer'
-import IconButton from '@mui/material/IconButton'
-import Menu from '@mui/material/Menu'
-import MenuIcon from '@mui/icons-material/Menu'
 import MenuItems from './MenuItems'
-import MenuItem from '@mui/material/MenuItem'
 import Toolbar from '@mui/material/Toolbar'
-import Tooltip from '@mui/material/Tooltip'
-import Typography from '@mui/material/Typography'
+
 // Local imports
 import { useGetUserProfileQuery } from '../app/services/auth/authService'
 import { setUserInfo } from '../features/auth/authSlice'
@@ -24,26 +16,17 @@ import {
     clearNotification,
     setNotification,
 } from '../features/notification/notificationSlice'
-import Logo from '../logo.svg'
+import MainAppBar from './MainAppBar'
 
 const drawerWidth = 240
 
-const settings = [
-    { text: 'Profile', href: '/user-profile' },
-    { text: 'Logout', href: '/logout' },
-]
-
 function ResponsiveDrawerLayout(props) {
     const dispatch = useDispatch()
-    const theme = useTheme()
     const { window } = props
 
     const [mobileOpen, setMobileOpen] = React.useState(false)
-    const [anchorElUser, setAnchorElUser] = React.useState(null)
 
-    const { isLoggedIn, userInfo } = useSelector((state) => state.auth)
-
-    const avatarString = userInfo?.firstName[0] + userInfo?.lastName[0]
+    const { isLoggedIn } = useSelector((state) => state.auth)
 
     const { data, isFetching } = useGetUserProfileQuery('userProfile', {
         // perform a refetch every 15mins
@@ -78,14 +61,6 @@ function ResponsiveDrawerLayout(props) {
         setMobileOpen(!mobileOpen)
     }
 
-    const handleOpenUserMenu = (event) => {
-        setAnchorElUser(event.currentTarget)
-    }
-
-    const handleCloseUserMenu = () => {
-        setAnchorElUser(null)
-    }
-
     const drawer = (
         <div>
             <Toolbar />
@@ -102,120 +77,12 @@ function ResponsiveDrawerLayout(props) {
             <CssBaseline />
 
             {/* AppBar */}
+
             {isLoggedIn && (
-                <AppBar
-                    position="fixed"
-                    sx={{
-                        width: '100%',
-                        ml: { md: `${drawerWidth}px` },
-                        zIndex: theme.zIndex['drawer'] + 1,
-                    }}
-                >
-                    <Toolbar>
-                        <Box
-                            component="img"
-                            sx={{
-                                display: { xs: 'none', md: 'flex' },
-                                mr: 1,
-                                height: '2em',
-                            }}
-                            alt="Logo"
-                            src={Logo}
-                        />
-
-                        <IconButton
-                            color="inherit"
-                            aria-label="open drawer"
-                            edge="start"
-                            onClick={handleDrawerToggle}
-                            sx={{
-                                mr: 2,
-                                display: { md: 'none' },
-                            }}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-
-                        <Typography
-                            variant="h6"
-                            noWrap
-                            component={Link}
-                            to="/"
-                            sx={{
-                                mr: 2,
-                                display: { xs: 'none', sm: 'flex' },
-                                fontFamily: 'monospace',
-                                fontWeight: 700,
-                                letterSpacing: '.3rem',
-                                color: 'inherit',
-                                textDecoration: 'none',
-                            }}
-                        >
-                            LocPlanner
-                        </Typography>
-
-                        <Typography
-                            sx={{
-                                ml: 'auto',
-                                display: { xs: 'none', sm: 'flex' },
-                                fontWeight: 700,
-                                color: 'inherit',
-                            }}
-                        >
-                            Welcome back {userInfo.firstName}!
-                        </Typography>
-
-                        <Box sx={{ flexGrow: 0, ml: { xs: 'auto', sm: 2 } }}>
-                            <Tooltip title="Open settings">
-                                <IconButton
-                                    onClick={handleOpenUserMenu}
-                                    sx={{
-                                        p: 0,
-                                    }}
-                                >
-                                    <Avatar
-                                        sx={{
-                                            bgcolor: userInfo.userColor,
-                                            color: '#fff',
-                                        }}
-                                        alt={userInfo.firstName}
-                                    >
-                                        {avatarString}
-                                    </Avatar>
-                                </IconButton>
-                            </Tooltip>
-                            <Menu
-                                sx={{ mt: '45px' }}
-                                id="menu-appbar"
-                                anchorEl={anchorElUser}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}
-                            >
-                                {settings.map((setting) => (
-                                    <MenuItem
-                                        key={setting.text}
-                                        component={Link}
-                                        to={setting.href}
-                                        onClick={handleCloseUserMenu}
-                                    >
-                                        <Typography textAlign="center">
-                                            {setting.text}
-                                        </Typography>
-                                    </MenuItem>
-                                ))}
-                            </Menu>
-                        </Box>
-                    </Toolbar>
-                </AppBar>
+                <MainAppBar
+                    drawerWidth={drawerWidth}
+                    handleDrawerToggle={handleDrawerToggle}
+                />
             )}
 
             {/* Drawers */}
