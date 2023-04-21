@@ -20,7 +20,7 @@ import MainAppBar from './MainAppBar'
 
 const drawerWidth = 240
 
-function ResponsiveDrawerLayout(props) {
+function RespDrawerLayout(props) {
     const dispatch = useDispatch()
     const { window } = props
 
@@ -153,4 +153,4 @@ function ResponsiveDrawerLayout(props) {
     )
 }
 
-export default ResponsiveDrawerLayout
+export default RespDrawerLayout

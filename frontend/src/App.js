@@ -22,7 +22,7 @@ import UserProfile from './features/users/UserProfile'
 import BackDropLoader from './components/BackDropLoader'
 import RequireLogin from './routing/RequireLogin'
 import RequireAdminRole from './routing/RequireAdmin'
-import ResponsiveDrawerLayout from './components/ResponsiveDrawerLayout'
+import RespDrawerLayout from './components/RespDrawerLayout'
 
 const About = loadable(() => import('./components/About'))
 
@@ -47,7 +47,7 @@ function App() {
             </React.Fragment>
 
             <Routes>
-                <Route element={<ResponsiveDrawerLayout />}>
+                <Route element={<RespDrawerLayout />}>
                     <Route path="login" element={<SignIn />} />
                     <Route path="register" element={<SignUp />} />
                     <Route path="logout" element={<Logout />} />
