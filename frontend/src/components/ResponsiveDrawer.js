@@ -26,6 +26,7 @@ import {
     clearNotification,
     setNotification,
 } from '../features/notification/notificationSlice'
+import Logo from '../logo.svg'
 
 const drawerWidth = 240
 
@@ -96,6 +97,7 @@ function ResponsiveDrawer(props) {
 
     const container =
         window !== undefined ? () => window().document.body : undefined
+
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -111,6 +113,17 @@ function ResponsiveDrawer(props) {
                     }}
                 >
                     <Toolbar>
+                        <Box
+                            component="img"
+                            sx={{
+                                display: { xs: 'none', md: 'flex' },
+                                mr: 1,
+                                height: '2em',
+                            }}
+                            alt="Logo"
+                            src={Logo}
+                        />
+
                         <IconButton
                             color="inherit"
                             aria-label="open drawer"
