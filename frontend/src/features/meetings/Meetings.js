@@ -43,14 +43,15 @@ const columns = [
 ]
 function Meetings() {
     // Using a query hook automatically fetches data and returns query values
-    const { data, error, isLoading } = useGetMeetingsQuery()
+    const { data: meetings = [], error, isLoading } = useGetMeetingsQuery()
     const [rows, setRows] = useState([])
 
     useEffect(() => {
-        if (data) {
-            setRows(data)
+        if (meetings) {
+            setRows(meetings)
         }
-    }, [error, isLoading, data])
+    }, [error, isLoading, meetings])
+    console.log({ meetings })
 
     return (
         <div>

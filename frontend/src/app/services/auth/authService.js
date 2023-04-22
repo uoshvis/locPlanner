@@ -9,8 +9,8 @@ export const authApi = createApi({
             const token = getState().auth.userToken
             if (token) {
                 headers.set('authorization', `Bearer ${token}`)
-                return headers
             }
+            return headers
         },
     }),
     endpoints: (builder) => ({
