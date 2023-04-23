@@ -31,9 +31,19 @@ export const usersApi = createApi({
                 method: 'GET',
             }),
         }),
+        deleteUser: builder.mutation({
+            query: (id) => ({
+                url: `api/users/${id}/delete`,
+                method: 'DELETE',
+            }),
+        }),
     }),
 })
 // export hooks for usage in functional components
 // auto-generated based on the defined endpoints
-export const { useGetUsersQuery, useGetUserQuery, useGetUserProfileQuery } =
-    usersApi
+export const {
+    useGetUsersQuery,
+    useGetUserQuery,
+    useGetUserProfileQuery,
+    useDeleteUserMutation,
+} = usersApi

@@ -11,9 +11,12 @@ import {
 import React from 'react'
 import UserList from './UserList'
 import UserItem from './UserItem'
-import { deleteUser, fetchUsers } from './usersSlice'
+// import { deleteUser, fetchUsers } from './usersSlice'
 import { setNotification } from '../notification/notificationSlice'
-import { useGetUsersQuery } from '../../app/services/users/usersService'
+import {
+    useGetUsersQuery,
+    useDeleteUserMutation,
+} from '../../app/services/users/usersService'
 
 const Users = () => {
     const navigate = useNavigate()
@@ -21,6 +24,7 @@ const Users = () => {
     const [users, setUsers] = useState([])
     const { userInfo } = useSelector((state) => state.auth)
     const { data, error, isLoading } = useGetUsersQuery()
+    const [deleteUser] = useDeleteUserMutation()
 
     const isSuperAdmin = userInfo.role === 'superAdmin'
 
@@ -30,7 +34,7 @@ const Users = () => {
         }
     }, [error, isLoading, data])
 
-    const handleRemoveUser = (userId) => {
+    const handleRemoveUser = async (userId) => {
         if (Number(userInfo.id) === Number(userId)) {
             dispatch(
                 setNotification({
@@ -48,9 +52,14 @@ const Users = () => {
                 })
             )
         } else if (isSuperAdmin) {
-            dispatch(deleteUser(userId))
-                .then(() => dispatch(fetchUsers()))
-                .then(() => navigate('/users'))
+            try {
+                await deleteUser(userId).unwrap()
+                navigate('/users')
+                // ToDo refetch users
+            } catch (err) {
+                // ToDo on error notification
+                console.error('Failed delete user ', err)
+            }
         }
     }
 

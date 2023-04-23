@@ -43,4 +43,17 @@ const getUser = asyncHandler(async (req, res) => {
     }
 })
 
-export { getUserProfile, getUsers, getUser }
+const deleteUser = asyncHandler(async (req, res) => {
+    // req.user was set in authMiddleware.js
+    const reqUser = await User.findById(req.user._id)
+    const id = req.params.id
+    if (['superAdmin'].includes(reqUser.role)) {
+        const user = await User.deleteOne({ id })
+        res.json()
+    } else {
+        res.status(404)
+        throw new Error('User not Found')
+    }
+})
+
+export { getUserProfile, getUsers, getUser, deleteUser }
