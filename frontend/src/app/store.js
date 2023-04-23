@@ -4,7 +4,7 @@ import notificationReducer from '../features/notification/notificationSlice'
 import usersReducer from '../features/users/usersSlice'
 import authReducer from '../features/auth/authSlice'
 import { meetingsApi } from './services/meetings/meetingsService'
-import { authApi } from './services/auth/authService'
+// import { authApi } from './services/auth/authService'
 import { usersApi } from './services/users/usersService'
 
 const combineReducer = combineReducers({
@@ -15,7 +15,7 @@ const combineReducer = combineReducers({
     // Add the generated reducer as a specific top-level slice
     [usersApi.reducerPath]: usersApi.reducer,
     [meetingsApi.reducerPath]: meetingsApi.reducer,
-    [authApi.reducerPath]: authApi.reducer,
+    // [authApi.reducerPath]: authApi.reducer,
 })
 
 const rootReducer = (state, action) => {
@@ -53,6 +53,6 @@ export const store = configureStore({
                 Adding the api middleware enables caching, invalidation, polling, and other useful features of `rtk-query`.
             */
             .concat(meetingsApi.middleware)
-            .concat(authApi.middleware)
+            // .concat(authApi.middleware)
             .concat(usersApi.middleware),
 })

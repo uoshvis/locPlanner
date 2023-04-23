@@ -69,7 +69,7 @@ export const register = createAsyncThunk(
                     'Content-Type': 'application/json',
                 },
             }
-            await axios.post(`${backendURL}/api/user/register`, data, config)
+            await axios.post(`${backendURL}/api/auth/register`, data, config)
         } catch (error) {
             // return custom error message from backend if present
             if (error.response && error.response.data.message) {
@@ -92,7 +92,7 @@ export const login = createAsyncThunk(
                 },
             }
             const { data } = await axios.post(
-                `${backendURL}/api/user/login`,
+                `${backendURL}/api/auth/login`,
                 { userName, password },
                 config
             )

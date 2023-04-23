@@ -15,11 +15,18 @@ export const usersApi = createApi({
     endpoints: (builder) => ({
         getUsers: builder.query({
             query: () => ({
-                url: 'api/user',
+                url: 'api/users',
+                method: 'GET',
+            }),
+        }),
+        getUserProfile: builder.query({
+            query: () => ({
+                url: 'api/users/profile',
                 method: 'GET',
             }),
         }),
     }),
 })
-
-export const { useGetUsersQuery } = usersApi
+// export hooks for usage in functional components
+// auto-generated based on the defined endpoints
+export const { useGetUsersQuery, useGetUserProfileQuery } = usersApi

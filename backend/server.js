@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import colors from 'colors'
 import connectDB from './config/db.js'
 import userRoutes from './routes/userRoutes.js'
+import authRoutes from './routes/authRoutes.js'
 import meetingsRoutes from './routes/meetingsRoutes.js'
 
 import { errorHandler, notFound } from './middleware/errorMiddleware.js'
@@ -30,7 +31,8 @@ app.use(function (req, res, next) {
 app.use(express.json())
 
 // API routes
-app.use('/api/user', userRoutes)
+app.use('/api/auth', authRoutes)
+app.use('/api/users', userRoutes)
 app.use('/api/meetings', meetingsRoutes)
 
 // deployment configuration
