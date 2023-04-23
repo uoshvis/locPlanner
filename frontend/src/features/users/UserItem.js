@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Button from '@mui/material/Button'
@@ -8,15 +8,23 @@ import Box from '@mui/material/Box'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import Typography from '@mui/material/Typography'
 
-import { fetchUsers, getUserById, updateUser } from './usersSlice'
+import { fetchUsers, updateUser } from './usersSlice'
 import UserFormFields from './formFields/UserFormFields'
 import AlertDialog from '../../components/DeleteAlertDialog'
 import { userSchema } from './formFields/userSchema'
+import { useGetUserQuery } from '../../app/services/users/usersService'
 
 const UserItem = ({ handleRemoveUser }) => {
     const { userId } = useParams()
     const dispatch = useDispatch()
-    const user = useSelector((state) => getUserById(state, userId))
+    const [user, setUser] = useState()
+    const { data, error, isLoading } = useGetUserQuery(userId)
+
+    useEffect(() => {
+        if (data) {
+            setUser(data)
+        }
+    }, [error, isLoading, data])
 
     const [isDialogOpen, setDialogIsOpen] = useState(false)
 
@@ -34,7 +42,8 @@ const UserItem = ({ handleRemoveUser }) => {
 
     useEffect(() => {
         if (user) {
-            setValue('passwordConfirm', user.password)
+            setValue('password', user.password.slice(0, 5))
+            setValue('passwordConfirm', user.password.slice(0, 5))
         }
     }, [user, setValue])
 

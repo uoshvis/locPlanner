@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
     Route,
     Routes,
@@ -19,37 +19,16 @@ const Users = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [users, setUsers] = useState([])
-    const [userInfo, setUserInfo] = useState({})
-
+    const { userInfo } = useSelector((state) => state.auth)
     const { data, error, isLoading } = useGetUsersQuery()
+
     const isSuperAdmin = userInfo.role === 'superAdmin'
 
     useEffect(() => {
         if (data) {
-            setUsers(data.users)
-            setUserInfo(data.userInfo)
+            setUsers(data)
         }
     }, [error, isLoading, data])
-
-    useEffect(() => {
-        let didCancel = false
-
-        async function dofetchUsers() {
-            try {
-                await dispatch(fetchUsers()).unwrap()
-            } catch {
-                // error catched in reject case
-                // swallow error
-            }
-            if (!didCancel) {
-            }
-        }
-        dofetchUsers()
-
-        return () => {
-            didCancel = true
-        }
-    }, [dispatch])
 
     const handleRemoveUser = (userId) => {
         if (Number(userInfo.id) === Number(userId)) {
