@@ -51,7 +51,6 @@ function Meetings() {
             setRows(meetings)
         }
     }, [error, isLoading, meetings])
-    console.log({ meetings })
 
     return (
         <div>

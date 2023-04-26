@@ -30,10 +30,10 @@ describe('user role permissions ', () => {
         cy.get('.rbc-day-bg').eq(20).click()
         cy.contains('Add')
         cy.get('[id="select-user"]').click()
-        cy.get('ul[aria-labelledby="select-user-label"]').should(
-            'have.length',
-            1
-        )
+        cy.get('ul[aria-labelledby="select-user-label"]')
+            .should('have.length', 1)
+            .contains(userAuthData.firstName)
+            .contains(userAuthData.lastName)
     })
 
     it('can only view other users event', () => {
