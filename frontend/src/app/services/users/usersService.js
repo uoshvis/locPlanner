@@ -12,12 +12,14 @@ export const usersApi = createApi({
             }
         },
     }),
+    tagTypes: ['Users'],
     endpoints: (builder) => ({
         getUsers: builder.query({
             query: () => ({
                 url: 'api/users',
                 method: 'GET',
             }),
+            providesTags: ['Users'],
         }),
         getUserProfile: builder.query({
             query: () => ({
@@ -36,6 +38,7 @@ export const usersApi = createApi({
                 url: `api/users/${id}/delete`,
                 method: 'DELETE',
             }),
+            invalidatesTags: ['Users'],
         }),
     }),
 })

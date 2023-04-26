@@ -55,10 +55,14 @@ const Users = () => {
             try {
                 await deleteUser(userId).unwrap()
                 navigate('/users')
-                // ToDo refetch users
             } catch (err) {
-                // ToDo on error notification
-                console.error('Failed delete user ', err)
+                dispatch(
+                    setNotification({
+                        message: err,
+                        type: 'error',
+                        open: true,
+                    })
+                )
             }
         }
     }
