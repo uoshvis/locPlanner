@@ -32,12 +32,11 @@ Cypress.Commands.add('login', (loginData) => {
     cy.get('form').submit()
 
     // ASSERT
-    cy.get('.MuiToolbar-root').within(() => {
-        cy.get('p').should(
-            'contain.text',
-            `Welcome back ${loginData.firstName}`
-        )
-    })
+
+    cy.get('.MuiTypography-root').should(
+        'contain.text',
+        `Welcome back ${loginData.firstName}`
+    )
 })
 
 Cypress.Commands.add('visitWithLogin', (url, loginData) => {
