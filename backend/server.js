@@ -6,6 +6,7 @@ import connectDB from './config/db.js'
 import userRoutes from './routes/userRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import meetingsRoutes from './routes/meetingsRoutes.js'
+import eventsRoutes from './routes/eventsRoutes.js'
 
 import { errorHandler, notFound } from './middleware/errorMiddleware.js'
 
@@ -34,6 +35,7 @@ app.use(express.json())
 // API routes
 app.use('/api/auth', authRoutes)
 app.use('/api/users', userRoutes)
+app.use('/api/events', eventsRoutes)
 app.use('/api/meetings', meetingsRoutes)
 
 // deployment configuration
