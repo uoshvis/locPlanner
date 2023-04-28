@@ -26,6 +26,7 @@ import {
 } from './eventsSlice'
 import { LocationInputDropDown } from './formFields/LocationInputDropdown'
 import { UserSelectDropdown } from './formFields/UserSelectDropdown'
+import { useGetUsersQuery } from '../../app/services/users/usersService'
 
 export const EventForm = (props) => {
     const dispatch = useDispatch()
@@ -34,9 +35,21 @@ export const EventForm = (props) => {
     const event = useSelector((state) => state.calendar.currentItem)
     const { userInfo } = useSelector((state) => state.auth)
     const { formType } = useSelector((state) => state.calendar)
-    const users = useSelector((state) => state.users.items)
 
-    const [usersList, setUsersList] = useState(users)
+    const [usersList, setUsersList] = useState([userInfo])
+    const { data: users = [] } = useGetUsersQuery()
+
+    const isAdminRole = (role) => {
+        const adminRoles = ['admin', 'superAdmin']
+        return adminRoles.includes(role)
+    }
+
+    useEffect(() => {
+        if (users && isAdminRole(userInfo.role)) {
+            setUsersList(users)
+        }
+    }, [users, userInfo.role])
+
     const [readOnly] = useState(formType === 'view' ? true : false)
 
     const defaultValues = {
@@ -48,7 +61,7 @@ export const EventForm = (props) => {
         isCompleted: false,
     }
 
-    const { handleSubmit, control, setValue, getValues } = useForm({
+    const { handleSubmit, control, getValues } = useForm({
         defaultValues,
         values: { ...defaultValues, ...event },
     })
@@ -65,16 +78,6 @@ export const EventForm = (props) => {
     } else if (formType === 'view') {
         submitBtnText = 'View'
     }
-
-    useEffect(() => {
-        const adminRoles = ['admin', 'superAdmin']
-
-        if (adminRoles.includes(userInfo.role)) {
-            setUsersList(users)
-        } else {
-            setUsersList(users.filter((user) => user.id === event.userId))
-        }
-    }, [userInfo, users, setValue, event])
 
     const handleClose = () => {
         dispatch(toggleShowModal())
@@ -132,12 +135,14 @@ export const EventForm = (props) => {
                                     />
                                 )}
                             />
+
                             <LocationInputDropDown
                                 name="location"
                                 control={control}
                                 label="Location"
                                 disabled={readOnly}
                             />
+
                             <UserSelectDropdown
                                 name="userId"
                                 control={control}
@@ -145,6 +150,7 @@ export const EventForm = (props) => {
                                 label="User"
                                 disabled={readOnly}
                             />
+
                             <Controller
                                 control={control}
                                 name="start"
@@ -168,6 +174,7 @@ export const EventForm = (props) => {
                                     />
                                 )}
                             />
+
                             <Controller
                                 control={control}
                                 name="end"
@@ -197,6 +204,7 @@ export const EventForm = (props) => {
                                     />
                                 )}
                             />
+
                             <Controller
                                 name="isCompleted"
                                 control={control}
