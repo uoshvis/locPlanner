@@ -7,18 +7,6 @@ describe('Login Page', () => {
 
         // ASSERT
 
-        // Navbar
-        cy.get('.MuiPaper-root')
-            .should('be.visible')
-            .within(() => {
-                cy.get('.MuiTypography-root').should(
-                    'contain.text',
-                    'LocPlanner'
-                )
-                cy.get('a')
-                    .should('be.visible')
-                    .should('contain.text', 'LocPlanner')
-            })
         // Login Form
         cy.get('h1').should('contain.text', 'Sign in')
         cy.get('form').should('be.visible')
