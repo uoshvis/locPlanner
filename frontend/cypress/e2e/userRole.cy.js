@@ -25,7 +25,7 @@ describe('user role permissions ', () => {
         cy.get('button').contains('Edit').should('be.enabled')
     })
 
-    it('can add new event only for self', () => {
+    it('can select user event only for self', () => {
         cy.get('a').contains('.MuiListItemText-root', 'Calendar').click()
         cy.get('.rbc-day-bg').eq(20).click()
         cy.contains('Add')
