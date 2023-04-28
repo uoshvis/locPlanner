@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
 
-const getUserProfile = asyncHandler(async (req, res) => {
+const getProfile = asyncHandler(async (req, res) => {
     // req.user was set in authMiddleware.js
     const user = await User.findById(req.user._id)
 
@@ -12,32 +12,38 @@ const getUserProfile = asyncHandler(async (req, res) => {
             firstName: user.firstName,
             lastName: user.lastName,
             role: user.role,
+            userColor: user.userColor,
         })
     } else {
         res.status(404)
-        throw new Error('User not found')
+        throw new Error('User profile not found')
     }
 })
 
 const getUsers = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.user._id)
-    if (user) {
-        const users = await User.find({}, 'id firstName lastName')
+    const users = await User.find({}, 'id firstName lastName userColor')
+    if (users) {
         res.json(users)
     } else {
         res.status(404)
-        throw new Error('No Users')
+        throw new Error('Users not found')
     }
 })
 
 const getUsersData = asyncHandler(async (req, res) => {
+    // req.user was set in authMiddleware.js
     const user = await User.findById(req.user._id)
     if (['admin', 'superAdmin'].includes(user.role)) {
         const users = await User.find({})
-        res.json(users)
+        if (users) {
+            res.json(users)
+        } else {
+            res.status(404)
+            throw new Error('No Users')
+        }
     } else {
-        res.status(404)
-        throw new Error('No Users')
+        res.status(401)
+        throw new Error('Only for admin role users')
     }
 })
 
@@ -47,10 +53,15 @@ const getUser = asyncHandler(async (req, res) => {
     const id = req.params.id
     if (['admin', 'superAdmin'].includes(reqUser.role)) {
         const user = await User.findOne({ id })
-        res.json(user)
+        if (user) {
+            res.json(user)
+        } else {
+            res.status(404)
+            throw new Error('User not Found')
+        }
     } else {
-        res.status(404)
-        throw new Error('User not Found')
+        res.status(401)
+        throw new Error('Only for admin role users')
     }
 })
 
@@ -59,12 +70,17 @@ const deleteUser = asyncHandler(async (req, res) => {
     const reqUser = await User.findById(req.user._id)
     const id = req.params.id
     if (['superAdmin'].includes(reqUser.role)) {
-        const user = await User.deleteOne({ id })
-        res.json()
+        const deleted = await User.deleteOne({ id })
+        if (deleted) {
+            res.json(deleted)
+        } else {
+            res.status(404)
+            throw new Error('User not Found')
+        }
     } else {
-        res.status(404)
-        throw new Error('User not Found')
+        res.status(401)
+        throw new Error('Only for superAdmin')
     }
 })
 
-export { getUser, getUserProfile, getUsers, getUsersData, deleteUser }
+export { getUser, getProfile, getUsers, getUsersData, deleteUser }
