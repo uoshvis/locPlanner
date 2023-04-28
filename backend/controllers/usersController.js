@@ -21,6 +21,17 @@ const getUserProfile = asyncHandler(async (req, res) => {
 
 const getUsers = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id)
+    if (user) {
+        const users = await User.find({}, 'id firstName lastName')
+        res.json(users)
+    } else {
+        res.status(404)
+        throw new Error('No Users')
+    }
+})
+
+const getUsersData = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id)
     if (['admin', 'superAdmin'].includes(user.role)) {
         const users = await User.find({})
         res.json(users)
@@ -56,4 +67,4 @@ const deleteUser = asyncHandler(async (req, res) => {
     }
 })
 
-export { getUserProfile, getUsers, getUser, deleteUser }
+export { getUser, getUserProfile, getUsers, getUsersData, deleteUser }
