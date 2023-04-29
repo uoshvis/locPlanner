@@ -18,15 +18,15 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import DeleteIcon from '@mui/icons-material/Delete'
 import CancelIcon from '@mui/icons-material/Cancel'
 import CheckIcon from '@mui/icons-material/Check'
-import {
-    addEventData,
-    updateEventData,
-    toggleShowModal,
-    deleteEvent,
-} from './eventsSlice'
+import { toggleShowModal } from './eventsSlice'
 import { LocationInputDropDown } from './formFields/LocationInputDropdown'
 import { UserSelectDropdown } from './formFields/UserSelectDropdown'
 import { useGetUsersQuery } from '../../app/services/users/usersService'
+import {
+    useCreateEventMutation,
+    useDeleteEventMutation,
+    useUpdateEventMutation,
+} from '../../app/services/events/eventsService'
 
 export const EventForm = (props) => {
     const dispatch = useDispatch()
@@ -38,7 +38,9 @@ export const EventForm = (props) => {
 
     const [usersList, setUsersList] = useState([userInfo])
     const { data: users = [] } = useGetUsersQuery()
-
+    const [addEvent] = useCreateEventMutation()
+    const [updateEvent] = useUpdateEventMutation()
+    const [deleteEvent] = useDeleteEventMutation()
     const isAdminRole = (role) => {
         const adminRoles = ['admin', 'superAdmin']
         return adminRoles.includes(role)
@@ -71,10 +73,10 @@ export const EventForm = (props) => {
 
     if (formType === 'add') {
         submitBtnText = 'Add'
-        submitAction = addEventData
+        submitAction = addEvent
     } else if (formType === 'update') {
         submitBtnText = 'Update'
-        submitAction = updateEventData
+        submitAction = updateEvent
     } else if (formType === 'view') {
         submitBtnText = 'View'
     }
@@ -85,14 +87,14 @@ export const EventForm = (props) => {
 
     const onSubmit = (data) => {
         if (!isLoading) {
-            dispatch(submitAction(data))
+            submitAction(data)
             dispatch(toggleShowModal())
         }
     }
 
     const handleDelete = () => {
         if (!isLoading) {
-            dispatch(deleteEvent(event))
+            deleteEvent(event?.id)
             dispatch(toggleShowModal())
         }
     }

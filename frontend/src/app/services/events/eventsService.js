@@ -29,17 +29,22 @@ export const eventsApi = createApi({
             }),
         }),
         createEvent: builder.mutation({
-            query: () => ({
+            query: (body) => ({
                 url: `api/events`,
                 method: 'POST',
+                body,
             }),
             invalidatesTags: ['Events'],
         }),
-        editEvent: builder.mutation({
-            query: (id) => ({
-                url: `api/events/${id}`,
-                method: 'PUT',
-            }),
+        updateEvent: builder.mutation({
+            query(data) {
+                const { id, ...body } = data
+                return {
+                    url: `api/events/${id}`,
+                    method: 'PUT',
+                    body,
+                }
+            },
             invalidatesTags: ['Events'],
         }),
         deleteEvent: builder.mutation({
@@ -57,6 +62,6 @@ export const {
     useGetEventsQuery,
     useGetEventQuery,
     useCreateEventMutation,
-    useEditEventMutation,
+    useUpdateEventMutation,
     useDeleteEventMutation,
 } = eventsApi

@@ -12,16 +12,14 @@ import {
     selectCurrentEvent,
     toggleShowModal,
     updateEventData,
-    fetchEventsByLocation,
-    filterEventsByLocation,
 } from '../events/eventsSlice'
 import {
     setNotification,
-    isNotificationOpen,
 } from '../notification/notificationSlice'
 import { fetchUsers, getUserColors } from '../users/usersSlice'
 import LocationBtn from './LocationBtn'
 import { EventForm } from '../events/EventForm'
+import { useGetEventsQuery } from '../../app/services/events/eventsService'
 
 moment.updateLocale('lt', {
     week: {
@@ -36,40 +34,13 @@ const DnDCalendar = withDragAndDrop(Calendar)
 function MainCalendar() {
     const dispatch = useDispatch()
     const location = useSelector((state) => state.calendar.currentLocation)
-    const events = useSelector((state) =>
-        filterEventsByLocation(state, location)
-    )
     const open = useSelector((state) => state.calendar.showModal)
-    const notificationIsOpen = useSelector(isNotificationOpen)
     const userColors = useSelector((state) => getUserColors(state))
     const { userInfo } = useSelector((state) => state.auth)
+
+    const { data: events = [] } = useGetEventsQuery({ location })
+
     const adminRoles = ['admin', 'superAdmin']
-
-    useEffect(() => {
-        // https://github.com/facebook/react/issues/14326
-        let didCancel = false
-
-        async function fetchAPI() {
-            try {
-                await dispatch(fetchEventsByLocation(location)).unwrap()
-            } catch {
-                // error catched in reject case
-                // swallow error
-            }
-            if (!didCancel) {
-            }
-        }
-        if (!notificationIsOpen) {
-            fetchAPI()
-        }
-        return () => {
-            didCancel = true
-        }
-    }, [
-        dispatch,
-        location,
-        notificationIsOpen, // do fetch if notification is closed
-    ])
 
     useEffect(() => {
         let didCancel = false
