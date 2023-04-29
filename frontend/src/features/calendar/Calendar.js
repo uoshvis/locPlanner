@@ -1,4 +1,5 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+
 import { useSelector, useDispatch } from 'react-redux'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
@@ -13,13 +14,11 @@ import {
     toggleShowModal,
     updateEventData,
 } from '../events/eventsSlice'
-import {
-    setNotification,
-} from '../notification/notificationSlice'
-import { fetchUsers, getUserColors } from '../users/usersSlice'
+import { setNotification } from '../notification/notificationSlice'
 import LocationBtn from './LocationBtn'
 import { EventForm } from '../events/EventForm'
 import { useGetEventsQuery } from '../../app/services/events/eventsService'
+import { useGetUsersQuery } from '../../app/services/users/usersService'
 
 moment.updateLocale('lt', {
     week: {
@@ -31,36 +30,40 @@ moment.updateLocale('lt', {
 const localizer = momentLocalizer(moment)
 const DnDCalendar = withDragAndDrop(Calendar)
 
+const getUserColors = (users) => {
+    var userColors = users.reduce((obj, item) => {
+        obj[item.id] = item.userColor
+        return obj
+    }, {})
+    return userColors
+}
+
 function MainCalendar() {
     const dispatch = useDispatch()
     const location = useSelector((state) => state.calendar.currentLocation)
     const open = useSelector((state) => state.calendar.showModal)
-    const userColors = useSelector((state) => getUserColors(state))
+    const [userData, setUserData] = useState([])
+    const [userColors, setUserColors] = useState({})
+    const { data: users = [] } = useGetUsersQuery()
+
+    useEffect(() => {
+        if (users) {
+            setUserData(users)
+        }
+    }, [users, userData])
+
+    useEffect(() => {
+        if (userData.length > 0) {
+            const userColors = getUserColors(userData)
+            setUserColors(userColors)
+        }
+    }, [userData])
+
     const { userInfo } = useSelector((state) => state.auth)
 
     const { data: events = [] } = useGetEventsQuery({ location })
 
     const adminRoles = ['admin', 'superAdmin']
-
-    useEffect(() => {
-        let didCancel = false
-
-        async function dofetchUsers() {
-            try {
-                await dispatch(fetchUsers()).unwrap()
-            } catch {
-                // error catched in reject case
-                // swallow error
-            }
-            if (!didCancel) {
-            }
-        }
-        dofetchUsers()
-
-        return () => {
-            didCancel = true
-        }
-    }, [dispatch])
 
     const handleEventDrop = async (data) => {
         const { start, end } = data
