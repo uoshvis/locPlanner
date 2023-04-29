@@ -3,8 +3,11 @@ import Event from '../models/eventModel.js'
 import User from '../models/userModel.js'
 
 const getEvents = asyncHandler(async (req, res) => {
-    const events = await Event.find({})
-
+    const filters = req.query
+    if (filters?.location === 'all') {
+        delete filters.location
+    }
+    const events = await Event.find(filters)
     if (events) {
         res.json(events)
     } else {

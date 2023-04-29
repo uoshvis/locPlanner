@@ -21,6 +21,7 @@ const eventSchema = mongoose.Schema({
     },
     location: {
         type: String,
+        enum: ['loc1', 'loc2'],
         required: true,
     },
     userId: {
