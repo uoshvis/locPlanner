@@ -6,6 +6,7 @@ import authReducer from '../features/auth/authSlice'
 import { meetingsApi } from './services/meetings/meetingsService'
 // import { authApi } from './services/auth/authService'
 import { usersApi } from './services/users/usersService'
+import { eventsApi } from './services/events/eventsService'
 
 const combineReducer = combineReducers({
     calendar: calendarReducer,
@@ -16,6 +17,7 @@ const combineReducer = combineReducers({
     [usersApi.reducerPath]: usersApi.reducer,
     [meetingsApi.reducerPath]: meetingsApi.reducer,
     // [authApi.reducerPath]: authApi.reducer,
+    [eventsApi.reducerPath]: eventsApi.reducer,
 })
 
 const rootReducer = (state, action) => {
@@ -53,6 +55,7 @@ export const store = configureStore({
                 Adding the api middleware enables caching, invalidation, polling, and other useful features of `rtk-query`.
             */
             .concat(meetingsApi.middleware)
+            .concat(usersApi.middleware)
             // .concat(authApi.middleware)
-            .concat(usersApi.middleware),
+            .concat(eventsApi.middleware),
 })
