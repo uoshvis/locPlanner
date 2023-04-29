@@ -25,9 +25,9 @@ describe('user role permissions ', () => {
         cy.get('button').contains('Edit').should('be.enabled')
     })
 
-    it('can select user event only for self', () => {
+    it('can select event user only for self', () => {
         cy.get('a').contains('.MuiListItemText-root', 'Calendar').click()
-        cy.get('.rbc-day-bg').eq(20).click()
+        cy.get('.rbc-date-cell').eq(20).click()
         cy.contains('Add')
         cy.get('[id="select-user"]').click()
         cy.get('ul[aria-labelledby="select-user-label"]')
