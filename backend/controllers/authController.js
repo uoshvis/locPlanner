@@ -43,6 +43,7 @@ const loginUser = asyncHandler(async (req, res) => {
             firstName: user.firstName,
             lastName: user.lastName,
             role: user.role,
+            userColor: user.userColor,
             userToken: generateToken(user._id),
         })
     } else {
