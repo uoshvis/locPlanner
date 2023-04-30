@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { client } from '../../mocks/client.js'
-import { jsonDateTimeConverter } from './eventsHelpers.js'
+import { dateTimeToDateObj } from './eventsHelpers.js'
 
 const initialState = {
     items: [],
@@ -41,14 +41,14 @@ export const eventsSlice = createSlice({
     extraReducers(builder) {
         builder
             .addCase(fetchEventsByLocation.fulfilled, (state, action) => {
-                state.items = jsonDateTimeConverter(action.payload)
+                state.items = dateTimeToDateObj(action.payload)
             })
             .addCase(fetchEventsByLocation.rejected, (state, action) => {
                 state.error = action.error.message
             })
             // add
             .addCase(addEventData.fulfilled, (state, action) => {
-                const item = jsonDateTimeConverter(action.payload)
+                const item = dateTimeToDateObj(action.payload)
                 state.items.push(item)
             })
             .addCase(addEventData.rejected, (state, action) => {
@@ -56,7 +56,7 @@ export const eventsSlice = createSlice({
             })
             // update
             .addCase(updateEventData.fulfilled, (state, action) => {
-                const item = jsonDateTimeConverter(action.payload)
+                const item = dateTimeToDateObj(action.payload)
                 const itemIdx = state.items.findIndex(
                     (obj) => obj.id === Number(item.id)
                 )

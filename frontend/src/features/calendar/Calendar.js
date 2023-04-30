@@ -19,6 +19,7 @@ import LocationBtn from './LocationBtn'
 import { EventForm } from '../events/EventForm'
 import { useGetEventsQuery } from '../../app/services/events/eventsService'
 import { useGetUsersQuery } from '../../app/services/users/usersService'
+import { dateTimeToDateObj } from '../events/eventsHelpers'
 
 moment.updateLocale('lt', {
     week: {
@@ -42,9 +43,14 @@ function MainCalendar() {
     const dispatch = useDispatch()
     const location = useSelector((state) => state.calendar.currentLocation)
     const open = useSelector((state) => state.calendar.showModal)
+    const { userInfo } = useSelector((state) => state.auth)
     const [userData, setUserData] = useState([])
     const [userColors, setUserColors] = useState({})
+    const [events, setEvents] = useState([])
     const { data: users = [] } = useGetUsersQuery()
+    const { data: eventsData = [] } = useGetEventsQuery({ location })
+
+    const adminRoles = ['admin', 'superAdmin']
 
     useEffect(() => {
         if (users) {
@@ -59,11 +65,12 @@ function MainCalendar() {
         }
     }, [userData])
 
-    const { userInfo } = useSelector((state) => state.auth)
-
-    const { data: events = [] } = useGetEventsQuery({ location })
-
-    const adminRoles = ['admin', 'superAdmin']
+    useEffect(() => {
+        if (eventsData.length > 0) {
+            const convertedEvents = dateTimeToDateObj(eventsData)
+            setEvents(convertedEvents)
+        }
+    }, [eventsData])
 
     const handleEventDrop = async (data) => {
         const { start, end } = data

@@ -87,7 +87,11 @@ export const EventForm = (props) => {
 
     const onSubmit = (data) => {
         if (!isLoading) {
-            submitAction(data)
+            submitAction({
+                ...data,
+                start: data.start.toString(),
+                end: data.end.toString(),
+            })
             dispatch(toggleShowModal())
         }
     }
