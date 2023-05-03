@@ -14,7 +14,7 @@ import UserItem from './UserItem'
 // import { deleteUser, fetchUsers } from './usersSlice'
 import { setNotification } from '../notification/notificationSlice'
 import {
-    useGetUsersQuery,
+    useGetUsersDataQuery,
     useDeleteUserMutation,
 } from '../../app/services/users/usersService'
 
@@ -23,7 +23,7 @@ const Users = () => {
     const dispatch = useDispatch()
     const [users, setUsers] = useState([])
     const { userInfo } = useSelector((state) => state.auth)
-    const { data, error, isLoading } = useGetUsersQuery()
+    const { data, error, isLoading } = useGetUsersDataQuery()
     const [deleteUser] = useDeleteUserMutation()
 
     const isSuperAdmin = userInfo.role === 'superAdmin'

@@ -21,6 +21,13 @@ export const usersApi = createApi({
             }),
             providesTags: ['Users'],
         }),
+        getUsersData: builder.query({
+            query: () => ({
+                url: 'api/users/users-data',
+                method: 'GET',
+            }),
+            providesTags: ['Users'],
+        }),
         getUserProfile: builder.query({
             query: () => ({
                 url: 'api/users/profile',
@@ -46,6 +53,7 @@ export const usersApi = createApi({
 // auto-generated based on the defined endpoints
 export const {
     useGetUsersQuery,
+    useGetUsersDataQuery,
     useGetUserQuery,
     useGetUserProfileQuery,
     useDeleteUserMutation,
