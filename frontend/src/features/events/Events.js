@@ -4,53 +4,61 @@ import { DataGrid } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
 import CustomFooterComponent from './CustomFooter'
 import {
-    fetchEventsByLocation,
-    filterEventsByLocation,
     setFormType,
     selectCurrentEvent,
     toggleShowModal,
     deleteEvents,
 } from './eventsSlice'
 import { EventForm } from './EventForm'
-import { fetchUsers } from '../users/usersSlice'
 import AlertDialog from '../../components/DeleteAlertDialog'
+import { useGetEventsQuery } from '../../app/services/events/eventsService'
+import { useGetUsersQuery } from '../../app/services/users/usersService'
 
 const Events = () => {
     const dispatch = useDispatch()
-    const events = useSelector((state) => filterEventsByLocation(state, 'all'))
+
     const user = useSelector((state) => state.auth.userInfo)
     const open = useSelector((state) => state.calendar.showModal)
-    const users = useSelector((state) => state.users.items)
-    const [isDialogOpen, setDialogIsOpen] = useState(false)
 
+    const [isDialogOpen, setDialogIsOpen] = useState(false)
     const [selectedIds, setSelectedIds] = useState(new Set())
+    const [eventsFilter, setEventsFilter] = useState({ userId: user.id })
+
+    const [events, setEvents] = useState([])
+    const { data: users = [] } = useGetUsersQuery()
+    const { data: eventsData } = useGetEventsQuery(eventsFilter)
+
     const adminRoles = ['admin', 'superAdmin']
     const adminPermission = adminRoles.includes(user.role)
 
-    // https://stackoverflow.com/questions/67100027/dispatch-multiple-async-actions-with-redux-toolkit
     useEffect(() => {
         if (adminPermission) {
-            dispatch(fetchUsers())
+            // Admin getsEvents
+            setEventsFilter({})
         }
-    }, [dispatch, adminPermission])
+    }, [adminPermission, user.id])
 
     useEffect(() => {
-        dispatch(fetchEventsByLocation('all'))
-    }, [dispatch])
+        if (eventsData) {
+            setEvents(eventsData)
+        }
+    }, [eventsData])
 
-    function createData(events, userId) {
-        let userEvents = []
+    function createData(events, user) {
+        let eventsDataToDisplay = []
 
         if (user) {
             if (!adminPermission) {
-                userEvents = events.filter((event) => event.userId === user.id)
-                userEvents = userEvents.map((event) => ({
+                // Can be used to filter user events in frontend
+                // eventsDataToDisplay = events.filter(
+                //     (event) => event.userId === user.id
+                // )
+                eventsDataToDisplay = events.map((event) => ({
                     ...event,
                     userFullName: user.firstName + ' ' + user.lastName,
                 }))
-                return userEvents
             } else {
-                userEvents = events.map((event) => ({
+                eventsDataToDisplay = events.map((event) => ({
                     ...event,
                     userFullName:
                         users.find((user) => user.id === event.userId)
@@ -60,7 +68,7 @@ const Events = () => {
                 }))
             }
         }
-        return userEvents
+        return eventsDataToDisplay
     }
 
     const handleSelection = (selection) => {
