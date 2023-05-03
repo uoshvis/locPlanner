@@ -12,12 +12,14 @@ import {
     setFormType,
     selectCurrentEvent,
     toggleShowModal,
-    updateEventData,
 } from '../events/eventsSlice'
 import { setNotification } from '../notification/notificationSlice'
 import LocationBtn from './LocationBtn'
 import { EventForm } from '../events/EventForm'
-import { useGetEventsQuery } from '../../app/services/events/eventsService'
+import {
+    useGetEventsQuery,
+    useUpdateEventMutation,
+} from '../../app/services/events/eventsService'
 import { useGetUsersQuery } from '../../app/services/users/usersService'
 import { dateTimeToDateObj } from '../events/eventsHelpers'
 
@@ -49,6 +51,7 @@ function MainCalendar() {
     const [events, setEvents] = useState([])
     const { data: users = [] } = useGetUsersQuery()
     const { data: eventsData = [] } = useGetEventsQuery({ location })
+    const [updateEvent] = useUpdateEventMutation()
 
     const adminRoles = ['admin', 'superAdmin']
 
@@ -80,7 +83,7 @@ function MainCalendar() {
             end: end.toISOString(),
         }
         try {
-            await dispatch(updateEventData(updatedEvent)).unwrap()
+            await updateEvent(updatedEvent)
         } catch (err) {
             dispatch(setNotification({ message: err.message, type: 'error' }))
         }
