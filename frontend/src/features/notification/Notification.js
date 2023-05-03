@@ -14,7 +14,7 @@ const Notification = ({ type, message }) => {
         <Fade in={true} timeout={1000}>
             <Alert
                 sx={{
-                    position: 'absolute',
+                    position: 'fixed',
                     width: 'auto',
                     bottom: 0,
                     right: 0,
