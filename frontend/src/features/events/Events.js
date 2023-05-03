@@ -3,15 +3,13 @@ import { useSelector, useDispatch } from 'react-redux'
 import { DataGrid } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
 import CustomFooterComponent from './CustomFooter'
-import {
-    setFormType,
-    selectCurrentEvent,
-    toggleShowModal,
-    deleteEvents,
-} from './eventsSlice'
+import { setFormType, selectCurrentEvent, toggleShowModal } from './eventsSlice'
 import { EventForm } from './EventForm'
 import AlertDialog from '../../components/DeleteAlertDialog'
-import { useGetEventsQuery } from '../../app/services/events/eventsService'
+import {
+    useDeleteEventsMutation,
+    useGetEventsQuery,
+} from '../../app/services/events/eventsService'
 import { useGetUsersQuery } from '../../app/services/users/usersService'
 
 const Events = () => {
@@ -27,13 +25,14 @@ const Events = () => {
     const [events, setEvents] = useState([])
     const { data: users = [] } = useGetUsersQuery()
     const { data: eventsData } = useGetEventsQuery(eventsFilter)
+    const [deleteEvents] = useDeleteEventsMutation()
 
     const adminRoles = ['admin', 'superAdmin']
     const adminPermission = adminRoles.includes(user.role)
 
     useEffect(() => {
         if (adminPermission) {
-            // Admin getsEvents
+            // Admin get all events
             setEventsFilter({})
         }
     }, [adminPermission, user.id])
@@ -82,8 +81,8 @@ const Events = () => {
         dispatch(toggleShowModal())
     }
     const handleDeleteEvents = () => {
-        const idsString = [...selectedIds].join(';')
-        dispatch(deleteEvents(idsString)).then(() => {
+        const ids = Array.from(selectedIds)
+        deleteEvents({ ids }).then(() => {
             setSelectedIds([])
         })
         setDialogIsOpen(false)

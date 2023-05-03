@@ -9,5 +9,6 @@ router.route('/').post(protect, eventsController.createEvent)
 router.route('/:id').get(protect, eventsController.getEvent)
 router.route('/:id').put(protect, eventsController.updateEvent)
 router.route('/:id/delete').delete(protect, eventsController.deleteEvent)
+router.route('/delete').delete(protect, eventsController.deleteEvents)
 
 export default router

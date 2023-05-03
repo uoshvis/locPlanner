@@ -96,4 +96,26 @@ const deleteEvent = asyncHandler(async (req, res) => {
     }
 })
 
-export { getEvents, getEvent, createEvent, updateEvent, deleteEvent }
+const deleteEvents = asyncHandler(async (req, res) => {
+    const ids = req.body.ids
+    try {
+        if (ids) {
+            const deleted = await Event.deleteMany({ id: { $in: ids } })
+            res.json(deleted)
+        } else {
+            throw new Error('no ids')
+        }
+    } catch (err) {
+        res.status(404)
+        throw new Error(err)
+    }
+})
+
+export {
+    getEvents,
+    getEvent,
+    createEvent,
+    updateEvent,
+    deleteEvent,
+    deleteEvents,
+}

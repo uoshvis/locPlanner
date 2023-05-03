@@ -54,6 +54,14 @@ export const eventsApi = createApi({
             }),
             invalidatesTags: ['Events'],
         }),
+        deleteEvents: builder.mutation({
+            query: (body) => ({
+                url: `api/events/delete`,
+                method: 'DELETE',
+                body,
+            }),
+            invalidatesTags: ['Events'],
+        }),
     }),
 })
 // export hooks for usage in functional components
@@ -64,4 +72,5 @@ export const {
     useCreateEventMutation,
     useUpdateEventMutation,
     useDeleteEventMutation,
+    useDeleteEventsMutation,
 } = eventsApi
