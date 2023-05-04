@@ -83,9 +83,9 @@ function MainCalendar() {
             end: end.toISOString(),
         }
         try {
-            await updateEvent(updatedEvent)
+            await updateEvent(updatedEvent).unwrap()
         } catch (err) {
-            dispatch(setNotification({ message: err.message, type: 'error' }))
+            dispatch(setNotification({ message: err, type: 'error' }))
         }
     }
 
