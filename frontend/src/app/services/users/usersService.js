@@ -33,12 +33,25 @@ export const usersApi = createApi({
                 url: 'api/users/profile',
                 method: 'GET',
             }),
+            providesTags: ['UserProfile'],
         }),
         getUser: builder.query({
             query: (id) => ({
                 url: `api/users/${id}`,
                 method: 'GET',
             }),
+        }),
+        updateUser: builder.mutation({
+            query(data) {
+                const { id, ...body } = data
+
+                return {
+                    url: `api/users/${id}`,
+                    method: 'PUT',
+                    body,
+                }
+            },
+            invalidatesTags: ['UserProfile'],
         }),
         deleteUser: builder.mutation({
             query: (id) => ({
@@ -56,5 +69,6 @@ export const {
     useGetUsersDataQuery,
     useGetUserQuery,
     useGetUserProfileQuery,
+    useUpdateUserMutation,
     useDeleteUserMutation,
 } = usersApi
