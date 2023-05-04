@@ -65,6 +65,35 @@ const getUser = asyncHandler(async (req, res) => {
     }
 })
 
+const updateUser = asyncHandler(async (req, res) => {
+    // req.user was set in authMiddleware.js
+    const reqUser = await User.findById(req.user._id)
+    const id = req.params.id
+    const data = req.body
+
+    const userToUpdate = await User.findOne({ id })
+
+    if (userToUpdate) {
+        if (
+            userToUpdate.id === reqUser.id ||
+            ['admin', 'superAdmin'].includes(reqUser.role)
+        ) {
+            const doc = await User.findOneAndUpdate({ id }, data, {
+                new: true,
+            })
+            if (doc) {
+                res.json(doc)
+            } else {
+                res.status(500)
+                throw new Error('User not edited')
+            }
+        }
+    } else {
+        res.status(404)
+        throw new Error('User not Found')
+    }
+})
+
 const deleteUser = asyncHandler(async (req, res) => {
     // req.user was set in authMiddleware.js
     const reqUser = await User.findById(req.user._id)
@@ -83,4 +112,4 @@ const deleteUser = asyncHandler(async (req, res) => {
     }
 })
 
-export { getUser, getProfile, getUsers, getUsersData, deleteUser }
+export { getUser, getProfile, getUsers, getUsersData, updateUser, deleteUser }
