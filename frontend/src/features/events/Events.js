@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { DataGrid } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
@@ -22,13 +22,18 @@ const Events = () => {
     const [selectedIds, setSelectedIds] = useState(new Set())
     const [eventsFilter, setEventsFilter] = useState({ userId: user.id })
 
-    const [events, setEvents] = useState([])
     const { data: users = [] } = useGetUsersQuery()
-    const { data: eventsData } = useGetEventsQuery(eventsFilter)
+    const { data: events = [] } = useGetEventsQuery(eventsFilter)
     const [deleteEvents] = useDeleteEventsMutation()
 
     const adminRoles = ['admin', 'superAdmin']
     const adminPermission = adminRoles.includes(user.role)
+
+    const sortedEvents = useMemo(() => {
+        const sortedEvents = events.slice()
+        sortedEvents.sort((a, b) => b.start.localeCompare(a.start))
+        return sortedEvents
+    }, [events])
 
     useEffect(() => {
         if (adminPermission) {
@@ -36,12 +41,6 @@ const Events = () => {
             setEventsFilter({})
         }
     }, [adminPermission, user.id])
-
-    useEffect(() => {
-        if (eventsData) {
-            setEvents(eventsData)
-        }
-    }, [eventsData])
 
     function createData(events, user) {
         let eventsDataToDisplay = []
@@ -123,7 +122,7 @@ const Events = () => {
             <h2>My Events</h2>
             <Box sx={{ height: 700, width: '90%', m: 'auto' }}>
                 <DataGrid
-                    rows={createData(events, user)}
+                    rows={createData(sortedEvents, user)}
                     columns={columns}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
