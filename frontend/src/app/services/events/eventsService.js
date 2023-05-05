@@ -20,13 +20,17 @@ export const eventsApi = createApi({
                 params: arg,
                 method: 'GET',
             }),
-            providesTags: ['Events'],
+            providesTags: (result = [], error, arg) => [
+                'Events',
+                ...result.map(({ id }) => ({ type: 'Post', id })),
+            ],
         }),
         getEvent: builder.query({
             query: (id) => ({
                 url: `api/events/${id}`,
                 method: 'GET',
             }),
+            providesTags: (result, error, arg) => [{ type: 'Events', id: arg }],
         }),
         createEvent: builder.mutation({
             query: (body) => ({
@@ -45,7 +49,9 @@ export const eventsApi = createApi({
                     body,
                 }
             },
-            invalidatesTags: ['Events'],
+            invalidatesTags: (result, error, arg) => [
+                { type: 'Events', id: arg.id },
+            ],
         }),
         deleteEvent: builder.mutation({
             query: (id) => ({
