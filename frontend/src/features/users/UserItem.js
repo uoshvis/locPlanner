@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Button from '@mui/material/Button'
@@ -8,17 +7,20 @@ import Box from '@mui/material/Box'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import Typography from '@mui/material/Typography'
 
-import { fetchUsers, updateUser } from './usersSlice'
 import UserFormFields from './formFields/UserFormFields'
 import AlertDialog from '../../components/DeleteAlertDialog'
 import { userSchema } from './formFields/userSchema'
-import { useGetUserQuery } from '../../app/services/users/usersService'
+import {
+    useGetUserQuery,
+    useUpdateUserMutation,
+} from '../../app/services/users/usersService'
 
 const UserItem = ({ handleRemoveUser }) => {
     const { userId } = useParams()
-    const dispatch = useDispatch()
     const [user, setUser] = useState()
     const { data, error, isLoading } = useGetUserQuery(userId)
+
+    const [updateUser, { isUpdateLoading }] = useUpdateUserMutation()
 
     useEffect(() => {
         if (data) {
@@ -47,16 +49,15 @@ const UserItem = ({ handleRemoveUser }) => {
         }
     }, [user, setValue])
 
-    const onSaveSubmit = () => {
+    const onSaveSubmit = async () => {
         const data = getValues()
-        dispatch(updateUser(data))
-            .unwrap()
-            .then(() => {
-                dispatch(fetchUsers())
-            })
-            .catch(() => {
+        if (data && !isUpdateLoading) {
+            try {
+                await updateUser(data).unwrap()
+            } catch (err) {
                 reset(user)
-            })
+            }
+        }
     }
 
     const onDelete = () => {

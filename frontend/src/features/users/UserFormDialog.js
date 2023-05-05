@@ -11,7 +11,6 @@ import DialogTitle from '@mui/material/DialogTitle'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import FormControl from '@mui/material/FormControl'
 
-import { createUser, fetchUsers } from './usersSlice'
 import UserFormFields from './formFields/UserFormFields'
 import { userSchema } from './formFields/userSchema'
 
@@ -42,15 +41,23 @@ export default function UserFormDialog() {
     }
 
     const onSaveSubmit = (data) => {
-        dispatch(createUser(data))
-            .unwrap()
-            .then(() => {
-                dispatch(fetchUsers())
-                handleClose()
-            })
-            .catch(() => {
-                reset()
-            })
+        alert('NO Chance')
+        // if (data) {
+        //     try {
+        //         dispatch(register(data)).unwrap()
+        //     } catch (err) {
+        //         reset()
+        //     }
+        // }
+        // dispatch(createUser(data))
+        //     .unwrap()
+        //     .then(() => {
+        //         dispatch(fetchUsers())
+        //         handleClose()
+        //     })
+        //     .catch(() => {
+        //         reset()
+        //     })
     }
 
     return (

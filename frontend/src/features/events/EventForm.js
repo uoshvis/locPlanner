@@ -21,12 +21,12 @@ import CheckIcon from '@mui/icons-material/Check'
 import { toggleShowModal } from './eventsSlice'
 import { LocationInputDropDown } from './formFields/LocationInputDropdown'
 import { UserSelectDropdown } from './formFields/UserSelectDropdown'
-import { useGetUsersQuery } from '../../app/services/users/usersService'
 import {
     useCreateEventMutation,
     useDeleteEventMutation,
     useUpdateEventMutation,
 } from '../../app/services/events/eventsService'
+import { selectAllUsers } from '../users/usersSlice'
 
 export const EventForm = (props) => {
     const dispatch = useDispatch()
@@ -37,7 +37,9 @@ export const EventForm = (props) => {
     const { formType } = useSelector((state) => state.calendar)
 
     const [usersList, setUsersList] = useState([userInfo])
-    const { data: users = [] } = useGetUsersQuery()
+
+    const users = useSelector((state) => selectAllUsers(state))
+
     const [addEvent] = useCreateEventMutation()
     const [updateEvent] = useUpdateEventMutation()
     const [deleteEvent] = useDeleteEventMutation()

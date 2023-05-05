@@ -1,7 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import calendarReducer from '../features/events/eventsSlice'
 import notificationReducer from '../features/notification/notificationSlice'
-import usersReducer from '../features/users/usersSlice'
 import authReducer from '../features/auth/authSlice'
 import { meetingsApi } from './services/meetings/meetingsService'
 // import { authApi } from './services/auth/authService'
@@ -11,7 +10,6 @@ import { eventsApi } from './services/events/eventsService'
 const combineReducer = combineReducers({
     calendar: calendarReducer,
     notification: notificationReducer,
-    users: usersReducer,
     auth: authReducer,
     // Add the generated reducer as a specific top-level slice
     [usersApi.reducerPath]: usersApi.reducer,
