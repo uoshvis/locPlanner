@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
 
-const getProfile = asyncHandler(async (req, res) => {
+const getUserProfile = asyncHandler(async (req, res) => {
     // req.user was set in authMiddleware.js
     const user = await User.findById(req.user._id)
 
@@ -112,4 +112,11 @@ const deleteUser = asyncHandler(async (req, res) => {
     }
 })
 
-export { getUser, getProfile, getUsers, getUsersData, updateUser, deleteUser }
+export {
+    getUser,
+    getUserProfile,
+    getUsers,
+    getUsersData,
+    updateUser,
+    deleteUser,
+}
