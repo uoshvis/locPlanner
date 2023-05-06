@@ -1,9 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit'
-
-import { usersApi } from '../../app/services/users/usersService'
+import { usersApi } from './usersService'
 
 export const selectUsersResult = usersApi.endpoints.getUsers.select()
-
 const emptyUsers = []
 
 export const selectAllUsers = createSelector(

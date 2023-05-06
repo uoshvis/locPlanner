@@ -13,10 +13,7 @@ import UserList from './UserList'
 import UserItem from './UserItem'
 // import { deleteUser, fetchUsers } from './usersSlice'
 import { setNotification } from '../notification/notificationSlice'
-import {
-    useGetUsersDataQuery,
-    useDeleteUserMutation,
-} from '../../app/services/users/usersService'
+import { useGetUsersDataQuery, useDeleteUserMutation } from './usersService'
 
 const Users = () => {
     const navigate = useNavigate()

@@ -19,8 +19,8 @@ import { EventForm } from '../events/EventForm'
 import {
     useGetEventsQuery,
     useUpdateEventMutation,
-} from '../../app/services/events/eventsService'
-import { useGetUsersQuery } from '../../app/services/users/usersService'
+} from '../events/eventsService'
+import { useGetUsersQuery } from '../users/usersService'
 import { dateTimeToDateObj } from '../events/eventsHelpers'
 
 moment.updateLocale('lt', {

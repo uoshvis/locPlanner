@@ -1,17 +1,7 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { apiSlice } from '../api/apiSlice'
 
-export const usersApi = createApi({
+export const usersApi = apiSlice.injectEndpoints({
     reducerPath: 'usersApi',
-    baseQuery: fetchBaseQuery({
-        baseUrl: 'http://127.0.0.1:5000/',
-        prepareHeaders: (headers, { getState }) => {
-            const token = getState().auth.userToken
-            if (token) {
-                headers.set('authorization', `Bearer ${token}`)
-                return headers
-            }
-        },
-    }),
     tagTypes: ['Users', 'UserProfile'],
     endpoints: (builder) => ({
         getUsers: builder.query({

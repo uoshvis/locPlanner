@@ -25,7 +25,7 @@ import {
     useCreateEventMutation,
     useDeleteEventMutation,
     useUpdateEventMutation,
-} from '../../app/services/events/eventsService'
+} from './eventsService'
 import { selectAllUsers } from '../users/usersSlice'
 
 export const EventForm = (props) => {

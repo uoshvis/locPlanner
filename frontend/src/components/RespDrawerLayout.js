@@ -10,7 +10,7 @@ import MenuItems from './MenuItems'
 import Toolbar from '@mui/material/Toolbar'
 
 // Local imports
-import { useGetUserProfileQuery } from '../app/services/users/usersService'
+import { useGetUserProfileQuery } from '../features/users/usersService'
 import { setUserInfo } from '../features/auth/authSlice'
 import {
     clearNotification,
