@@ -1,7 +1,6 @@
 import { api } from './api'
 
 export const usersApi = api.injectEndpoints({
-    reducerPath: 'usersApi',
     tagTypes: ['Users', 'UserProfile'],
     endpoints: (builder) => ({
         getUsers: builder.query({

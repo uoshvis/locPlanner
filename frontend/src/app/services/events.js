@@ -1,7 +1,6 @@
 import { api } from './api'
 
 export const eventsApi = api.injectEndpoints({
-    // reducerPath: 'eventsApi',
     tagTypes: ['Events'],
     endpoints: (builder) => ({
         getEvents: builder.query({
