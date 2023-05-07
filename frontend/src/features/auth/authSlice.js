@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-// import { client } from '../../mocks/client.js'
 import axios from 'axios'
 
 const backendURL = 'http://127.0.0.1:5000'
@@ -38,20 +37,6 @@ export const authSlice = createSlice({
         })
     },
 })
-
-// Auth with Mock
-
-// export const register = createAsyncThunk('auth/register', async (data) => {
-//     const response = await client.post(`/myApi/register`, data)
-//     return response.data
-// })
-
-// export const login = createAsyncThunk('auth/login', async (crediantials) => {
-//     const response = await client.post('/myApi/login', crediantials)
-//     return response.data
-// })
-
-// Auth with Backend
 
 export const register = createAsyncThunk(
     'auth/register',
