@@ -9,9 +9,9 @@ const userToken = localStorage.getItem('userToken')
     : null
 
 const initialState = {
-    isLoggedIn: false,
-    userInfo: null,
-    userToken,
+    isLoggedIn: false, // isAuthenticated
+    userInfo: null, // user
+    userToken, // token
 }
 
 export const authSlice = createSlice({
