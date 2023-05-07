@@ -1,6 +1,6 @@
-import { apiSlice } from '../api/apiSlice'
+import { api } from './api'
 
-export const eventsApi = apiSlice.injectEndpoints({
+export const eventsApi = api.injectEndpoints({
     // reducerPath: 'eventsApi',
     tagTypes: ['Events'],
     endpoints: (builder) => ({

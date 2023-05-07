@@ -10,7 +10,10 @@ import Typography from '@mui/material/Typography'
 import UserFormFields from './formFields/UserFormFields'
 import AlertDialog from '../../components/DeleteAlertDialog'
 import { userSchema } from './formFields/userSchema'
-import { useGetUserQuery, useUpdateUserMutation } from './usersService'
+import {
+    useGetUserQuery,
+    useUpdateUserMutation,
+} from '../../app/services/users'
 
 const UserItem = ({ handleRemoveUser }) => {
     const { userId } = useParams()

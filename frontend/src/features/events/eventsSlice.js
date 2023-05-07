@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit'
 import { client } from '../../mocks/client.js'
 import { dateTimeToDateObj } from './eventsHelpers.js'
-import { eventsApi } from './eventsService.js'
+import { eventsApi } from '../../app/services/events'
 
 export const selectEventsResult = eventsApi.endpoints.getEvents.select()
 

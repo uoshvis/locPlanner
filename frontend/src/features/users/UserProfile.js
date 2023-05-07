@@ -10,7 +10,7 @@ import Button from '@mui/material/Button'
 
 import Input from './formFields/Input'
 import ColorSelectorBtn from './formFields/ColorSelectorBtn'
-import { useUpdateUserMutation } from './usersService'
+import { useUpdateUserMutation } from '../../app/services/users'
 
 const userSchema = z.object({
     userName: z.string().max(15).min(1, { message: 'User Name Required' }),

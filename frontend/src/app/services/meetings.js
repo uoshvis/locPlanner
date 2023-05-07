@@ -1,6 +1,6 @@
-import { apiSlice } from '../api/apiSlice'
+import { api } from './api'
 
-export const meetingsApi = apiSlice.injectEndpoints({
+export const meetingsApi = api.injectEndpoints({
     reducerPath: 'meetingsApi',
     endpoints: (builder) => ({
         getMeetings: builder.query({

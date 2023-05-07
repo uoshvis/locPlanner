@@ -6,8 +6,11 @@ import CustomFooterComponent from './CustomFooter'
 import { setFormType, selectCurrentEvent, toggleShowModal } from './eventsSlice'
 import { EventForm } from './EventForm'
 import AlertDialog from '../../components/DeleteAlertDialog'
-import { useDeleteEventsMutation, useGetEventsQuery } from './eventsService'
-import { useGetUsersQuery } from '../users/usersService'
+import {
+    useDeleteEventsMutation,
+    useGetEventsQuery,
+} from '../../app/services/events'
+import { useGetUsersQuery } from '../../app/services/users'
 
 const Events = () => {
     const dispatch = useDispatch()

@@ -1,6 +1,6 @@
-import { apiSlice } from '../api/apiSlice'
+import { api } from './api'
 
-export const usersApi = apiSlice.injectEndpoints({
+export const usersApi = api.injectEndpoints({
     reducerPath: 'usersApi',
     tagTypes: ['Users', 'UserProfile'],
     endpoints: (builder) => ({
