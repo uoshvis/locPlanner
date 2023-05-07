@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -20,7 +20,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 
 import TextInput from './formFields/TextInput'
 import Spinner from '../../components/Spinner'
-import { register } from './authSlice'
+import { useRegisterMutation } from '../../app/services/auth'
 
 export const userCreateSchema = z
     .object({
@@ -63,7 +63,7 @@ function Copyright(props) {
 const theme = createTheme()
 
 export default function SignUp() {
-    const dispatch = useDispatch()
+    const [register] = useRegisterMutation()
     const navigate = useNavigate()
     const { isLoading } = useSelector((state) => state.notification)
 
@@ -78,8 +78,14 @@ export default function SignUp() {
         resolver: zodResolver(userCreateSchema),
     })
 
-    const onSubmit = (data, event) => {
-        dispatch(register(data)).then(() => navigate('/login'))
+    const onSubmit = async (data, event) => {
+        try {
+            await register(data)
+                .unwrap()
+                .then(() => navigate('/login'))
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     return (
