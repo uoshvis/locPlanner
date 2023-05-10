@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { authApi } from '../../app/services/auth'
 
-// initialize userToken from local storage
-const userToken = localStorage.getItem('userToken')
-    ? localStorage.getItem('userToken')
+// initialize userToken from session storage
+const userToken = sessionStorage.getItem('userToken')
+    ? JSON.parse(sessionStorage.getItem('userToken'))
     : null
 
 const initialState = {
@@ -16,9 +16,7 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        logout: () => {
-            localStorage.removeItem('userToken')
-            return initialState
+            sessionStorage.removeItem('userToken')
         },
         setUserInfo: (state, { payload }) => {
             state.userInfo = payload
@@ -38,7 +36,10 @@ export const authSlice = createSlice({
                     state.isLoggedIn = true
                     state.userInfo = action.payload
                     state.userToken = action.payload.userToken
-                    localStorage.setItem('userToken', action.payload.userToken)
+                    sessionStorage.setItem(
+                        'userToken',
+                        JSON.stringify(action.payload.userToken)
+                    )
                 }
             )
             .addMatcher(
