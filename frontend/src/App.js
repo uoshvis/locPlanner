@@ -30,13 +30,14 @@ function App() {
     const notificationIsOpen = useSelector(isNotificationOpen)
     const notificationType = useSelector(getNotificationType)
     const notificationMsg = useSelector(getNotificationMsg)
-    const open = useSelector((state) => state.calendar.showModal)
+
+    const isModalOpen = useSelector((state) => state.calendar.showModal)
     const { isLoading } = useSelector((state) => state.notification)
 
     return (
         <div className="App">
             <React.Fragment>
-                {notificationIsOpen && !open && (
+                {notificationIsOpen && !isModalOpen && (
                     <Notification
                         type={notificationType}
                         message={notificationMsg}
