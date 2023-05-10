@@ -16,11 +16,15 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
+        logout: (state) => {
             sessionStorage.removeItem('userToken')
+            state.isLoggedIn = false
+            state.userInfo = null
+            state.userToken = null
         },
         setUserInfo: (state, { payload }) => {
-            state.userInfo = payload
             state.isLoggedIn = true
+            state.userInfo = payload
         },
     },
     extraReducers(builder) {
