@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React from 'react'
+import { useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 // MUI imports
 import Box from '@mui/material/Box'
@@ -10,52 +10,16 @@ import MenuItems from './MenuItems'
 import Toolbar from '@mui/material/Toolbar'
 
 // Local imports
-import { useGetUserProfileQuery } from '../app/services/users'
-import { setUserInfo } from '../features/auth/authSlice'
-import {
-    clearNotification,
-    setNotification,
-} from '../features/notification/notificationSlice'
 import MainAppBar from './MainAppBar'
 
 const drawerWidth = 240
 
 function RespDrawerLayout(props) {
-    const dispatch = useDispatch()
     const { window } = props
 
     const [mobileOpen, setMobileOpen] = React.useState(false)
 
     const { isLoggedIn } = useSelector((state) => state.auth)
-
-    const { data, isFetching } = useGetUserProfileQuery('userProfile', {
-        // perform a refetch every 15mins
-        pollingInterval: 900000,
-    })
-
-    useEffect(() => {
-        if (data) dispatch(setUserInfo(data))
-    }, [data, dispatch])
-
-    // Show refetch notification
-    useEffect(() => {
-        if (isFetching) {
-            dispatch(
-                setNotification({
-                    message: 'Auto fetching your profile...',
-                    type: 'info',
-                })
-            )
-        } else {
-            const timeId = setTimeout(() => {
-                dispatch(clearNotification())
-            }, 2000)
-
-            return () => {
-                clearTimeout(timeId)
-            }
-        }
-    }, [isFetching, dispatch])
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen)
