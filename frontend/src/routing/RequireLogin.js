@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
 function RequireLogin({ children }) {
-    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn)
+    const { isLoggedIn } = useSelector((state) => state.auth)
 
     let location = useLocation()
     if (!isLoggedIn) {
