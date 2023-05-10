@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import loadable from '@loadable/component'
@@ -23,6 +23,7 @@ import BackDropLoader from './components/BackDropLoader'
 import RequireLogin from './routing/RequireLogin'
 import RequireAdminRole from './routing/RequireAdmin'
 import RespDrawerLayout from './components/RespDrawerLayout'
+import { useGetUserProfileQuery } from './app/services/users'
 
 const About = loadable(() => import('./components/About'))
 
@@ -33,6 +34,16 @@ function App() {
 
     const isModalOpen = useSelector((state) => state.calendar.showModal)
     const { isLoading } = useSelector((state) => state.notification)
+
+    const { userToken, isLoggedIn } = useSelector((state) => state.auth)
+
+    useEffect(() => {
+        if (userToken && !isLoggedIn) {
+            console.log('Do getUserProfile')
+        } else {
+            console.log('Do nothing')
+        }
+    }, [userToken, isLoggedIn])
 
     return (
         <div className="App">
