@@ -23,7 +23,6 @@ import BackDropLoader from './components/BackDropLoader'
 import RequireLogin from './routing/RequireLogin'
 import RequireAdminRole from './routing/RequireAdmin'
 import RespDrawerLayout from './components/RespDrawerLayout'
-import { useGetUserProfileQuery } from './app/services/users'
 
 const About = loadable(() => import('./components/About'))
 
