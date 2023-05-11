@@ -40,9 +40,8 @@ function UserProfile() {
     const onSaveSubmit = async () => {
         const data = getValues()
         try {
-            await updateUser({ id: userInfo.id, ...data }).unwrap()
-            reset()
             setReadOnly(true)
+            await updateUser({ id: userInfo.id, ...data }).unwrap()
         } catch (err) {
             reset(userInfo)
         }
