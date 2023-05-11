@@ -26,23 +26,27 @@ import {
     useDeleteEventMutation,
     useUpdateEventMutation,
 } from '../../app/services/events'
-import { selectAllUsers } from '../users/usersSlice'
+import { selectAllUsers, selectUserById } from '../users/usersSlice'
 
 export const EventForm = (props) => {
     const dispatch = useDispatch()
 
-    const { isLoading } = useSelector((state) => state.notification)
     const event = useSelector((state) => state.calendar.currentItem)
+    const { isLoading } = useSelector((state) => state.notification)
     const { userInfo } = useSelector((state) => state.auth)
     const { formType } = useSelector((state) => state.calendar)
 
-    const [usersList, setUsersList] = useState([userInfo])
-
     const users = useSelector((state) => selectAllUsers(state))
+    const eventUser = useSelector((state) =>
+        selectUserById(state, event.userId)
+    )
+
+    const [usersList, setUsersList] = useState([eventUser])
 
     const [addEvent] = useCreateEventMutation()
     const [updateEvent] = useUpdateEventMutation()
     const [deleteEvent] = useDeleteEventMutation()
+
     const isAdminRole = (role) => {
         const adminRoles = ['admin', 'superAdmin']
         return adminRoles.includes(role)
