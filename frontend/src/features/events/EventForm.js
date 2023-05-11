@@ -108,12 +108,12 @@ export const EventForm = (props) => {
     return (
         <Dialog open={props.open}>
             <Box
-                sx={{ p: 2, m: 1, border: '1px dashed grey' }}
+                sx={{ m: 1 }}
                 component="form"
                 onSubmit={handleSubmit(onSubmit)}
             >
                 <DialogTitle>{submitBtnText} Event</DialogTitle>{' '}
-                <DialogContent sx={{ p: 2, m: 1, border: '1px dashed green' }}>
+                <DialogContent sx={{ m: 1 }}>
                     <DialogContentText>
                         To submit, fill in all fields.
                     </DialogContentText>
