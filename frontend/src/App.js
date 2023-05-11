@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import loadable from '@loadable/component'
 import './App.css'
 import MainCalendar from './features/calendar/Calendar'
@@ -23,10 +23,13 @@ import BackDropLoader from './components/BackDropLoader'
 import RequireLogin from './routing/RequireLogin'
 import RequireAdminRole from './routing/RequireAdmin'
 import RespDrawerLayout from './components/RespDrawerLayout'
+import { useLazyGetUserProfileQuery } from './app/services/users'
+import { setUserInfo } from './features/auth/authSlice'
 
 const About = loadable(() => import('./components/About'))
 
 function App() {
+    const dispatch = useDispatch()
     const notificationIsOpen = useSelector(isNotificationOpen)
     const notificationType = useSelector(getNotificationType)
     const notificationMsg = useSelector(getNotificationMsg)
@@ -35,14 +38,23 @@ function App() {
     const { isLoading } = useSelector((state) => state.notification)
 
     const { userToken, isLoggedIn } = useSelector((state) => state.auth)
+    const [triggerGetProfile, result] = useLazyGetUserProfileQuery()
 
     useEffect(() => {
         if (userToken && !isLoggedIn) {
-            console.log('Do getUserProfile')
-        } else {
-            console.log('Do nothing')
+            triggerGetProfile()
         }
-    }, [userToken, isLoggedIn])
+    }, [userToken, isLoggedIn, triggerGetProfile])
+
+    useEffect(() => {
+        if (result.data) {
+            try {
+                dispatch(setUserInfo(result.data))
+            } catch (err) {
+                console.log(err)
+            }
+        }
+    }, [result, dispatch])
 
     return (
         <div className="App">
