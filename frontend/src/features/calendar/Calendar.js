@@ -45,7 +45,7 @@ function MainCalendar() {
     const [userData, setUserData] = useState([])
     const [userColors, setUserColors] = useState({})
     const [events, setEvents] = useState([])
-    const [eventData, setEventData] = useState({})
+    const [eventData, setEventData] = useState({ userId: userInfo.id })
     const { data: users = [] } = useGetUsersQuery()
     const { data: eventsData = [] } = useGetEventsQuery({ location })
     const [updateEvent] = useUpdateEventMutation()
