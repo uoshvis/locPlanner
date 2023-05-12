@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { DataGrid } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
 import CustomFooterComponent from './CustomFooter'
-import { setFormType, selectCurrentEvent, toggleShowModal } from './eventsSlice'
+import { setFormType, toggleShowModal } from './eventsSlice'
 import { EventForm } from './EventForm'
 import AlertDialog from '../../components/DeleteAlertDialog'
 import {
@@ -21,6 +21,7 @@ const Events = () => {
     const [isDialogOpen, setDialogIsOpen] = useState(false)
     const [selectedIds, setSelectedIds] = useState(new Set())
     const [eventsFilter, setEventsFilter] = useState({ userId: user.id })
+    const [eventData, setEventData] = useState({})
 
     const { data: users = [] } = useGetUsersQuery()
     const { data: events = [] } = useGetEventsQuery(eventsFilter)
@@ -76,7 +77,7 @@ const Events = () => {
     const handleRowDoubleClick = ({ id }) => {
         const selectedEvent = events.find((event) => event.id === id)
         dispatch(setFormType('update'))
-        dispatch(selectCurrentEvent(selectedEvent))
+        setEventData(selectedEvent)
         dispatch(toggleShowModal())
     }
     const handleDeleteEvents = () => {
@@ -140,7 +141,7 @@ const Events = () => {
                 />
             </Box>
 
-            {open && <EventForm open={open} />}
+            {open && <EventForm open={open} event={eventData} />}
         </div>
     )
 }

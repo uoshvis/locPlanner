@@ -28,21 +28,17 @@ import {
 } from '../../app/services/events'
 import { selectAllUsers, selectUserById } from '../users/usersSlice'
 
-export const EventForm = (props) => {
+export const EventForm = ({ open, event }) => {
     const dispatch = useDispatch()
 
-    const event = useSelector((state) => state.calendar.selectedEvent)
     const { isLoading } = useSelector((state) => state.notification)
     const { userInfo } = useSelector((state) => state.auth)
     const { formType } = useSelector((state) => state.calendar)
-
     const users = useSelector((state) => selectAllUsers(state))
     const eventUser = useSelector((state) =>
         selectUserById(state, event.userId)
     )
-
     const [usersList, setUsersList] = useState([eventUser])
-
     const [addEvent] = useCreateEventMutation()
     const [updateEvent] = useUpdateEventMutation()
     const [deleteEvent] = useDeleteEventMutation()
@@ -110,7 +106,7 @@ export const EventForm = (props) => {
     }
 
     return (
-        <Dialog open={props.open}>
+        <Dialog open={open}>
             <Box
                 sx={{ m: 1 }}
                 component="form"

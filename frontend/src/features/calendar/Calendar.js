@@ -8,11 +8,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import moment from 'moment'
 import 'moment/locale/lt'
 import styles from './Calendar.module.css'
-import {
-    setFormType,
-    selectCurrentEvent,
-    toggleShowModal,
-} from '../events/eventsSlice'
+import { setFormType, toggleShowModal } from '../events/eventsSlice'
 import { setNotification } from '../notification/notificationSlice'
 import LocationBtn from './LocationBtn'
 import { EventForm } from '../events/EventForm'
@@ -49,6 +45,7 @@ function MainCalendar() {
     const [userData, setUserData] = useState([])
     const [userColors, setUserColors] = useState({})
     const [events, setEvents] = useState([])
+    const [eventData, setEventData] = useState({})
     const { data: users = [] } = useGetUsersQuery()
     const { data: eventsData = [] } = useGetEventsQuery({ location })
     const [updateEvent] = useUpdateEventMutation()
@@ -97,7 +94,7 @@ function MainCalendar() {
         } else {
             dispatch(setFormType('view'))
         }
-        dispatch(selectCurrentEvent(data))
+        setEventData(data)
         dispatch(toggleShowModal())
     }
 
@@ -105,14 +102,12 @@ function MainCalendar() {
         const { start, end } = data
         const loc = location === 'all' ? '' : location
         dispatch(setFormType('add'))
-        dispatch(
-            selectCurrentEvent({
-                location: loc,
-                userId: userInfo.id,
-                start: start.toISOString(),
-                end: end.toISOString(),
-            })
-        )
+        setEventData({
+            location: loc,
+            userId: userInfo.id,
+            start: start.toISOString(),
+            end: end.toISOString(),
+        })
         dispatch(toggleShowModal())
     }
 
@@ -143,7 +138,7 @@ function MainCalendar() {
                 eventPropGetter={eventStyleGetter}
             />
 
-            {open && <EventForm open={open} />}
+            {open && <EventForm open={open} event={eventData} />}
         </div>
     )
 }

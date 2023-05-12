@@ -36,10 +36,7 @@ export const store = configureStore({
                     'meta.baseQueryMeta.response',
                 ],
                 // Ignore these paths in the state
-                ignoredPaths: [
-                    'calendar.selectedEvent.start',
-                    'calendar.selectedEvent.end',
-                ],
+                ignoredPaths: [],
             },
         })
             /*
