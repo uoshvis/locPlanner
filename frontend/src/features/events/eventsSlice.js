@@ -26,7 +26,6 @@ const initialState = {
     currentItem: {},
     currentLocation: 'all',
     showModal: false,
-    error: null,
     formType: '', // 'add' | 'update'
 }
 
