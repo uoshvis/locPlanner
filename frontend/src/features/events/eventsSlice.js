@@ -23,7 +23,6 @@ export const filterEventsByLoc = createSelector(
 )
 
 const initialState = {
-    showModal: false,
     formType: '', // 'view' |'add' | 'update'
 }
 
@@ -34,15 +33,12 @@ export const eventsSlice = createSlice({
         addEvent: {},
         getEvent: {},
 
-        toggleShowModal(state) {
-            state.showModal = !state.showModal
-        },
         setFormType(state, action) {
             state.formType = action.payload
         },
     },
 })
 
-export const { setFormType, toggleShowModal } = eventsSlice.actions
+export const { setFormType } = eventsSlice.actions
 
 export default eventsSlice.reducer

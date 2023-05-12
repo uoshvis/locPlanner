@@ -8,7 +8,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import moment from 'moment'
 import 'moment/locale/lt'
 import styles from './Calendar.module.css'
-import { setFormType, toggleShowModal } from '../events/eventsSlice'
+import { setFormType } from '../events/eventsSlice'
 import { setNotification } from '../notification/notificationSlice'
 import LocationBtn from './LocationBtn'
 import { EventForm } from '../events/EventForm'
@@ -39,8 +39,9 @@ const getUserColors = (users) => {
 
 function MainCalendar() {
     const dispatch = useDispatch()
+
     const [location, setLocation] = useState('all')
-    const open = useSelector((state) => state.calendar.showModal)
+    const [open, setOpen] = useState(false)
     const { userInfo } = useSelector((state) => state.auth)
     const [userData, setUserData] = useState([])
     const [userColors, setUserColors] = useState({})
@@ -95,7 +96,7 @@ function MainCalendar() {
             dispatch(setFormType('view'))
         }
         setEventData(data)
-        dispatch(toggleShowModal())
+        setOpen((prevOpen) => !prevOpen)
     }
 
     const handleSelectSlot = (data) => {
@@ -108,7 +109,7 @@ function MainCalendar() {
             start: start.toISOString(),
             end: end.toISOString(),
         })
-        dispatch(toggleShowModal())
+        setOpen((prevOpen) => !prevOpen)
     }
 
     const eventStyleGetter = (event) => {
@@ -138,7 +139,9 @@ function MainCalendar() {
                 eventPropGetter={eventStyleGetter}
             />
 
-            {open && <EventForm open={open} event={eventData} />}
+            {open && (
+                <EventForm open={open} setOpen={setOpen} event={eventData} />
+            )}
         </div>
     )
 }

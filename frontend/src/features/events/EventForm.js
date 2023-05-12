@@ -18,7 +18,6 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import DeleteIcon from '@mui/icons-material/Delete'
 import CancelIcon from '@mui/icons-material/Cancel'
 import CheckIcon from '@mui/icons-material/Check'
-import { toggleShowModal } from './eventsSlice'
 import { LocationInputDropDown } from './formFields/LocationInputDropdown'
 import { UserSelectDropdown } from './formFields/UserSelectDropdown'
 import {
@@ -28,9 +27,7 @@ import {
 } from '../../app/services/events'
 import { selectAllUsers, selectUserById } from '../users/usersSlice'
 
-export const EventForm = ({ open, event }) => {
-    const dispatch = useDispatch()
-
+export const EventForm = ({ open, setOpen, event }) => {
     const { isLoading } = useSelector((state) => state.notification)
     const { userInfo } = useSelector((state) => state.auth)
     const { formType } = useSelector((state) => state.calendar)
@@ -84,7 +81,7 @@ export const EventForm = ({ open, event }) => {
     }
 
     const handleClose = () => {
-        dispatch(toggleShowModal())
+        setOpen((prevOpen) => !prevOpen)
     }
 
     const onSubmit = (data) => {
@@ -94,14 +91,14 @@ export const EventForm = ({ open, event }) => {
                 start: data.start.toString(),
                 end: data.end.toString(),
             })
-            dispatch(toggleShowModal())
+            setOpen((prevOpen) => !prevOpen)
         }
     }
 
     const handleDelete = () => {
         if (!isLoading) {
             deleteEvent(event?.id)
-            dispatch(toggleShowModal())
+            setOpen((prevOpen) => !prevOpen)
         }
     }
 
