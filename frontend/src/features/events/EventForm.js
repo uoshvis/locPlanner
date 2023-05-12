@@ -31,7 +31,7 @@ import { selectAllUsers, selectUserById } from '../users/usersSlice'
 export const EventForm = (props) => {
     const dispatch = useDispatch()
 
-    const event = useSelector((state) => state.calendar.currentItem)
+    const event = useSelector((state) => state.calendar.selectedEvent)
     const { isLoading } = useSelector((state) => state.notification)
     const { userInfo } = useSelector((state) => state.auth)
     const { formType } = useSelector((state) => state.calendar)
