@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { DataGrid } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
 import CustomFooterComponent from './CustomFooter'
