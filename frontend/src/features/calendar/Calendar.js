@@ -43,7 +43,7 @@ const getUserColors = (users) => {
 
 function MainCalendar() {
     const dispatch = useDispatch()
-    const location = useSelector((state) => state.calendar.currentLocation)
+    const [location, setLocation] = useState('all')
     const open = useSelector((state) => state.calendar.showModal)
     const { userInfo } = useSelector((state) => state.auth)
     const [userData, setUserData] = useState([])
@@ -128,7 +128,7 @@ function MainCalendar() {
 
     return (
         <div className={styles.MainCalendar}>
-            <LocationBtn />
+            <LocationBtn setLocation={setLocation} location={location} />
 
             <DnDCalendar
                 style={{ height: '75vh' }}

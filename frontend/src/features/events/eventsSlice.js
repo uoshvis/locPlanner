@@ -24,7 +24,6 @@ export const filterEventsByLoc = createSelector(
 
 const initialState = {
     currentItem: {},
-    currentLocation: 'all',
     showModal: false,
     formType: '', // 'add' | 'update'
 }
@@ -45,9 +44,7 @@ export const eventsSlice = createSlice({
         setFormType(state, action) {
             state.formType = action.payload
         },
-        setCurrentLocation(state, action) {
-            state.currentLocation = action.payload
-        },
+
         selectCurrentEvent: (state, action) => {
             state.currentItem = action.payload
         },
@@ -61,7 +58,6 @@ export const eventsSlice = createSlice({
 export const {
     setFormType,
     toggleShowModal,
-    setCurrentLocation,
     selectCurrentEvent,
     updateCurrentEvent,
 } = eventsSlice.actions
