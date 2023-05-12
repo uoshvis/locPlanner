@@ -1,11 +1,9 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import calendarReducer from '../features/events/eventsSlice'
 import notificationReducer from '../features/notification/notificationSlice'
 import authReducer from '../features/auth/authSlice'
 import { api } from './services/api'
 
 const combineReducer = combineReducers({
-    calendar: calendarReducer,
     notification: notificationReducer,
     auth: authReducer,
     // Add the generated reducer as a specific top-level slice
@@ -24,7 +22,7 @@ export const store = configureStore({
         getDefaultMiddleware({
             serializableCheck: {
                 // Ignore these action types
-                ignoredActions: ['calendar/fetchEventsByLocation/fulfilled'],
+                ignoredActions: [],
                 // Ignore these field paths in all actions
                 ignoredActionPaths: [
                     'payload.start',

@@ -1,4 +1,4 @@
-import { createSelector, createSlice } from '@reduxjs/toolkit'
+import { createSelector } from '@reduxjs/toolkit'
 import { eventsApi } from '../../app/services/events'
 
 export const selectEventsResult = eventsApi.endpoints.getEvents.select()
@@ -21,14 +21,3 @@ export const filterEventsByLoc = createSelector(
     (state, eventLoc) => eventLoc,
     (events, eventLoc) => events.filter((event) => event.location === eventLoc)
 )
-
-export const eventsSlice = createSlice({
-    name: 'calendar',
-    initialState: {},
-    reducers: {
-        addEvent: {},
-        getEvent: {},
-    },
-})
-
-export default eventsSlice.reducer
