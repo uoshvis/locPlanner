@@ -37,7 +37,6 @@ export const store = configureStore({
                 ],
                 // Ignore these paths in the state
                 ignoredPaths: [
-                    'calendar.items',
                     'calendar.currentItem.start',
                     'calendar.currentItem.end',
                 ],
