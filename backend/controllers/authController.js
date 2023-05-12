@@ -4,6 +4,7 @@ import generateToken from '../utils/generateToken.js'
 
 const registerUser = asyncHandler(async (req, res) => {
     const data = req.body
+    const id = Date.now()
 
     // check if email exists in db
     const userExists = await User.findOne({ userName: data.userName })
@@ -14,7 +15,7 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     // create new user document in db
-    const user = await User.create(data)
+    const user = await User.create({ ...data, id })
 
     if (user) {
         res.status(201).json({
@@ -37,11 +38,12 @@ const loginUser = asyncHandler(async (req, res) => {
     // return user obj if their password matches
     if (user && (await user.matchPassword(password))) {
         res.json({
-            _id: user._id,
+            id: user.id,
             userName: user.userName,
             firstName: user.firstName,
             lastName: user.lastName,
             role: user.role,
+            userColor: user.userColor,
             userToken: generateToken(user._id),
         })
     } else {
@@ -50,22 +52,4 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 })
 
-const getUserProfile = asyncHandler(async (req, res) => {
-    // req.user was set in authMiddleware.js
-    const user = await User.findById(req.user._id)
-
-    if (user) {
-        res.json({
-            id: user._id,
-            userName: user.userName,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            role: user.role,
-        })
-    } else {
-        res.status(404)
-        throw new Error('User not found')
-    }
-})
-
-export { registerUser, loginUser, getUserProfile }
+export { registerUser, loginUser }

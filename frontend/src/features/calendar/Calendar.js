@@ -1,4 +1,5 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+
 import { useSelector, useDispatch } from 'react-redux'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
@@ -7,21 +8,15 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import moment from 'moment'
 import 'moment/locale/lt'
 import styles from './Calendar.module.css'
-import {
-    setFormType,
-    selectCurrentEvent,
-    toggleShowModal,
-    updateEventData,
-    fetchEventsByLocation,
-    filterEventsByLocation,
-} from '../events/eventsSlice'
-import {
-    setNotification,
-    isNotificationOpen,
-} from '../notification/notificationSlice'
-import { fetchUsers, getUserColors } from '../users/usersSlice'
+import { setNotification } from '../notification/notificationSlice'
 import LocationBtn from './LocationBtn'
 import { EventForm } from '../events/EventForm'
+import {
+    useGetEventsQuery,
+    useUpdateEventMutation,
+} from '../../app/services/events'
+import { useGetUsersQuery } from '../../app/services/users'
+import { dateTimeToDateObj } from '../events/eventsHelpers'
 
 moment.updateLocale('lt', {
     week: {
@@ -33,63 +28,50 @@ moment.updateLocale('lt', {
 const localizer = momentLocalizer(moment)
 const DnDCalendar = withDragAndDrop(Calendar)
 
+const getUserColors = (users) => {
+    var userColors = users.reduce((obj, item) => {
+        obj[item.id] = item.userColor
+        return obj
+    }, {})
+    return userColors
+}
+
 function MainCalendar() {
     const dispatch = useDispatch()
-    const location = useSelector((state) => state.calendar.currentLocation)
-    const events = useSelector((state) =>
-        filterEventsByLocation(state, location)
-    )
-    const open = useSelector((state) => state.calendar.showModal)
-    const notificationIsOpen = useSelector(isNotificationOpen)
-    const userColors = useSelector((state) => getUserColors(state))
+
+    const [location, setLocation] = useState('all')
+    const [open, setOpen] = useState(false)
+    const [formType, setFormType] = useState('view') // 'view' |'add' | 'update'
     const { userInfo } = useSelector((state) => state.auth)
+    const [userData, setUserData] = useState([])
+    const [userColors, setUserColors] = useState({})
+    const [events, setEvents] = useState([])
+    const [eventData, setEventData] = useState({ userId: userInfo.id })
+    const { data: users = [] } = useGetUsersQuery()
+    const { data: eventsData = [] } = useGetEventsQuery({ location })
+    const [updateEvent] = useUpdateEventMutation()
+
     const adminRoles = ['admin', 'superAdmin']
 
     useEffect(() => {
-        // https://github.com/facebook/react/issues/14326
-        let didCancel = false
-
-        async function fetchAPI() {
-            try {
-                await dispatch(fetchEventsByLocation(location)).unwrap()
-            } catch {
-                // error catched in reject case
-                // swallow error
-            }
-            if (!didCancel) {
-            }
+        if (users) {
+            setUserData(users)
         }
-        if (!notificationIsOpen) {
-            fetchAPI()
-        }
-        return () => {
-            didCancel = true
-        }
-    }, [
-        dispatch,
-        location,
-        notificationIsOpen, // do fetch if notification is closed
-    ])
+    }, [users, userData])
 
     useEffect(() => {
-        let didCancel = false
-
-        async function dofetchUsers() {
-            try {
-                await dispatch(fetchUsers()).unwrap()
-            } catch {
-                // error catched in reject case
-                // swallow error
-            }
-            if (!didCancel) {
-            }
+        if (userData.length > 0) {
+            const userColors = getUserColors(userData)
+            setUserColors(userColors)
         }
-        dofetchUsers()
+    }, [userData])
 
-        return () => {
-            didCancel = true
+    useEffect(() => {
+        if (eventsData.length > 0) {
+            const convertedEvents = dateTimeToDateObj(eventsData)
+            setEvents(convertedEvents)
         }
-    }, [dispatch])
+    }, [eventsData])
 
     const handleEventDrop = async (data) => {
         const { start, end } = data
@@ -99,37 +81,35 @@ function MainCalendar() {
             end: end.toISOString(),
         }
         try {
-            await dispatch(updateEventData(updatedEvent)).unwrap()
+            await updateEvent(updatedEvent).unwrap()
         } catch (err) {
-            dispatch(setNotification({ message: err.message, type: 'error' }))
+            dispatch(setNotification({ message: err, type: 'error' }))
         }
     }
 
     const handleSelectEvent = (data) => {
         if (data.userId === userInfo.id) {
-            dispatch(setFormType('update'))
+            setFormType('update')
         } else if (adminRoles.includes(userInfo.role)) {
-            dispatch(setFormType('update'))
+            setFormType('update')
         } else {
-            dispatch(setFormType('view'))
+            setFormType('view')
         }
-        dispatch(selectCurrentEvent(data))
-        dispatch(toggleShowModal())
+        setEventData(data)
+        setOpen((prevOpen) => !prevOpen)
     }
 
     const handleSelectSlot = (data) => {
         const { start, end } = data
         const loc = location === 'all' ? '' : location
-        dispatch(setFormType('add'))
-        dispatch(
-            selectCurrentEvent({
-                location: loc,
-                userId: userInfo.id,
-                start: start.toISOString(),
-                end: end.toISOString(),
-            })
-        )
-        dispatch(toggleShowModal())
+        setFormType('add')
+        setEventData({
+            location: loc,
+            userId: userInfo.id,
+            start: start.toISOString(),
+            end: end.toISOString(),
+        })
+        setOpen((prevOpen) => !prevOpen)
     }
 
     const eventStyleGetter = (event) => {
@@ -144,7 +124,7 @@ function MainCalendar() {
 
     return (
         <div className={styles.MainCalendar}>
-            <LocationBtn />
+            <LocationBtn setLocation={setLocation} location={location} />
 
             <DnDCalendar
                 style={{ height: '75vh' }}
@@ -159,7 +139,14 @@ function MainCalendar() {
                 eventPropGetter={eventStyleGetter}
             />
 
-            {open && <EventForm open={open} />}
+            {open && (
+                <EventForm
+                    open={open}
+                    setOpen={setOpen}
+                    event={eventData}
+                    formType={formType}
+                />
+            )}
         </div>
     )
 }

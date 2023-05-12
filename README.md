@@ -37,7 +37,7 @@ The main task is to recreate the project and learn using:
 -   [x] Display Events by Users (colors)
 -   [x] Login/Logout
 -   [x] Router
--   [ ] JWT
+-   [x] JWT
 -   [x] Roles
 -   [ ] ! Tests, tests and tests !
 
@@ -85,4 +85,15 @@ REACT_APP_MOCK_ENV = 'enabled'
 
   # Run frontend only
   npm run client
+```
+
+```bash
+  # Run Cypress
+
+  cd frontend
+
+  npm run cypress:open
+
+  # Or use npx
+  npx cypress open
 ```

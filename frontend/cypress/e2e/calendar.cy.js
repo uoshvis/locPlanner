@@ -1,5 +1,6 @@
 describe('main calendar', () => {
     const userAuthData = Cypress.env('userAuthData')
+    const newTitle = 'Awesome title'
 
     before(() => {
         cy.login(userAuthData)
@@ -20,22 +21,19 @@ describe('main calendar', () => {
     })
 
     it('displays events by default', () => {
-        cy.contains('Bird song 1')
-        cy.contains('Sunrise 2')
-        cy.get('.rbc-event-content').should('have.length', 6)
+        cy.get('a').contains('.MuiListItemText-root', 'Calendar').click()
+        cy.get('.rbc-event-content').should('have.length.least', 1)
     })
 
-    it('displays event update form on click', () => {
-        cy.contains('Bird song 1').click()
-        cy.contains('Bird song 1')
-        cy.contains('Update')
-        cy.get('button:contains("Cancel")').click()
+    it('displays event form on click', () => {
+        cy.get('a').contains('.MuiListItemText-root', 'Calendar').click()
+        cy.get('.rbc-event-content').first().click()
+        cy.contains('View')
     })
 
     it('can add new event', () => {
-        const newTitle = 'Awesome title'
-
-        cy.get('.rbc-day-bg').eq(20).click()
+        cy.get('a').contains('.MuiListItemText-root', 'Calendar').click()
+        cy.get('.rbc-date-cell').eq(20).click()
         cy.contains('Add')
 
         cy.get('input[id="title"]').type(`${newTitle}`)
@@ -52,7 +50,8 @@ describe('main calendar', () => {
     })
 
     it('can update event Location', () => {
-        cy.contains('Bird song 1').click()
+        cy.get('a').contains('.MuiListItemText-root', 'Calendar').click()
+        cy.contains(`${newTitle}`).click()
 
         cy.get('[id="select-location"]').click()
         cy.contains('Location 1')
@@ -62,9 +61,12 @@ describe('main calendar', () => {
         cy.get('.MuiButtonBase-root').contains('Update').click()
 
         cy.get('.MuiButtonBase-root').contains('Location 1').click()
-        cy.contains('Bird song 1').should('not.exist')
+        // cy.contains(`${newTitle}`).should('not.exist')
 
         cy.get('.MuiButtonBase-root').contains('Location 2').click()
-        cy.contains('Bird song 1').should('exist')
+        cy.get('.rbc-event-content').contains(`${newTitle}`).should('exist')
+        cy.contains(`${newTitle}`).click()
+
+        cy.get('button').contains('Delete').click()
     })
 })

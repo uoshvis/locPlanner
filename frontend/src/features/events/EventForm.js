@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Controller, useForm } from 'react-hook-form'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -18,25 +18,38 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import DeleteIcon from '@mui/icons-material/Delete'
 import CancelIcon from '@mui/icons-material/Cancel'
 import CheckIcon from '@mui/icons-material/Check'
-import {
-    addEventData,
-    updateEventData,
-    toggleShowModal,
-    deleteEvent,
-} from './eventsSlice'
 import { LocationInputDropDown } from './formFields/LocationInputDropdown'
 import { UserSelectDropdown } from './formFields/UserSelectDropdown'
+import {
+    useCreateEventMutation,
+    useDeleteEventMutation,
+    useUpdateEventMutation,
+} from '../../app/services/events'
+import { selectAllUsers, selectUserById } from '../users/usersSlice'
 
-export const EventForm = (props) => {
-    const dispatch = useDispatch()
-
+export const EventForm = ({ open, setOpen, event, formType }) => {
     const { isLoading } = useSelector((state) => state.notification)
-    const event = useSelector((state) => state.calendar.currentItem)
     const { userInfo } = useSelector((state) => state.auth)
-    const { formType } = useSelector((state) => state.calendar)
-    const users = useSelector((state) => state.users.items)
+    const users = useSelector((state) => selectAllUsers(state))
+    const eventUser = useSelector((state) =>
+        selectUserById(state, event.userId)
+    )
+    const [usersList, setUsersList] = useState([eventUser])
+    const [addEvent] = useCreateEventMutation()
+    const [updateEvent] = useUpdateEventMutation()
+    const [deleteEvent] = useDeleteEventMutation()
 
-    const [usersList, setUsersList] = useState(users)
+    const isAdminRole = (role) => {
+        const adminRoles = ['admin', 'superAdmin']
+        return adminRoles.includes(role)
+    }
+
+    useEffect(() => {
+        if (users && isAdminRole(userInfo.role)) {
+            setUsersList(users)
+        }
+    }, [users, userInfo.role])
+
     const [readOnly] = useState(formType === 'view' ? true : false)
 
     const defaultValues = {
@@ -48,7 +61,7 @@ export const EventForm = (props) => {
         isCompleted: false,
     }
 
-    const { handleSubmit, control, setValue, getValues } = useForm({
+    const { handleSubmit, control, getValues } = useForm({
         defaultValues,
         values: { ...defaultValues, ...event },
     })
@@ -58,51 +71,45 @@ export const EventForm = (props) => {
 
     if (formType === 'add') {
         submitBtnText = 'Add'
-        submitAction = addEventData
+        submitAction = addEvent
     } else if (formType === 'update') {
         submitBtnText = 'Update'
-        submitAction = updateEventData
+        submitAction = updateEvent
     } else if (formType === 'view') {
         submitBtnText = 'View'
     }
 
-    useEffect(() => {
-        const adminRoles = ['admin', 'superAdmin']
-
-        if (adminRoles.includes(userInfo.role)) {
-            setUsersList(users)
-        } else {
-            setUsersList(users.filter((user) => user.id === event.userId))
-        }
-    }, [userInfo, users, setValue, event])
-
     const handleClose = () => {
-        dispatch(toggleShowModal())
+        setOpen((prevOpen) => !prevOpen)
     }
 
     const onSubmit = (data) => {
         if (!isLoading) {
-            dispatch(submitAction(data))
-            dispatch(toggleShowModal())
+            submitAction({
+                ...data,
+                start: data.start.toString(),
+                end: data.end.toString(),
+            })
+            setOpen((prevOpen) => !prevOpen)
         }
     }
 
     const handleDelete = () => {
         if (!isLoading) {
-            dispatch(deleteEvent(event))
-            dispatch(toggleShowModal())
+            deleteEvent(event?.id)
+            setOpen((prevOpen) => !prevOpen)
         }
     }
 
     return (
-        <Dialog open={props.open}>
+        <Dialog open={open}>
             <Box
-                sx={{ p: 2, m: 1, border: '1px dashed grey' }}
+                sx={{ m: 1 }}
                 component="form"
                 onSubmit={handleSubmit(onSubmit)}
             >
                 <DialogTitle>{submitBtnText} Event</DialogTitle>{' '}
-                <DialogContent sx={{ p: 2, m: 1, border: '1px dashed green' }}>
+                <DialogContent sx={{ m: 1 }}>
                     <DialogContentText>
                         To submit, fill in all fields.
                     </DialogContentText>
@@ -132,12 +139,14 @@ export const EventForm = (props) => {
                                     />
                                 )}
                             />
+
                             <LocationInputDropDown
                                 name="location"
                                 control={control}
                                 label="Location"
                                 disabled={readOnly}
                             />
+
                             <UserSelectDropdown
                                 name="userId"
                                 control={control}
@@ -145,6 +154,7 @@ export const EventForm = (props) => {
                                 label="User"
                                 disabled={readOnly}
                             />
+
                             <Controller
                                 control={control}
                                 name="start"
@@ -168,6 +178,7 @@ export const EventForm = (props) => {
                                     />
                                 )}
                             />
+
                             <Controller
                                 control={control}
                                 name="end"
@@ -197,6 +208,7 @@ export const EventForm = (props) => {
                                     />
                                 )}
                             />
+
                             <Controller
                                 name="isCompleted"
                                 control={control}

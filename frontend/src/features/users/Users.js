@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
     Route,
     Routes,
@@ -11,40 +11,29 @@ import {
 import React from 'react'
 import UserList from './UserList'
 import UserItem from './UserItem'
-import { deleteUser, fetchUsers } from './usersSlice'
-import { useSelector } from 'react-redux'
 import { setNotification } from '../notification/notificationSlice'
+import {
+    useGetUsersDataQuery,
+    useDeleteUserMutation,
+} from '../../app/services/users'
 
 const Users = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-
-    const users = useSelector((state) => state.users.items)
+    const [users, setUsers] = useState([])
     const { userInfo } = useSelector((state) => state.auth)
+    const { data, error, isLoading } = useGetUsersDataQuery()
+    const [deleteUser] = useDeleteUserMutation()
 
     const isSuperAdmin = userInfo.role === 'superAdmin'
 
     useEffect(() => {
-        let didCancel = false
-
-        async function dofetchUsers() {
-            try {
-                await dispatch(fetchUsers()).unwrap()
-            } catch {
-                // error catched in reject case
-                // swallow error
-            }
-            if (!didCancel) {
-            }
+        if (data) {
+            setUsers(data)
         }
-        dofetchUsers()
+    }, [error, isLoading, data])
 
-        return () => {
-            didCancel = true
-        }
-    }, [dispatch])
-
-    const handleRemoveUser = (userId) => {
+    const handleRemoveUser = async (userId) => {
         if (Number(userInfo.id) === Number(userId)) {
             dispatch(
                 setNotification({
@@ -62,9 +51,18 @@ const Users = () => {
                 })
             )
         } else if (isSuperAdmin) {
-            dispatch(deleteUser(userId))
-                .then(() => dispatch(fetchUsers()))
-                .then(() => navigate('/users'))
+            try {
+                await deleteUser(userId).unwrap()
+                navigate('/users')
+            } catch (err) {
+                dispatch(
+                    setNotification({
+                        message: err,
+                        type: 'error',
+                        open: true,
+                    })
+                )
+            }
         }
     }
 

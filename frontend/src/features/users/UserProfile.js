@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -10,7 +10,7 @@ import Button from '@mui/material/Button'
 
 import Input from './formFields/Input'
 import ColorSelectorBtn from './formFields/ColorSelectorBtn'
-import { updateUser } from './usersSlice'
+import { useUpdateUserMutation } from '../../app/services/users'
 
 const userSchema = z.object({
     userName: z.string().max(15).min(1, { message: 'User Name Required' }),
@@ -20,7 +20,6 @@ const userSchema = z.object({
 })
 
 function UserProfile() {
-    const dispatch = useDispatch()
     const { userInfo } = useSelector((state) => state.auth)
     const { handleSubmit, reset, setValue, getValues, watch, control } =
         useForm({
@@ -36,19 +35,16 @@ function UserProfile() {
 
     const watchColor = watch('userColor', '')
     const [readOnly, setReadOnly] = React.useState(true)
+    const [updateUser] = useUpdateUserMutation()
 
-    const onSaveSubmit = () => {
+    const onSaveSubmit = async () => {
         const data = getValues()
-
-        dispatch(updateUser(data))
-            .unwrap()
-            .then(() => {
-                reset()
-                setReadOnly(true)
-            })
-            .catch(() => {
-                reset(userInfo)
-            })
+        try {
+            setReadOnly(true)
+            await updateUser({ id: userInfo.id, ...data }).unwrap()
+        } catch (err) {
+            reset(userInfo)
+        }
     }
 
     const handleCancel = () => {

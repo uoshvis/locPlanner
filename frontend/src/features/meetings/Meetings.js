@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
-import { useGetMeetingsQuery } from '../../app/services/meetings/meetingsService'
+import { useGetMeetingsQuery } from '../../app/services/meetings'
 
 const { useEffect } = React
 
@@ -43,14 +43,14 @@ const columns = [
 ]
 function Meetings() {
     // Using a query hook automatically fetches data and returns query values
-    const { data, error, isLoading } = useGetMeetingsQuery()
+    const { data: meetings = [], error, isLoading } = useGetMeetingsQuery()
     const [rows, setRows] = useState([])
 
     useEffect(() => {
-        if (data) {
-            setRows(data)
+        if (meetings) {
+            setRows(meetings)
         }
-    }, [error, isLoading, data])
+    }, [error, isLoading, meetings])
 
     return (
         <div>
@@ -58,7 +58,7 @@ function Meetings() {
             <Box
                 sx={{
                     height: 700,
-                    width: 840,
+                    width: '90%',
                     m: 'auto',
                 }}
             >

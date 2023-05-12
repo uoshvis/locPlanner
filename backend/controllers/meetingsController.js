@@ -2,7 +2,6 @@ import asyncHandler from 'express-async-handler'
 import Meeting from '../models/meetingModel.js'
 
 const getMeetings = asyncHandler(async (req, res) => {
-    // req.user was set in authMiddleware.js
     const meetings = await Meeting.find({})
 
     if (meetings) {

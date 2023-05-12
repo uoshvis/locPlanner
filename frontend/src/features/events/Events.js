@@ -1,63 +1,61 @@
-import React, { useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useEffect, useMemo, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { DataGrid } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
 import CustomFooterComponent from './CustomFooter'
-import {
-    fetchEventsByLocation,
-    filterEventsByLocation,
-    setFormType,
-    selectCurrentEvent,
-    toggleShowModal,
-    deleteEvents,
-} from './eventsSlice'
 import { EventForm } from './EventForm'
-import { fetchUsers } from '../users/usersSlice'
 import AlertDialog from '../../components/DeleteAlertDialog'
+import {
+    useDeleteEventsMutation,
+    useGetEventsQuery,
+} from '../../app/services/events'
+import { useGetUsersQuery } from '../../app/services/users'
 
 const Events = () => {
-    const dispatch = useDispatch()
-    const events = useSelector((state) => filterEventsByLocation(state, 'all'))
     const user = useSelector((state) => state.auth.userInfo)
-    const open = useSelector((state) => state.calendar.showModal)
-<<<<<<< HEAD:src/features/events/Events.js
-    const users = useSelector((state) => state.users)
+    const [open, setOpen] = useState(false)
     const [isDialogOpen, setDialogIsOpen] = useState(false)
+    const [formType, setFormType] = useState('view') // 'view' |'add' | 'update'
 
-||||||| d0ae4e2:src/features/events/Events.js
-=======
-    const users = useSelector((state) => state.users.items)
-    const [isDialogOpen, setDialogIsOpen] = useState(false)
-
->>>>>>> development:frontend/src/features/events/Events.js
     const [selectedIds, setSelectedIds] = useState(new Set())
+    const [eventsFilter, setEventsFilter] = useState({ userId: user.id })
+    const [eventData, setEventData] = useState({})
+
+    const { data: users = [] } = useGetUsersQuery()
+    const { data: events = [] } = useGetEventsQuery(eventsFilter)
+    const [deleteEvents] = useDeleteEventsMutation()
+
     const adminRoles = ['admin', 'superAdmin']
     const adminPermission = adminRoles.includes(user.role)
 
-    // https://stackoverflow.com/questions/67100027/dispatch-multiple-async-actions-with-redux-toolkit
+    const sortedEvents = useMemo(() => {
+        const sortedEvents = events.slice()
+        sortedEvents.sort((a, b) => b.start.localeCompare(a.start))
+        return sortedEvents
+    }, [events])
+
     useEffect(() => {
         if (adminPermission) {
-            dispatch(fetchUsers())
+            // Admin get all events
+            setEventsFilter({})
         }
-    }, [dispatch, adminPermission])
+    }, [adminPermission, user.id])
 
-    useEffect(() => {
-        dispatch(fetchEventsByLocation('all'))
-    }, [dispatch])
-
-    function createData(events, userId) {
-        let userEvents = []
+    function createData(events, user) {
+        let eventsDataToDisplay = []
 
         if (user) {
             if (!adminPermission) {
-                userEvents = events.filter((event) => event.userId === user.id)
-                userEvents = userEvents.map((event) => ({
+                // Can be used to filter user events in frontend
+                // eventsDataToDisplay = events.filter(
+                //     (event) => event.userId === user.id
+                // )
+                eventsDataToDisplay = events.map((event) => ({
                     ...event,
                     userFullName: user.firstName + ' ' + user.lastName,
                 }))
-                return userEvents
             } else {
-                userEvents = events.map((event) => ({
+                eventsDataToDisplay = events.map((event) => ({
                     ...event,
                     userFullName:
                         users.find((user) => user.id === event.userId)
@@ -67,7 +65,7 @@ const Events = () => {
                 }))
             }
         }
-        return userEvents
+        return eventsDataToDisplay
     }
 
     const handleSelection = (selection) => {
@@ -76,13 +74,13 @@ const Events = () => {
     }
     const handleRowDoubleClick = ({ id }) => {
         const selectedEvent = events.find((event) => event.id === id)
-        dispatch(setFormType('update'))
-        dispatch(selectCurrentEvent(selectedEvent))
-        dispatch(toggleShowModal())
+        setFormType('update')
+        setEventData(selectedEvent)
+        setOpen((prevOpen) => !prevOpen)
     }
     const handleDeleteEvents = () => {
-        const idsString = [...selectedIds].join(';')
-        dispatch(deleteEvents(idsString)).then(() => {
+        const ids = Array.from(selectedIds)
+        deleteEvents({ ids }).then(() => {
             setSelectedIds([])
         })
         setDialogIsOpen(false)
@@ -114,19 +112,6 @@ const Events = () => {
 
     return (
         <div>
-<<<<<<< HEAD:src/features/events/Events.js
-            {isDialogOpen && (
-                <AlertDialog
-                    isDialogOpen={isDialogOpen}
-                    setDialogIsOpen={setDialogIsOpen}
-                    onDelete={handleDeleteEvents}
-                />
-            )}
-            <h2>My Events</h2>
-||||||| d0ae4e2:src/features/events/Events.js
-            <h2>My Events</h2>
-
-=======
             <AlertDialog
                 isDialogOpen={isDialogOpen}
                 setDialogIsOpen={setDialogIsOpen}
@@ -134,10 +119,9 @@ const Events = () => {
             />
 
             <h2>My Events</h2>
->>>>>>> development:frontend/src/features/events/Events.js
-            <Box sx={{ height: 700, width: 840, m: 'auto' }}>
+            <Box sx={{ height: 700, width: '90%', m: 'auto' }}>
                 <DataGrid
-                    rows={createData(events, user)}
+                    rows={createData(sortedEvents, user)}
                     columns={columns}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
@@ -155,7 +139,14 @@ const Events = () => {
                 />
             </Box>
 
-            {open && <EventForm open={open} />}
+            {open && (
+                <EventForm
+                    open={open}
+                    setOpen={setOpen}
+                    formType={formType}
+                    event={eventData}
+                />
+            )}
         </div>
     )
 }

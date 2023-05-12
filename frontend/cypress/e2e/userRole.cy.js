@@ -5,12 +5,13 @@ describe('user role permissions ', () => {
     })
 
     it('user does not have dashboard permission', () => {
-        cy.contains('.MuiButtonBase-root', 'Users').should(
-            'have.class',
-            'Mui-disabled'
-        )
+        cy.contains('.MuiListItem-root', 'Users').should('exist')
+        cy.get('.MuiListItem-root')
+            .contains('Users')
+            .should('have.class', 'Mui-disabled')
+
         cy.contains('You dont have permissions').should('not.exist')
-        cy.visitWithLogin('users', userAuthData)
+        cy.visit('/users')
         cy.contains('You dont have permissions').should('exist')
     })
 
@@ -24,15 +25,15 @@ describe('user role permissions ', () => {
         cy.get('button').contains('Edit').should('be.enabled')
     })
 
-    it('can add new event only for self', () => {
+    it('can select event user only for self', () => {
         cy.get('a').contains('.MuiListItemText-root', 'Calendar').click()
-        cy.get('.rbc-day-bg').eq(20).click()
+        cy.get('.rbc-date-cell').eq(20).click()
         cy.contains('Add')
         cy.get('[id="select-user"]').click()
-        cy.get('ul[aria-labelledby="select-user-label"]').should(
-            'have.length',
-            1
-        )
+        cy.get('ul[aria-labelledby="select-user-label"]')
+            .should('have.length', 1)
+            .contains(userAuthData.firstName)
+            .contains(userAuthData.lastName)
     })
 
     it('can only view other users event', () => {

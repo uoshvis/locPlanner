@@ -13,7 +13,7 @@ import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import FormControl from '@mui/material/FormControl'
 
 import { userCreateSchema } from '../auth/SignUp'
-import { createUser, fetchUsers } from './usersSlice'
+
 import UserFormFields from './formFields/UserFormFields'
 
 const roleSchema = z.object({
@@ -52,15 +52,23 @@ export default function UserFormDialog() {
     }
 
     const onSaveSubmit = (data) => {
-        dispatch(createUser(data))
-            .unwrap()
-            .then(() => {
-                dispatch(fetchUsers())
-                handleClose()
-            })
-            .catch(() => {
-                reset()
-            })
+        alert('NO Chance')
+        // if (data) {
+        //     try {
+        //         dispatch(register(data)).unwrap()
+        //     } catch (err) {
+        //         reset()
+        //     }
+        // }
+        // dispatch(createUser(data))
+        //     .unwrap()
+        //     .then(() => {
+        //         dispatch(fetchUsers())
+        //         handleClose()
+        //     })
+        //     .catch(() => {
+        //         reset()
+        //     })
     }
 
     return (

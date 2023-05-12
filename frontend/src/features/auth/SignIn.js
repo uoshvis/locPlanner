@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import Avatar from '@mui/material/Avatar'
@@ -18,7 +18,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 import TextInput from './formFields/TextInput'
 
 import Spinner from '../../components/Spinner'
-import { login } from './authSlice'
+import { useLoginMutation } from '../../app/services/auth'
 
 function Copyright(props) {
     return (
@@ -54,8 +54,6 @@ export default function SignIn() {
         },
     })
 
-    const dispatch = useDispatch()
-
     let navigate = useNavigate()
     let location = useLocation()
 
@@ -63,6 +61,8 @@ export default function SignIn() {
 
     const { isLoggedIn } = useSelector((state) => state.auth)
     const { isLoading } = useSelector((state) => state.notification)
+
+    const [login] = useLoginMutation()
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -77,8 +77,10 @@ export default function SignIn() {
         })
     }, [isSubmitSuccessful, reset, getValues])
 
-    const onSubmit = ({ userName, password }) => {
-        dispatch(login({ userName, password }))
+    const onSubmit = async ({ userName, password }) => {
+        try {
+            await login({ userName, password }).unwrap()
+        } catch (err) {}
     }
 
     return (

@@ -4,7 +4,9 @@ import dotenv from 'dotenv'
 import colors from 'colors'
 import connectDB from './config/db.js'
 import userRoutes from './routes/userRoutes.js'
+import authRoutes from './routes/authRoutes.js'
 import meetingsRoutes from './routes/meetingsRoutes.js'
+import eventsRoutes from './routes/eventsRoutes.js'
 
 import { errorHandler, notFound } from './middleware/errorMiddleware.js'
 
@@ -19,6 +21,7 @@ const app = express()
 app.use(function (req, res, next) {
     // update to match the domain you will make the request from
     res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+    res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE')
     res.header(
         'Access-Control-Allow-Headers',
         'Origin, X-Requested-With, Content-Type, Authorization, Accept'
@@ -30,7 +33,9 @@ app.use(function (req, res, next) {
 app.use(express.json())
 
 // API routes
-app.use('/api/user', userRoutes)
+app.use('/api/auth', authRoutes)
+app.use('/api/users', userRoutes)
+app.use('/api/events', eventsRoutes)
 app.use('/api/meetings', meetingsRoutes)
 
 // deployment configuration

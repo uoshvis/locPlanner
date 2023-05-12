@@ -1,19 +1,13 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import calendarReducer from '../features/events/eventsSlice'
 import notificationReducer from '../features/notification/notificationSlice'
-import usersReducer from '../features/users/usersSlice'
 import authReducer from '../features/auth/authSlice'
-import { meetingsApi } from './services/meetings/meetingsService'
-import { authApi } from './services/auth/authService'
+import { api } from './services/api'
 
 const combineReducer = combineReducers({
-    calendar: calendarReducer,
     notification: notificationReducer,
-    users: usersReducer,
     auth: authReducer,
     // Add the generated reducer as a specific top-level slice
-    [meetingsApi.reducerPath]: meetingsApi.reducer,
-    [authApi.reducerPath]: authApi.reducer,
+    [api.reducerPath]: api.reducer,
 })
 
 const rootReducer = (state, action) => {
@@ -28,7 +22,7 @@ export const store = configureStore({
         getDefaultMiddleware({
             serializableCheck: {
                 // Ignore these action types
-                ignoredActions: ['calendar/fetchEventsByLocation/fulfilled'],
+                ignoredActions: [],
                 // Ignore these field paths in all actions
                 ignoredActionPaths: [
                     'payload.start',
@@ -40,16 +34,11 @@ export const store = configureStore({
                     'meta.baseQueryMeta.response',
                 ],
                 // Ignore these paths in the state
-                ignoredPaths: [
-                    'calendar.items',
-                    'calendar.currentItem.start',
-                    'calendar.currentItem.end',
-                ],
+                ignoredPaths: [],
             },
         })
             /*
                 Adding the api middleware enables caching, invalidation, polling, and other useful features of `rtk-query`.
             */
-            .concat(meetingsApi.middleware)
-            .concat(authApi.middleware),
+            .concat(api.middleware),
 })

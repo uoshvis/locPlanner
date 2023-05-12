@@ -51,10 +51,9 @@ export const notificationSlice = createSlice({
             .addMatcher(isRejectedAction, (state, action) => {
                 // Skip "Aborted due to condition callback returning false."
                 if (action.error.name !== conditionError) {
-                    console.log({ action })
+                    console.log('isRejectedAction', { action })
                     state.isLoading = false
-                    state.message =
-                        action.payload || `RejectedAction: ${action?.type}`
+                    state.message = JSON.stringify(action?.payload)
                     state.type = 'error'
                     state.open = true
                 }
