@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { DataGrid } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
 import CustomFooterComponent from './CustomFooter'
-import { setFormType } from './eventsSlice'
 import { EventForm } from './EventForm'
 import AlertDialog from '../../components/DeleteAlertDialog'
 import {
@@ -13,11 +12,11 @@ import {
 import { useGetUsersQuery } from '../../app/services/users'
 
 const Events = () => {
-    const dispatch = useDispatch()
-
     const user = useSelector((state) => state.auth.userInfo)
     const [open, setOpen] = useState(false)
     const [isDialogOpen, setDialogIsOpen] = useState(false)
+    const [formType, setFormType] = useState('view') // 'view' |'add' | 'update'
+
     const [selectedIds, setSelectedIds] = useState(new Set())
     const [eventsFilter, setEventsFilter] = useState({ userId: user.id })
     const [eventData, setEventData] = useState({})
@@ -75,7 +74,7 @@ const Events = () => {
     }
     const handleRowDoubleClick = ({ id }) => {
         const selectedEvent = events.find((event) => event.id === id)
-        dispatch(setFormType('update'))
+        setFormType('update')
         setEventData(selectedEvent)
         setOpen((prevOpen) => !prevOpen)
     }
@@ -141,7 +140,12 @@ const Events = () => {
             </Box>
 
             {open && (
-                <EventForm open={open} setOpen={setOpen} event={eventData} />
+                <EventForm
+                    open={open}
+                    setOpen={setOpen}
+                    formType={formType}
+                    event={eventData}
+                />
             )}
         </div>
     )

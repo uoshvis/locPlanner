@@ -27,10 +27,9 @@ import {
 } from '../../app/services/events'
 import { selectAllUsers, selectUserById } from '../users/usersSlice'
 
-export const EventForm = ({ open, setOpen, event }) => {
+export const EventForm = ({ open, setOpen, event, formType }) => {
     const { isLoading } = useSelector((state) => state.notification)
     const { userInfo } = useSelector((state) => state.auth)
-    const { formType } = useSelector((state) => state.calendar)
     const users = useSelector((state) => selectAllUsers(state))
     const eventUser = useSelector((state) =>
         selectUserById(state, event.userId)

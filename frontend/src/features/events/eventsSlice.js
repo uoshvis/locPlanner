@@ -22,23 +22,13 @@ export const filterEventsByLoc = createSelector(
     (events, eventLoc) => events.filter((event) => event.location === eventLoc)
 )
 
-const initialState = {
-    formType: '', // 'view' |'add' | 'update'
-}
-
 export const eventsSlice = createSlice({
     name: 'calendar',
-    initialState,
+    initialState: {},
     reducers: {
         addEvent: {},
         getEvent: {},
-
-        setFormType(state, action) {
-            state.formType = action.payload
-        },
     },
 })
-
-export const { setFormType } = eventsSlice.actions
 
 export default eventsSlice.reducer

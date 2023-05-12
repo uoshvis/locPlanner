@@ -8,7 +8,6 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import moment from 'moment'
 import 'moment/locale/lt'
 import styles from './Calendar.module.css'
-import { setFormType } from '../events/eventsSlice'
 import { setNotification } from '../notification/notificationSlice'
 import LocationBtn from './LocationBtn'
 import { EventForm } from '../events/EventForm'
@@ -42,6 +41,7 @@ function MainCalendar() {
 
     const [location, setLocation] = useState('all')
     const [open, setOpen] = useState(false)
+    const [formType, setFormType] = useState('view') // 'view' |'add' | 'update'
     const { userInfo } = useSelector((state) => state.auth)
     const [userData, setUserData] = useState([])
     const [userColors, setUserColors] = useState({})
@@ -89,11 +89,11 @@ function MainCalendar() {
 
     const handleSelectEvent = (data) => {
         if (data.userId === userInfo.id) {
-            dispatch(setFormType('update'))
+            setFormType('update')
         } else if (adminRoles.includes(userInfo.role)) {
-            dispatch(setFormType('update'))
+            setFormType('update')
         } else {
-            dispatch(setFormType('view'))
+            setFormType('view')
         }
         setEventData(data)
         setOpen((prevOpen) => !prevOpen)
@@ -102,7 +102,7 @@ function MainCalendar() {
     const handleSelectSlot = (data) => {
         const { start, end } = data
         const loc = location === 'all' ? '' : location
-        dispatch(setFormType('add'))
+        setFormType('add')
         setEventData({
             location: loc,
             userId: userInfo.id,
@@ -140,7 +140,12 @@ function MainCalendar() {
             />
 
             {open && (
-                <EventForm open={open} setOpen={setOpen} event={eventData} />
+                <EventForm
+                    open={open}
+                    setOpen={setOpen}
+                    event={eventData}
+                    formType={formType}
+                />
             )}
         </div>
     )
