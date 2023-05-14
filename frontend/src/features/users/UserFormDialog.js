@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Button from '@mui/material/Button'
@@ -13,10 +12,11 @@ import FormControl from '@mui/material/FormControl'
 
 import UserFormFields from './formFields/UserFormFields'
 import { userSchema } from './formFields/userSchema'
+import { useRegisterMutation } from '../../app/services/auth'
 
 export default function UserFormDialog() {
     const [open, setOpen] = useState(false)
-    const dispatch = useDispatch()
+    const [register] = useRegisterMutation()
 
     const { control, handleSubmit, reset } = useForm({
         defaultValues: {
@@ -40,24 +40,14 @@ export default function UserFormDialog() {
         reset()
     }
 
-    const onSaveSubmit = (data) => {
-        alert('NO Chance')
-        // if (data) {
-        //     try {
-        //         dispatch(register(data)).unwrap()
-        //     } catch (err) {
-        //         reset()
-        //     }
-        // }
-        // dispatch(createUser(data))
-        //     .unwrap()
-        //     .then(() => {
-        //         dispatch(fetchUsers())
-        //         handleClose()
-        //     })
-        //     .catch(() => {
-        //         reset()
-        //     })
+    const onSaveSubmit = async (data) => {
+        if (data) {
+            try {
+                await register(data)
+                    .unwrap()
+                    .then(() => handleClose())
+            } catch (err) {}
+        }
     }
 
     return (
