@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
 import { useGetMeetingsQuery } from '../../app/services/meetings'
+import MeetingFormDialog from './MeetingFormDialog'
 
 const { useEffect } = React
 
@@ -55,10 +56,11 @@ function Meetings() {
     return (
         <div>
             <h2>Meetings</h2>
+            <MeetingFormDialog />
             <Box
                 sx={{
                     height: 700,
-                    width: '90%',
+                    width: '100%',
                     m: 'auto',
                 }}
             >

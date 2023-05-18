@@ -2,6 +2,10 @@ import bcrypt from 'bcryptjs'
 import { mongoose } from 'mongoose'
 
 const meetingSchema = mongoose.Schema({
+    id: {
+        type: Number,
+        required: true,
+    },
     firstName: {
         type: String,
         required: true,
