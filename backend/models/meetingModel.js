@@ -14,7 +14,7 @@ const meetingSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    meetingData: {
+    meetingDate: {
         type: Date,
         required: true,
     },
