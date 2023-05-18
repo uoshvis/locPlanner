@@ -42,7 +42,6 @@ const createMeeting = asyncHandler(async (req, res) => {
 })
 
 const updateMeeting = asyncHandler(async (req, res) => {
-    // req.user was set in authMiddleware.js
     const id = req.params.id
     const data = req.body
     const itemToEdit = await Meeting.findOne({ id })
@@ -63,4 +62,21 @@ const updateMeeting = asyncHandler(async (req, res) => {
     }
 })
 
-export { getMeetings, getMeeting, createMeeting, updateMeeting }
+const deleteMeeting = asyncHandler(async (req, res) => {
+    const id = req.params.id
+    const itemToEdit = await Meeting.findOne({ id })
+    if (itemToEdit) {
+        const deleted = await Meeting.deleteOne({ id })
+        if (deleted) {
+            res.json(deleted)
+        } else {
+            res.status(500)
+            throw new Error('Meeting not deleted')
+        }
+    } else {
+        res.status(404)
+        throw new Error('Meeting not Found')
+    }
+})
+
+export { getMeetings, getMeeting, createMeeting, updateMeeting, deleteMeeting }
