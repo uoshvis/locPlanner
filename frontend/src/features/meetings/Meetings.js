@@ -73,7 +73,8 @@ function Meetings() {
                     columns={columns}
                     pageSize={10}
                     rowsPerPageOptions={[5, 10]}
-                    checkboxSelection
+                    // checkboxSelection
+                    disableSelectionOnClick
                     sortModel={[{ field: 'id', sort: 'desc' }]}
                 />
             </Box>
