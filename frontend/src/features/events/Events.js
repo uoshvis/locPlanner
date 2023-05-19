@@ -145,14 +145,12 @@ const Events = () => {
                 />
             </Box>
 
-            {open && (
-                <EventForm
-                    open={open}
-                    setOpen={setOpen}
-                    formType={formType}
-                    event={eventData}
-                />
-            )}
+            <EventForm
+                open={open}
+                setOpen={setOpen}
+                formType={formType}
+                event={eventData}
+            />
         </div>
     )
 }
