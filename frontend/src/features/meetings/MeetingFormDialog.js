@@ -41,9 +41,13 @@ export default function MeetingFormDialog() {
 
     const onSaveSubmit = async (data) => {
         if (data) {
-            console.log(data)
+            const dataToSave = {
+                ...data,
+                meetingDate: data.meetingDate.toString(),
+                firstDate: data.firstDate?.toString(),
+            }
             try {
-                await createMeeting(data)
+                await createMeeting(dataToSave)
                     .unwrap()
                     .then(() => handleClose())
             } catch (err) {
