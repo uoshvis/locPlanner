@@ -94,6 +94,11 @@ const Events = () => {
             headerName: 'Start Date',
             width: 200,
             type: 'dateTime',
+            valueFormatter: (params) =>
+                new Date(params?.value).toLocaleString('lt-LT', {
+                    dateStyle: 'short',
+                    timeStyle: 'short',
+                }),
         },
         { field: 'location', headerName: 'Location', width: 80 },
         {
@@ -124,7 +129,7 @@ const Events = () => {
                 <DataGrid
                     rows={createData(sortedEvents, user)}
                     columns={columns}
-                    pageSize={5}
+                    pageSize={10}
                     rowsPerPageOptions={[5]}
                     pagination
                     checkboxSelection
