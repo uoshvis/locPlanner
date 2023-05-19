@@ -32,7 +32,7 @@ export const EventForm = ({ open, setOpen, event, formType }) => {
     const { userInfo } = useSelector((state) => state.auth)
     const users = useSelector((state) => selectAllUsers(state))
     const eventUser = useSelector((state) =>
-        selectUserById(state, event.userId)
+        selectUserById(state, Number(event.userId))
     )
     const [usersList, setUsersList] = useState([eventUser])
     const [addEvent] = useCreateEventMutation()
