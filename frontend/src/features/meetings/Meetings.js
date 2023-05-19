@@ -2,9 +2,8 @@ import React, { useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
 import { useGetMeetingsQuery } from '../../app/services/meetings'
+import MeetingUptadeDialog from './MeetingUptadeDialog'
 import MeetingFormDialog from './MeetingFormDialog'
-
-const { useEffect } = React
 
 const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
@@ -47,20 +46,29 @@ const columns = [
     },
 ]
 function Meetings() {
-    // Using a query hook automatically fetches data and returns query values
-    const { data: meetings = [], error, isLoading } = useGetMeetingsQuery()
-    const [rows, setRows] = useState([])
+    const { data: meetings = [] } = useGetMeetingsQuery()
+    // const [formType, setFormType] = useState('view') // 'add' | 'update'
+    const [meetingData, setMeetingData] = useState({})
+    const [open, setOpen] = useState(false)
 
-    useEffect(() => {
-        if (meetings) {
-            setRows(meetings)
-        }
-    }, [error, isLoading, meetings])
-
+    const handleRowDoubleClick = ({ id }) => {
+        const selecteditem = meetings.find((item) => item.id === id)
+        // setFormType('update')
+        setMeetingData(selecteditem)
+        setOpen((prevOpen) => !prevOpen)
+    }
     return (
         <div>
             <h2>Meetings</h2>
+
             <MeetingFormDialog />
+
+            <MeetingUptadeDialog
+                open={open}
+                setOpen={setOpen}
+                meetingData={meetingData}
+            />
+
             <Box
                 sx={{
                     height: 700,
@@ -69,11 +77,12 @@ function Meetings() {
                 }}
             >
                 <DataGrid
-                    rows={rows}
+                    rows={meetings}
                     columns={columns}
                     pageSize={10}
                     rowsPerPageOptions={[5, 10]}
                     disableSelectionOnClick
+                    onRowDoubleClick={handleRowDoubleClick}
                     sortModel={[{ field: 'id', sort: 'desc' }]}
                 />
             </Box>
