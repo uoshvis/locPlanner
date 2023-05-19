@@ -7,6 +7,7 @@ const meetingSchema = z.object({
     meetingDate: z.coerce.date(),
     md: z.string().min(1, { message: 'MD required' }),
     firstDate: z.coerce.date().optional().or(z.literal('')),
+    // id: z.number(),
 })
 
 export default meetingSchema
