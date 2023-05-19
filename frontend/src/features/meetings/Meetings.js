@@ -29,6 +29,8 @@ const columns = [
         headerName: 'Date of Meeting',
         type: 'date',
         width: 130,
+        valueFormatter: (params) =>
+            new Date(params?.value).toLocaleDateString('lt-LT'),
     },
     {
         field: 'md',
@@ -40,6 +42,8 @@ const columns = [
         headerName: 'First Meeting',
         type: 'date',
         width: 130,
+        valueFormatter: (params) =>
+            new Date(params?.value).toLocaleDateString('lt-LT'),
     },
 ]
 function Meetings() {
