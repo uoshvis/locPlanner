@@ -21,12 +21,12 @@ export const selectUserDataById = createSelector(
 export const selectUsersResult = usersApi.endpoints.getUsers.select()
 
 export const selectAllUsers = createSelector(
-    selectUsersDataResult,
+    selectUsersResult,
     (usersResult) => usersResult?.data ?? emptyUsersData
 )
 
 export const selectUserById = createSelector(
-    selectAllUsersData,
+    selectAllUsers,
     (state, userId) => userId,
     (users, userId) => users.find((user) => user.id === userId)
 )

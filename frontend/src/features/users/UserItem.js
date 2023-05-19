@@ -17,9 +17,7 @@ import { selectUserDataById } from './usersSlice'
 const UserItem = ({ handleRemoveUser }) => {
     const { userId } = useParams()
 
-    const user = useSelector((state) =>
-        selectUserDataById(state, Number(userId))
-    )
+    const user = useSelector((state) => selectUserDataById(state, userId))
 
     const [updateUser, { isUpdateLoading }] = useUpdateUserMutation()
 
