@@ -52,7 +52,7 @@ export const notificationSlice = createSlice({
                 // Skip "Aborted due to condition callback returning false."
                 if (action.error.name !== conditionError) {
                     state.isLoading = false
-                    state.message = JSON.stringify(action?.payload)
+                    state.message = action?.error?.message
                     state.type = 'error'
                     state.open = true
                 }
