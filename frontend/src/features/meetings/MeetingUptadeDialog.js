@@ -12,10 +12,14 @@ import { Box } from '@mui/material'
 
 import meetingSchema from './formFields/meetingSchema'
 import MeetingFormFields from './formFields/MeetingFormFields'
-import { useUpdateMeetingMutation } from '../../app/services/meetings'
+import {
+    useUpdateMeetingMutation,
+    useDeleteMeetingMutation,
+} from '../../app/services/meetings'
 
 export default function MeetingUpdateDialog({ open, setOpen, meetingData }) {
     const [updateMeeting] = useUpdateMeetingMutation()
+    const [deleteMeeting] = useDeleteMeetingMutation()
 
     const { control, handleSubmit, reset } = useForm({
         defaultValues: {
@@ -33,6 +37,19 @@ export default function MeetingUpdateDialog({ open, setOpen, meetingData }) {
     const handleClose = () => {
         setOpen(false)
         reset()
+    }
+
+    const handleDelete = async () => {
+        const id = meetingData?.id
+        if (id) {
+            try {
+                await deleteMeeting(id)
+                    .unwrap()
+                    .then(() => handleClose())
+            } catch (err) {
+                console.log({ err })
+            }
+        }
     }
 
     const onSaveSubmit = async (data) => {
@@ -68,7 +85,17 @@ export default function MeetingUpdateDialog({ open, setOpen, meetingData }) {
                             handleSubmit={handleSubmit}
                         />
                     </DialogContent>
-                    <DialogActions>
+                    <DialogActions
+                        sx={{
+                            display: 'flex',
+                            flexDirection: { sm: 'row', xs: 'column' },
+                            alignItems: 'center',
+                            justifyContent: { sm: 'space-between' },
+                            ml: 8,
+                            mr: 8,
+                        }}
+                    >
+                        <Button onClick={handleDelete}>Delete</Button>
                         <Button onClick={handleClose}>Cancel</Button>
                         <Button
                             type="submit"
