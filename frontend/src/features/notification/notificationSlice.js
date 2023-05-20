@@ -46,8 +46,7 @@ export const notificationSlice = createSlice({
                 state.open = true
             })
             .addMatcher(isFulfilledAction, (state, action) => {
-                state.isLoading = false
-                state.open = false
+                return initialState
             })
             .addMatcher(isRejectedAction, (state, action) => {
                 // Skip "Aborted due to condition callback returning false."
