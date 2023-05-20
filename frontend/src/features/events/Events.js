@@ -11,6 +11,35 @@ import {
 } from '../../app/services/events'
 import { useGetUsersQuery } from '../../app/services/users'
 
+const columns = [
+    { field: 'id', headerName: 'ID', width: 20 },
+    { field: 'title', headerName: 'Title', width: 200 },
+    {
+        field: 'start',
+        headerName: 'Start Date',
+        width: 200,
+        type: 'dateTime',
+        valueFormatter: (params) =>
+            new Date(params?.value).toLocaleString('lt-LT', {
+                dateStyle: 'short',
+                timeStyle: 'short',
+            }),
+    },
+    { field: 'location', headerName: 'Location', width: 80 },
+    {
+        field: 'userFullName',
+        headerName: 'User',
+        width: 150,
+    },
+    {
+        field: 'isCompleted',
+        headerName: 'Completed',
+        type: 'boolean',
+        description: 'This column has a value getter and is not sortable.',
+        width: 90,
+    },
+]
+
 const Events = () => {
     const user = useSelector((state) => state.auth.userInfo)
     const [open, setOpen] = useState(false)
@@ -86,43 +115,8 @@ const Events = () => {
         setDialogIsOpen(false)
     }
 
-    const columns = [
-        { field: 'id', headerName: 'ID', width: 20 },
-        { field: 'title', headerName: 'Title', width: 200 },
-        {
-            field: 'start',
-            headerName: 'Start Date',
-            width: 200,
-            type: 'dateTime',
-            valueFormatter: (params) =>
-                new Date(params?.value).toLocaleString('lt-LT', {
-                    dateStyle: 'short',
-                    timeStyle: 'short',
-                }),
-        },
-        { field: 'location', headerName: 'Location', width: 80 },
-        {
-            field: 'userFullName',
-            headerName: 'User',
-            width: 150,
-        },
-        {
-            field: 'isCompleted',
-            headerName: 'Completed',
-            type: 'boolean',
-            description: 'This column has a value getter and is not sortable.',
-            width: 90,
-        },
-    ]
-
     return (
         <div>
-            <AlertDialog
-                isDialogOpen={isDialogOpen}
-                setDialogIsOpen={setDialogIsOpen}
-                onDelete={handleDeleteEvents}
-            />
-
             <h2>My Events</h2>
 
             <Box sx={{ height: 700, width: '100%', m: 'auto' }}>
@@ -151,6 +145,14 @@ const Events = () => {
                     setOpen={setOpen}
                     formType={formType}
                     event={eventData}
+                />
+            )}
+
+            {isDialogOpen && (
+                <AlertDialog
+                    isDialogOpen={isDialogOpen}
+                    setDialogIsOpen={setDialogIsOpen}
+                    onDelete={handleDeleteEvents}
                 />
             )}
         </div>

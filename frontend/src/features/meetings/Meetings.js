@@ -45,6 +45,7 @@ const columns = [
             new Date(params?.value).toLocaleDateString('lt-LT'),
     },
 ]
+
 function Meetings() {
     const { data: meetings = [] } = useGetMeetingsQuery()
     // const [formType, setFormType] = useState('view') // 'add' | 'update'
