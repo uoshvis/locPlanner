@@ -24,6 +24,13 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+Cypress.Commands.add('clearStorages', () => {
+    // clear localStorage not to use auto-login feature
+    cy.window().then((win) => win.sessionStorage.clear())
+    cy.clearCookies()
+    cy.clearLocalStorage()
+})
+
 Cypress.Commands.add('login', (loginData) => {
     cy.visit('/')
     cy.get('input[name="userName"]').click().type(loginData.userName)

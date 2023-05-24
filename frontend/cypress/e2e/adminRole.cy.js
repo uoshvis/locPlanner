@@ -2,6 +2,7 @@ describe('admin role permissions ', () => {
     const adminAuthData = Cypress.env('adminAuthData')
 
     beforeEach(() => {
+        cy.clearStorages()
         cy.login(adminAuthData)
     })
 

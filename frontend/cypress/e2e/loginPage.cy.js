@@ -1,7 +1,8 @@
 describe('Login Page', () => {
     it('loads successfully', () => {
         // ARRANGE
-        cy.visit('http://localhost:3000')
+        cy.clearStorages()
+        cy.visit('/')
 
         // ACT
 
