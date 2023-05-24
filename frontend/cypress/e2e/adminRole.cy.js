@@ -29,12 +29,19 @@ describe('admin role permissions ', () => {
         )
     })
 
+    it.only('access other user events', () => {
+        cy.get('a').contains('.MuiListItemText-root', 'Events').click()
+        cy.get('.MuiDataGrid-cellContent').contains('Super Admin')
+        cy.get('.MuiDataGrid-cellContent').contains('Santa Claus').dblclick()
+        cy.contains('Update').should('exist')
+    })
+
     it('can edit other users event', () => {
         cy.get('a').contains('.MuiListItemText-root', 'Calendar').click()
-        cy.contains('Sunshine 2').click()
+        cy.contains('New 1').click()
         cy.contains('Update')
         cy.contains('View').should('not.exist')
-        cy.get('input[id="title"]').should('have.value', 'Sunshine 2')
+        cy.get('input[id="title"]').should('have.value', 'New 1')
         cy.get('input[id="title"]').focus().clear().type('New Sunshine 2')
         cy.get('.MuiButtonBase-root').contains('Update').click()
         cy.contains('New Sunshine 2')
