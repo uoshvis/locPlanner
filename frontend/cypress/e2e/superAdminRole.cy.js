@@ -1,12 +1,12 @@
 describe('admin role permissions ', () => {
-    const adminAuthData = Cypress.env('adminAuthData')
+    const authData = Cypress.env('superAdminAuthData')
 
     beforeEach(() => {
         cy.clearStorages()
-        cy.login(adminAuthData)
+        cy.login(authData)
     })
 
-    it('admin have dashboard access with disabled edit', () => {
+    it('admin have dashboard access with enabled edit', () => {
         cy.contains('.MuiListItemText-root', 'Users')
             .should('not.be.disabled')
             .click()
@@ -14,8 +14,19 @@ describe('admin role permissions ', () => {
         cy.contains('Users').click()
         cy.get('table')
         cy.get('table > tbody > tr').should('have.length.least', 2)
-        cy.contains('button', 'Edit').should('be.disabled')
-        cy.contains('New user').should('not.exist')
+        cy.contains('button', 'Edit').should('be.enabled')
+        cy.contains('New user').should('exist')
+    })
+
+    it('admin can open add new user form with submit btn', () => {
+        cy.contains('.MuiListItemText-root', 'Users')
+            .should('not.be.disabled')
+            .click()
+        cy.contains('You dont have permissions').should('not.exist')
+        cy.contains('Users').click()
+        cy.contains('New user').should('exist').click()
+        cy.contains('Add New User').should('exist')
+        cy.contains('.MuiButtonBase-root', 'Submit').should('exist')
     })
 
     it('select users for event', () => {
