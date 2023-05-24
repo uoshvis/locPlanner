@@ -18,6 +18,17 @@ describe('admin role permissions ', () => {
         cy.contains('New user').should('exist')
     })
 
+    it('admin can open add new user form with submit btn', () => {
+        cy.contains('.MuiListItemText-root', 'Users')
+            .should('not.be.disabled')
+            .click()
+        cy.contains('You dont have permissions').should('not.exist')
+        cy.contains('Users').click()
+        cy.contains('New user').should('exist').click()
+        cy.contains('Add New User').should('exist')
+        cy.contains('.MuiButtonBase-root', 'Submit').should('exist')
+    })
+
     it('select users for event', () => {
         cy.get('a').contains('.MuiListItemText-root', 'Calendar').click()
         cy.get('.rbc-day-bg').eq(20).click()
@@ -40,7 +51,7 @@ describe('admin role permissions ', () => {
         cy.contains('New Sunshine 2')
     })
 
-    it.only('access other user events', () => {
+    it('access other user events', () => {
         cy.get('a').contains('.MuiListItemText-root', 'Events').click()
         cy.get('.MuiDataGrid-cellContent').contains('Super Admin')
         cy.get('.MuiDataGrid-cellContent').contains('Santa Claus').dblclick()
