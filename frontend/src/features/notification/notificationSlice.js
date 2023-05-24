@@ -41,19 +41,18 @@ export const notificationSlice = createSlice({
         builder
             .addMatcher(isPendingAction, (state, action) => {
                 state.isLoading = true
-                state.message = null
-                state.type = null
-                state.open = false
+                state.message = 'Loading...'
+                state.type = 'info'
+                state.open = true
             })
             .addMatcher(isFulfilledAction, (state, action) => {
-                state.isLoading = false
+                return initialState
             })
             .addMatcher(isRejectedAction, (state, action) => {
                 // Skip "Aborted due to condition callback returning false."
                 if (action.error.name !== conditionError) {
-                    console.log('isRejectedAction', { action })
                     state.isLoading = false
-                    state.message = JSON.stringify(action?.payload)
+                    state.message = action?.error?.message
                     state.type = 'error'
                     state.open = true
                 }

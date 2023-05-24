@@ -9,26 +9,25 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import FormControl from '@mui/material/FormControl'
+import { Box } from '@mui/material'
 
-import UserFormFields from './formFields/UserFormFields'
-import { userSchema } from './formFields/userSchema'
-import { useRegisterMutation } from '../../app/services/auth'
+import { useCreateMeetingMutation } from '../../app/services/meetings'
+import meetingSchema from './formFields/meetingSchema'
+import MeetingFormFields from './formFields/MeetingFormFields'
 
-export default function UserFormDialog() {
+export default function MeetingFormDialog() {
     const [open, setOpen] = useState(false)
-    const [register] = useRegisterMutation()
-
+    const [createMeeting] = useCreateMeetingMutation()
     const { control, handleSubmit, reset } = useForm({
         defaultValues: {
-            userName: '',
             firstName: '',
             lastName: '',
-            password: '',
-            passwordConfirm: '',
-            role: '',
-            isActive: false,
+            personalId: '',
+            meetingDate: '',
+            md: '',
+            firstDate: '',
         },
-        resolver: zodResolver(userSchema),
+        resolver: zodResolver(meetingSchema),
     })
 
     const handleClickOpen = () => {
@@ -42,34 +41,41 @@ export default function UserFormDialog() {
 
     const onSaveSubmit = async (data) => {
         if (data) {
+            const dataToSave = {
+                ...data,
+                meetingDate: data.meetingDate.toString(),
+                firstDate: data.firstDate?.toString(),
+            }
             try {
-                await register(data)
+                await createMeeting(dataToSave)
                     .unwrap()
                     .then(() => handleClose())
-            } catch (err) {}
+            } catch (err) {
+                console.log({ err })
+            }
         }
     }
 
     return (
-        <div>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button
-                sx={{ mb: 2 }}
+                sx={{ ml: 'auto', mb: 2 }}
                 variant="outlined"
                 startIcon={<AddOutlinedIcon />}
                 onClick={handleClickOpen}
             >
-                New user
+                Add Meeting
             </Button>
 
             <Dialog open={open} onClose={handleClose}>
                 <FormControl component="form" noValidate autoComplete="off">
-                    <DialogTitle>Add New User</DialogTitle>
+                    <DialogTitle>Add New Meeting</DialogTitle>
 
                     <DialogContent>
                         <DialogContentText>
-                            To add a new user fill the form.
+                            To add a new meeting fill the form.
                         </DialogContentText>
-                        <UserFormFields
+                        <MeetingFormFields
                             control={control}
                             handleSubmit={handleSubmit}
                         />
@@ -85,6 +91,6 @@ export default function UserFormDialog() {
                     </DialogActions>
                 </FormControl>
             </Dialog>
-        </div>
+        </Box>
     )
 }

@@ -10,23 +10,16 @@ import Typography from '@mui/material/Typography'
 import UserFormFields from './formFields/UserFormFields'
 import AlertDialog from '../../components/DeleteAlertDialog'
 import { userSchema } from './formFields/userSchema'
-import {
-    useGetUserQuery,
-    useUpdateUserMutation,
-} from '../../app/services/users'
+import { useUpdateUserMutation } from '../../app/services/users'
+import { useSelector } from 'react-redux'
+import { selectUserDataById } from './usersSlice'
 
 const UserItem = ({ handleRemoveUser }) => {
     const { userId } = useParams()
-    const [user, setUser] = useState()
-    const { data, error, isLoading } = useGetUserQuery(userId)
+
+    const user = useSelector((state) => selectUserDataById(state, userId))
 
     const [updateUser, { isUpdateLoading }] = useUpdateUserMutation()
-
-    useEffect(() => {
-        if (data) {
-            setUser(data)
-        }
-    }, [error, isLoading, data])
 
     const [isDialogOpen, setDialogIsOpen] = useState(false)
 

@@ -3,6 +3,7 @@ describe('main calendar', () => {
     const newTitle = 'Awesome title'
 
     before(() => {
+        cy.clearStorages()
         cy.login(userAuthData)
     })
 
@@ -29,6 +30,7 @@ describe('main calendar', () => {
         cy.get('a').contains('.MuiListItemText-root', 'Calendar').click()
         cy.get('.rbc-event-content').first().click()
         cy.contains('View')
+        cy.get('.MuiDialog-container').type('{esc}')
     })
 
     it('can add new event', () => {

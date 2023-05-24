@@ -33,7 +33,7 @@ export const authSlice = createSlice({
                 authApi.endpoints.login.matchFulfilled,
                 (state, action) => {
                     state.isLoggedIn = true
-                    state.userInfo = action.payload
+                    state.userInfo = action.payload.userInfo
                     state.userToken = action.payload.userToken
                     sessionStorage.setItem(
                         'userToken',

@@ -12,8 +12,8 @@ export const UserSelectDropdown = ({
     const generateSingleOptions = (usersList) => {
         return usersList.map((user) => {
             return (
-                <MenuItem key={user.id} value={user.id}>
-                    {user.firstName + ' ' + user.lastName}
+                <MenuItem key={user?.id} value={user?.id}>
+                    {user?.firstName + ' ' + user?.lastName}
                 </MenuItem>
             )
         })

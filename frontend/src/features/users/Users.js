@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
     Route,
@@ -13,25 +12,20 @@ import UserList from './UserList'
 import UserItem from './UserItem'
 import { setNotification } from '../notification/notificationSlice'
 import {
-    useGetUsersDataQuery,
     useDeleteUserMutation,
+    useGetUsersDataQuery,
 } from '../../app/services/users'
 
 const Users = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const [users, setUsers] = useState([])
     const { userInfo } = useSelector((state) => state.auth)
-    const { data, error, isLoading } = useGetUsersDataQuery()
+
+    const { data: users = [] } = useGetUsersDataQuery()
+
     const [deleteUser] = useDeleteUserMutation()
 
     const isSuperAdmin = userInfo.role === 'superAdmin'
-
-    useEffect(() => {
-        if (data) {
-            setUsers(data)
-        }
-    }, [error, isLoading, data])
 
     const handleRemoveUser = async (userId) => {
         if (Number(userInfo.id) === Number(userId)) {

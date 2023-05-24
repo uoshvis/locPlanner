@@ -38,13 +38,15 @@ const loginUser = asyncHandler(async (req, res) => {
     // return user obj if their password matches
     if (user && (await user.matchPassword(password))) {
         res.json({
-            id: user.id,
-            userName: user.userName,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            role: user.role,
-            userColor: user.userColor,
             userToken: generateToken(user._id),
+            userInfo: {
+                id: user.id,
+                userName: user.userName,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                role: user.role,
+                userColor: user.userColor,
+            },
         })
     } else {
         res.status(401)

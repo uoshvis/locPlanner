@@ -1,6 +1,7 @@
 describe('user role permissions ', () => {
     const userAuthData = Cypress.env('userAuthData')
     beforeEach(() => {
+        cy.clearStorages()
         cy.login(userAuthData)
     })
 

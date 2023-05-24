@@ -1,7 +1,7 @@
 import { api } from './api'
 
 export const usersApi = api.injectEndpoints({
-    tagTypes: ['Users', 'UserProfile'],
+    tagTypes: ['Users', 'UserProfile', 'UsersData'],
     endpoints: (builder) => ({
         getUsers: builder.query({
             query: () => ({
@@ -15,7 +15,7 @@ export const usersApi = api.injectEndpoints({
                 url: 'api/users/users-data',
                 method: 'GET',
             }),
-            providesTags: ['Users'],
+            providesTags: ['UsersData'],
         }),
         getUserProfile: builder.query({
             query: () => ({
@@ -40,14 +40,14 @@ export const usersApi = api.injectEndpoints({
                     body,
                 }
             },
-            invalidatesTags: ['UserProfile', 'Users'],
+            invalidatesTags: ['UserProfile', 'Users', 'UsersData'],
         }),
         deleteUser: builder.mutation({
             query: (id) => ({
                 url: `api/users/${id}/delete`,
                 method: 'DELETE',
             }),
-            invalidatesTags: ['Users'],
+            invalidatesTags: ['Users', 'UsersData'],
         }),
     }),
 })

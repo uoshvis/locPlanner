@@ -102,7 +102,7 @@ export const EventForm = ({ open, setOpen, event, formType }) => {
     }
 
     return (
-        <Dialog open={open}>
+        <Dialog open={open} onClose={handleClose}>
             <Box
                 sx={{ m: 1 }}
                 component="form"

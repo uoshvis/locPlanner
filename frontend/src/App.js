@@ -19,7 +19,6 @@ import Users from './features/users/Users'
 import Events from './features/events/Events'
 import Meetings from './features/meetings/Meetings'
 import UserProfile from './features/users/UserProfile'
-import BackDropLoader from './components/BackDropLoader'
 import RequireLogin from './routing/RequireLogin'
 import RequireAdminRole from './routing/RequireAdmin'
 import RespDrawerLayout from './components/RespDrawerLayout'
@@ -33,8 +32,6 @@ function App() {
     const notificationIsOpen = useSelector(isNotificationOpen)
     const notificationType = useSelector(getNotificationType)
     const notificationMsg = useSelector(getNotificationMsg)
-
-    const { isLoading } = useSelector((state) => state.notification)
 
     const { userToken, isLoggedIn } = useSelector((state) => state.auth)
     const [triggerGetProfile, result] = useLazyGetUserProfileQuery()
@@ -64,8 +61,6 @@ function App() {
                         message={notificationMsg}
                     />
                 )}
-
-                <BackDropLoader isLoading={isLoading} />
             </React.Fragment>
 
             <Routes>
