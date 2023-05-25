@@ -145,6 +145,24 @@ const users = [
     },
 ]
 
+const authenticateUser = (req) => {
+    // Mock authentication logic
+    const authorizationHeader = req.headers.get('Authorization')
+    if (authorizationHeader) {
+        console.log(authorizationHeader)
+        const token = authorizationHeader.replace('Bearer ', '')
+        console.log(token)
+        // Mock token verification logic
+        if (token.includes('_mockToken')) {
+            const id = token.split('_mockToken')[0]
+            // Mock user based on the token
+            const user = users.find((user) => user.id === Number(id))
+            return user
+        }
+    }
+    return null
+}
+
 export const handlers = [
     // #################### Login-logout handlers #############################
 
