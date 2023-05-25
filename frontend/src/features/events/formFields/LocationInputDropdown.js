@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Controller } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 import { MenuItem, TextField } from '@mui/material'
 
 const options = [
@@ -13,7 +13,9 @@ const options = [
     },
 ]
 
-export const LocationInputDropDown = ({ name, control, label, disabled }) => {
+export const LocationInputDropDown = ({ name, label, disabled }) => {
+    const { control } = useFormContext()
+
     const generateSingleOptions = () => {
         return options.map((option) => {
             return (

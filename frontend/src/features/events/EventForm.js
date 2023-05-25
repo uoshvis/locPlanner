@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, FormProvider } from 'react-hook-form'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
@@ -61,7 +61,7 @@ export const EventForm = ({ open, setOpen, event, formType }) => {
         isCompleted: false,
     }
 
-    const { handleSubmit, control, getValues } = useForm({
+    const formMethods = useForm({
         defaultValues,
         values: { ...defaultValues, ...event },
     })
@@ -103,169 +103,172 @@ export const EventForm = ({ open, setOpen, event, formType }) => {
 
     return (
         <Dialog open={open} onClose={handleClose}>
-            <Box
-                sx={{ m: 1 }}
-                component="form"
-                onSubmit={handleSubmit(onSubmit)}
-            >
-                <DialogTitle>{submitBtnText} Event</DialogTitle>{' '}
-                <DialogContent sx={{ m: 1 }}>
-                    <DialogContentText>
-                        To submit, fill in all fields.
-                    </DialogContentText>
-                    <LocalizationProvider dateAdapter={AdapterMoment}>
-                        <Stack spacing={3}>
-                            <Controller
-                                control={control}
-                                name="title"
-                                rules={{ required: 'Please enter a title' }}
-                                render={({
-                                    field: { onChange, value, ref },
-                                    fieldState: { error },
-                                }) => (
-                                    <TextField
-                                        autoFocus
-                                        margin="dense"
-                                        id="title"
-                                        label="Title"
-                                        type="text"
-                                        fullWidth
-                                        error={!!error}
-                                        helperText={error?.message}
-                                        variant="outlined"
-                                        value={value}
-                                        onChange={onChange}
-                                        disabled={readOnly}
-                                    />
-                                )}
-                            />
+            <FormProvider {...formMethods}>
+                <Box
+                    sx={{ m: 1 }}
+                    component="form"
+                    onSubmit={formMethods.handleSubmit(onSubmit)}
+                >
+                    <DialogTitle>{submitBtnText} Event</DialogTitle>
 
-                            <LocationInputDropDown
-                                name="location"
-                                control={control}
-                                label="Location"
-                                disabled={readOnly}
-                            />
+                    <DialogContent sx={{ m: 1 }}>
+                        <DialogContentText>
+                            To submit, fill in all fields.
+                        </DialogContentText>
+                        <LocalizationProvider dateAdapter={AdapterMoment}>
+                            <Stack spacing={3}>
+                                <Controller
+                                    name="title"
+                                    rules={{ required: 'Please enter a title' }}
+                                    render={({
+                                        field: { onChange, value, ref },
+                                        fieldState: { error },
+                                    }) => (
+                                        <TextField
+                                            autoFocus
+                                            margin="dense"
+                                            id="title"
+                                            label="Title"
+                                            type="text"
+                                            fullWidth
+                                            error={!!error}
+                                            helperText={error?.message}
+                                            variant="outlined"
+                                            value={value}
+                                            onChange={onChange}
+                                            disabled={readOnly}
+                                        />
+                                    )}
+                                />
 
-                            <UserSelectDropdown
-                                name="userId"
-                                control={control}
-                                usersList={usersList}
-                                label="User"
-                                disabled={readOnly}
-                            />
+                                <LocationInputDropDown
+                                    name="location"
+                                    label="Location"
+                                    disabled={readOnly}
+                                />
 
-                            <Controller
-                                control={control}
-                                name="start"
-                                rules={{
-                                    required: 'Please select datetime',
-                                }}
-                                render={({ field, fieldState }) => (
-                                    <DateTimePicker
-                                        {...field}
-                                        label="Start datetime"
-                                        disabled={readOnly}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                error={!!fieldState.error}
-                                                helperText={
-                                                    fieldState.error?.message
-                                                }
-                                            />
-                                        )}
-                                    />
-                                )}
-                            />
+                                <UserSelectDropdown
+                                    name="userId"
+                                    usersList={usersList}
+                                    label="User"
+                                    disabled={readOnly}
+                                />
 
-                            <Controller
-                                control={control}
-                                name="end"
-                                rules={{
-                                    required: 'Please select datetime',
-                                    validate: () => {
-                                        return getValues('end') >
-                                            getValues('start')
-                                            ? true
-                                            : 'End date must be later'
-                                    },
-                                }}
-                                render={({ field, fieldState }) => (
-                                    <DateTimePicker
-                                        {...field}
-                                        label="End datetime"
-                                        disabled={readOnly}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                error={!!fieldState.error}
-                                                helperText={
-                                                    fieldState.error?.message
-                                                }
-                                            />
-                                        )}
-                                    />
-                                )}
-                            />
+                                <Controller
+                                    name="start"
+                                    rules={{
+                                        required: 'Please select datetime',
+                                    }}
+                                    render={({ field, fieldState }) => (
+                                        <DateTimePicker
+                                            {...field}
+                                            label="Start datetime"
+                                            disabled={readOnly}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    error={!!fieldState.error}
+                                                    helperText={
+                                                        fieldState.error
+                                                            ?.message
+                                                    }
+                                                />
+                                            )}
+                                        />
+                                    )}
+                                />
 
-                            <Controller
-                                name="isCompleted"
-                                control={control}
-                                render={({
-                                    field: { onChange, value, name },
-                                    formState,
-                                }) => (
-                                    <FormControlLabel
-                                        label="Completed"
-                                        disabled={readOnly}
-                                        control={
-                                            <Checkbox
-                                                name={name}
-                                                checked={value}
-                                                onChange={onChange}
-                                                inputProps={{
-                                                    'aria-label': 'controlled',
-                                                }}
-                                            />
-                                        }
-                                    />
-                                )}
-                            />
-                        </Stack>
-                    </LocalizationProvider>
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        variant="text"
-                        onClick={handleClose}
-                        startIcon={<CancelIcon />}
-                    >
-                        Cancel
-                    </Button>
-                    {formType === 'update' && (
+                                <Controller
+                                    name="end"
+                                    rules={{
+                                        required: 'Please select datetime',
+                                        validate: () => {
+                                            return formMethods.getValues(
+                                                'end'
+                                            ) > formMethods.getValues('start')
+                                                ? true
+                                                : 'End date must be later'
+                                        },
+                                    }}
+                                    render={({ field, fieldState }) => (
+                                        <DateTimePicker
+                                            {...field}
+                                            label="End datetime"
+                                            disabled={readOnly}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    error={!!fieldState.error}
+                                                    helperText={
+                                                        fieldState.error
+                                                            ?.message
+                                                    }
+                                                />
+                                            )}
+                                        />
+                                    )}
+                                />
+
+                                <Controller
+                                    name="isCompleted"
+                                    render={({
+                                        field: { onChange, value, name },
+                                        formState,
+                                    }) => (
+                                        <FormControlLabel
+                                            label="Completed"
+                                            disabled={readOnly}
+                                            control={
+                                                <Checkbox
+                                                    name={name}
+                                                    checked={value}
+                                                    onChange={onChange}
+                                                    inputProps={{
+                                                        'aria-label':
+                                                            'controlled',
+                                                    }}
+                                                />
+                                            }
+                                        />
+                                    )}
+                                />
+                            </Stack>
+                        </LocalizationProvider>
+                    </DialogContent>
+                    <DialogActions>
                         <Button
                             variant="text"
-                            onClick={handleDelete}
-                            startIcon={<DeleteIcon />}
-                            disabled={readOnly}
+                            onClick={handleClose}
+                            startIcon={<CancelIcon />}
                         >
-                            Delete
+                            Cancel
                         </Button>
-                    )}
-                    {formType !== 'view' && (
-                        <Button
-                            type="submit"
-                            variant="text"
-                            onClick={handleSubmit}
-                            disabled={readOnly}
-                            startIcon={<CheckIcon />}
-                        >
-                            {submitBtnText}
-                        </Button>
-                    )}
-                </DialogActions>
-            </Box>
+
+                        {formType === 'update' && (
+                            <Button
+                                variant="text"
+                                onClick={handleDelete}
+                                startIcon={<DeleteIcon />}
+                                disabled={readOnly}
+                            >
+                                Delete
+                            </Button>
+                        )}
+
+                        {formType !== 'view' && (
+                            <Button
+                                type="submit"
+                                variant="text"
+                                onClick={formMethods.handleSubmit}
+                                disabled={readOnly}
+                                startIcon={<CheckIcon />}
+                            >
+                                {submitBtnText}
+                            </Button>
+                        )}
+                    </DialogActions>
+                </Box>
+            </FormProvider>
         </Dialog>
     )
 }
