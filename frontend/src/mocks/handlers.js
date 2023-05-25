@@ -164,9 +164,9 @@ const authenticateUser = (req) => {
 }
 
 export const handlers = [
-    // #################### Login-logout handlers #############################
+    // #################### Auth handlers #############################
 
-    rest.post('/myApi/register', (req, res, ctx) => {
+    rest.post('/api/auth/register', (req, res, ctx) => {
         const id = Number(new Date())
         const data = {
             ...req.body,
@@ -182,25 +182,40 @@ export const handlers = [
             )
         }
         data.id = id
-        users.push(data)
-        return res(
-            ctx.delay(ARTIFICIAL_DELAY_MS),
-            ctx.status(200),
-            ctx.json(data)
-        )
+        const checkUsername = (obj) => obj.userName === data.userName
+        if (!data.some(checkUsername)) {
+            users.push(data)
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(200),
+                ctx.json({
+                    id: data.id,
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                })
+            )
+        } else {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(404, 'UserName already taken'),
+                ctx.json({})
+            )
+        }
     }),
 
-    rest.post('/myApi/login', (req, res, ctx) => {
+    rest.post('api/auth/login', (req, res, ctx) => {
         const userName = req.body.userName
         const password = req.body.password
+
         if (userName && password) {
             const user = users.find((user) => user.userName === userName)
+
             if (user && user.password === password && user.isActive) {
-                const userToken = user.userName + '_token'
+                const userToken = user.id + '_mockToken'
                 return res(
                     ctx.delay(ARTIFICIAL_DELAY_MS),
                     ctx.status(200),
-                    ctx.json({ ...user, userToken })
+                    ctx.json({ userToken, userInfo: user })
                 )
             } else if (user && !user.isActive) {
                 return res(
@@ -227,7 +242,7 @@ export const handlers = [
         }
     }),
 
-    rest.post('/myApi/logout', (req, res, ctx) => {
+    rest.post('/api/auth/logout', (req, res, ctx) => {
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
@@ -237,7 +252,7 @@ export const handlers = [
 
     // #################### Users handlers ####################################
 
-    rest.get('/myApi/users', (req, res, ctx) => {
+    rest.get('/api/users', (req, res, ctx) => {
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
@@ -245,7 +260,25 @@ export const handlers = [
         )
     }),
 
-    rest.get('/myApi/users/:id', (req, res, ctx) => {
+    rest.get('/api/users/profile', (req, res, ctx) => {
+        const user = authenticateUser(req)
+
+        if (user) {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(200),
+                ctx.json(user)
+            )
+        } else {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(404, 'User profile not found'),
+                ctx.json({})
+            )
+        }
+    }),
+
+    rest.get('/api/users/:id', (req, res, ctx) => {
         const { id } = req.params
         const user = users.find((user) => user.id === Number(id))
 
@@ -264,7 +297,7 @@ export const handlers = [
         }
     }),
 
-    rest.post('/myApi/users', (req, res, ctx) => {
+    rest.post('/api/users', (req, res, ctx) => {
         const id = Number(new Date())
         const data = {
             ...req.body,
@@ -286,7 +319,7 @@ export const handlers = [
         )
     }),
 
-    rest.put('/myApi/users/:id', (req, res, ctx) => {
+    rest.put('/api/users/:id', (req, res, ctx) => {
         const { id } = req.params
         const data = req.body
         const itemIdx = users.findIndex((obj) => obj.id === Number(id))
@@ -307,7 +340,7 @@ export const handlers = [
         }
     }),
 
-    rest.delete('/myApi/users/:id', (req, res, ctx) => {
+    rest.delete('/api/users/:id', (req, res, ctx) => {
         const { id } = req.params
         const itemIdx = users.findIndex((obj) => obj.id === Number(id))
         // const itemIdx = -1
@@ -329,7 +362,7 @@ export const handlers = [
 
     // #################### Events handlers ####################################
 
-    rest.get('/myApi/events/:location', (req, res, ctx) => {
+    rest.get('/api/events/:location', (req, res, ctx) => {
         const { location } = req.params
         var events = []
         const validLocation = ['all', 'loc1', 'loc2'].includes(location)
@@ -354,7 +387,7 @@ export const handlers = [
         }
     }),
 
-    rest.put('/myApi/events/:id', (req, res, ctx) => {
+    rest.put('/api/events/:id', (req, res, ctx) => {
         const { id } = req.params
         const data = req.body
         const itemIdx = items.findIndex((obj) => obj.id === Number(id))
@@ -375,7 +408,7 @@ export const handlers = [
         }
     }),
 
-    rest.post('/myApi/events', (req, res, ctx) => {
+    rest.post('/api/events', (req, res, ctx) => {
         const id = Number(new Date())
         const data = req.body
 
@@ -396,7 +429,7 @@ export const handlers = [
         )
     }),
 
-    rest.delete('/myApi/events/:id', (req, res, ctx) => {
+    rest.delete('/api/events/:id', (req, res, ctx) => {
         const { id } = req.params
         const itemIdx = items.findIndex((obj) => obj.id === Number(id))
         // const itemIdx = -1
@@ -415,7 +448,7 @@ export const handlers = [
             )
         }
     }),
-    rest.delete('/myApi/events', (req, res, ctx) => {
+    rest.delete('/api/events', (req, res, ctx) => {
         const data = req.body
         const idsArray = data.split(';')
         const itemsIdxsToDelete = []
@@ -442,7 +475,7 @@ export const handlers = [
     }),
 
     // meetings
-    rest.get('/myApi/meetings', (req, res, ctx) => {
+    rest.get('/api/meetings', (req, res, ctx) => {
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
