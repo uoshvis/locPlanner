@@ -112,14 +112,58 @@ export const handlers = [
 
     // #################### Users handlers ####################################
 
+    //  GET users
     rest.get('/api/users', (req, res, ctx) => {
-        return res(
-            ctx.delay(ARTIFICIAL_DELAY_MS),
-            ctx.status(200),
-            ctx.json(users)
-        )
+        const usersData = users.map((user) => ({
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            userColor: user.userColor,
+        }))
+
+        if (usersData) {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(200),
+                ctx.json(usersData)
+            )
+        } else {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(404, 'Users not found'),
+                ctx.json({})
+            )
+        }
     }),
 
+    //  GET /users-data
+    rest.get('/api/users/users-data', (req, res, ctx) => {
+        const reqUser = authenticateUser(req)
+
+        if (['admin', 'superAdmin'].includes(reqUser.role)) {
+            if (users) {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(200),
+                    ctx.json(users)
+                )
+            } else {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(404, 'Users not found'),
+                    ctx.json({})
+                )
+            }
+        } else {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(401, 'Only for admin role users'),
+                ctx.json({})
+            )
+        }
+    }),
+
+    //  GET /profile
     rest.get('/api/users/profile', (req, res, ctx) => {
         const user = authenticateUser(req)
 
@@ -127,7 +171,14 @@ export const handlers = [
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(200),
-                ctx.json(user)
+                ctx.json({
+                    id: user.id,
+                    userName: user.userName,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    role: user.role,
+                    userColor: user.userColor,
+                })
             )
         } else {
             return res(
@@ -138,59 +189,32 @@ export const handlers = [
         }
     }),
 
-    rest.get('/api/users/:id', (req, res, ctx) => {
-        const { id } = req.params
-        const user = users.find((user) => user.id === Number(id))
-
-        if (user) {
-            return res(
-                ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(200),
-                ctx.json(user)
-            )
-        } else {
-            return res(
-                ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(404, 'User not found'),
-                ctx.json({})
-            )
-        }
-    }),
-
-    rest.post('/api/users', (req, res, ctx) => {
-        const id = Number(new Date())
-        const data = {
-            ...req.body,
-            userColor: circlePickerDefaultColors[0],
-        }
-        if (data.title === 'error') {
-            return res(
-                ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(500, 'Item not added'),
-                ctx.json({})
-            )
-        }
-        data.id = id
-        users.push(data)
-        return res(
-            ctx.delay(ARTIFICIAL_DELAY_MS),
-            ctx.status(200),
-            ctx.json(data)
-        )
-    }),
-
+    //  PUT /:id
     rest.put('/api/users/:id', (req, res, ctx) => {
+        const reqUser = authenticateUser(req)
         const { id } = req.params
         const data = req.body
         const itemIdx = users.findIndex((obj) => obj.id === Number(id))
+
         // const itemIdx = -1
         if (itemIdx !== -1) {
-            users[itemIdx] = { ...data }
-            return res(
-                ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(200),
-                ctx.json(users[itemIdx])
-            )
+            if (
+                users[itemIdx].id === reqUser.id ||
+                ['admin', 'superAdmin'].includes(reqUser.role)
+            ) {
+                users[itemIdx] = { ...users[itemIdx], ...data }
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(200),
+                    ctx.json(users[itemIdx])
+                )
+            } else {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(401, 'Update not Allowed'),
+                    ctx.json({})
+                )
+            }
         } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
@@ -200,11 +224,44 @@ export const handlers = [
         }
     }),
 
-    rest.delete('/api/users/:id', (req, res, ctx) => {
+    //  GET /:id
+    rest.get('/api/users/:id', (req, res, ctx) => {
+        const reqUser = authenticateUser(req)
+        const { id } = req.params
+
+        if (['admin', 'superAdmin'].includes(reqUser.role)) {
+            const user = users.find((user) => user.id === Number(id))
+
+            if (user) {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(200),
+                    ctx.json(user)
+                )
+            } else {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(404, 'User not found'),
+                    ctx.json({})
+                )
+            }
+        } else {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(401, 'Only for admin role users'),
+                ctx.json({})
+            )
+        }
+    }),
+
+    // DELETE /:id/delete
+    rest.delete('/api/users/:id/delete', (req, res, ctx) => {
+        const reqUser = authenticateUser(req)
         const { id } = req.params
         const itemIdx = users.findIndex((obj) => obj.id === Number(id))
         // const itemIdx = -1
-        if (itemIdx !== -1) {
+
+        if (itemIdx !== -1 && ['superAdmin'].includes(reqUser.role)) {
             users.splice(itemIdx, 1)
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
@@ -214,7 +271,7 @@ export const handlers = [
         } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(404, 'Item not found'),
+                ctx.status(401, 'Only for superAdmin'),
                 ctx.json({})
             )
         }
@@ -336,7 +393,8 @@ export const handlers = [
         }
     }),
 
-    // meetings
+    // #################### Meetings handlers #################################
+
     rest.get('/api/meetings', (req, res, ctx) => {
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),
