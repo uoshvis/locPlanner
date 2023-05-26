@@ -14,7 +14,7 @@ export const selectAllUsersData = createSelector(
 export const selectUserDataById = createSelector(
     selectAllUsersData,
     (state, userId) => userId,
-    (users, userId) => users.find((user) => user.id === userId)
+    (users, userId) => users.find((user) => user.id === Number(userId))
 )
 
 // getUsers
@@ -28,5 +28,5 @@ export const selectAllUsers = createSelector(
 export const selectUserById = createSelector(
     selectAllUsers,
     (state, userId) => userId,
-    (users, userId) => users.find((user) => user.id === userId)
+    (users, userId) => users.find((user) => user.id === Number(userId))
 )
