@@ -1,7 +1,7 @@
 import { rest } from 'msw'
-import { meetingsData } from './data/meetingsData'
 import { users, circlePickerDefaultColors } from './data/usersData'
 import { events } from './data/eventsData'
+import { meetingsData } from './data/meetingsData'
 
 // Add an extra delay to all endpoints, so loading spinners show up.
 const ARTIFICIAL_DELAY_MS = 1000
@@ -26,6 +26,7 @@ const authenticateUser = (req) => {
 export const handlers = [
     // #################### Auth handlers #############################
 
+    // registerUser
     rest.post('/api/auth/register', (req, res, ctx) => {
         const id = Number(new Date())
         const data = {
@@ -63,6 +64,7 @@ export const handlers = [
         }
     }),
 
+    // loginUser
     rest.post('api/auth/login', (req, res, ctx) => {
         const userName = req.body.userName
         const password = req.body.password
@@ -112,7 +114,7 @@ export const handlers = [
 
     // #################### Users handlers ####################################
 
-    //  GET users
+    //  getUsers
     rest.get('/api/users', (req, res, ctx) => {
         const usersData = users.map((user) => ({
             id: user.id,
@@ -136,7 +138,7 @@ export const handlers = [
         }
     }),
 
-    //  GET /users-data
+    //  getUsersData
     rest.get('/api/users/users-data', (req, res, ctx) => {
         const reqUser = authenticateUser(req)
 
@@ -163,7 +165,7 @@ export const handlers = [
         }
     }),
 
-    //  GET /profile
+    //  getUserProfile
     rest.get('/api/users/profile', (req, res, ctx) => {
         const user = authenticateUser(req)
 
@@ -189,7 +191,37 @@ export const handlers = [
         }
     }),
 
-    //  PUT /:id
+    //  getUser
+    rest.get('/api/users/:id', (req, res, ctx) => {
+        const reqUser = authenticateUser(req)
+        const { id } = req.params
+
+        if (['admin', 'superAdmin'].includes(reqUser.role)) {
+            const user = users.find((user) => user.id === Number(id))
+
+            if (user) {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(200),
+                    ctx.json(user)
+                )
+            } else {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(404, 'User not found'),
+                    ctx.json({})
+                )
+            }
+        } else {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(401, 'Only for admin role users'),
+                ctx.json({})
+            )
+        }
+    }),
+
+    //  updateUser
     rest.put('/api/users/:id', (req, res, ctx) => {
         const reqUser = authenticateUser(req)
         const { id } = req.params
@@ -224,37 +256,7 @@ export const handlers = [
         }
     }),
 
-    //  GET /:id
-    rest.get('/api/users/:id', (req, res, ctx) => {
-        const reqUser = authenticateUser(req)
-        const { id } = req.params
-
-        if (['admin', 'superAdmin'].includes(reqUser.role)) {
-            const user = users.find((user) => user.id === Number(id))
-
-            if (user) {
-                return res(
-                    ctx.delay(ARTIFICIAL_DELAY_MS),
-                    ctx.status(200),
-                    ctx.json(user)
-                )
-            } else {
-                return res(
-                    ctx.delay(ARTIFICIAL_DELAY_MS),
-                    ctx.status(404, 'User not found'),
-                    ctx.json({})
-                )
-            }
-        } else {
-            return res(
-                ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(401, 'Only for admin role users'),
-                ctx.json({})
-            )
-        }
-    }),
-
-    // DELETE /:id/delete
+    // deleteUser
     rest.delete('/api/users/:id/delete', (req, res, ctx) => {
         const reqUser = authenticateUser(req)
         const { id } = req.params
@@ -279,40 +281,46 @@ export const handlers = [
 
     // #################### Events handlers ####################################
 
-    rest.get('/api/events/:location', (req, res, ctx) => {
-        const { location } = req.params
-        var locationEvents = []
-        const validLocation = ['all', 'loc1', 'loc2'].includes(location)
+    // getEvents
+    rest.get('/api/events', (req, res, ctx) => {
+        const location = req.url.searchParams.get('location')
+        const userId = req.url.searchParams.get('userId')
 
-        if (validLocation) {
-            if (location === 'all') {
-                locationEvents = events
-            } else {
-                locationEvents = events.filter(
-                    (item) => item.location === location
-                )
-            }
+        var filteredEvents = events
+
+        // filter by location
+        if (location && location !== 'all') {
+            filteredEvents = events.filter((item) => item.location === location)
+        }
+
+        // filter by userId
+        if (userId) {
+            filteredEvents = filteredEvents.filter(
+                (item) => item.userId === Number(userId)
+            )
+        }
+
+        if (filteredEvents) {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(200),
-                ctx.json(locationEvents)
+                ctx.json(filteredEvents)
             )
         } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(404, 'Location not found'),
+                ctx.status(404, 'Events not found'),
                 ctx.json({})
             )
         }
     }),
 
-    rest.put('/api/events/:id', (req, res, ctx) => {
+    // getEvent
+    rest.get('/api/events/:id', (req, res, ctx) => {
         const { id } = req.params
-        const data = req.body
         const itemIdx = events.findIndex((obj) => obj.id === Number(id))
         // const itemIdx = -1
         if (itemIdx !== -1) {
-            events[itemIdx] = data
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(200),
@@ -321,15 +329,16 @@ export const handlers = [
         } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(404, 'Update item not found'),
+                ctx.status(404, 'Event not found'),
                 ctx.json({})
             )
         }
     }),
 
+    // createEvent
     rest.post('/api/events', (req, res, ctx) => {
-        const id = Number(new Date())
         const data = req.body
+        const id = Number(new Date())
 
         if (data.title === 'error') {
             return res(
@@ -341,6 +350,7 @@ export const handlers = [
 
         data.id = id
         events.push(data)
+
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
@@ -348,17 +358,66 @@ export const handlers = [
         )
     }),
 
-    rest.delete('/api/events/:id', (req, res, ctx) => {
+    // updateEvent
+    rest.put('/api/events/:id', (req, res, ctx) => {
+        const reqUser = authenticateUser(req)
+        const { id } = req.params
+        const data = req.body
+        const itemIdx = events.findIndex((obj) => obj.id === Number(id))
+        // const itemIdx = -1
+        if (itemIdx !== -1) {
+            const eventToEdit = events[itemIdx]
+            if (
+                eventToEdit.userId === Number(reqUser.id) ||
+                ['admin', 'superAdmin'].includes(reqUser.role)
+            ) {
+                events[itemIdx] = { ...eventToEdit, ...data }
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(200),
+                    ctx.json(events[itemIdx])
+                )
+            } else {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(401, 'Update Not allowed'),
+                    ctx.json({})
+                )
+            }
+        } else {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(404, 'Update item not found'),
+                ctx.json({})
+            )
+        }
+    }),
+
+    // deleteEvent
+    rest.delete('/api/events/:id/delete', (req, res, ctx) => {
+        const reqUser = authenticateUser(req)
         const { id } = req.params
         const itemIdx = events.findIndex((obj) => obj.id === Number(id))
         // const itemIdx = -1
         if (itemIdx !== -1) {
-            events.splice(itemIdx, 1)
-            return res(
-                ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(200),
-                ctx.json({ id })
-            )
+            const eventToEdit = events[itemIdx]
+            if (
+                eventToEdit.userId === Number(reqUser.id) ||
+                ['admin', 'superAdmin'].includes(reqUser.role)
+            ) {
+                events.splice(itemIdx, 1)
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(200),
+                    ctx.json({ id })
+                )
+            } else {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(401, 'Delete Not allowed'),
+                    ctx.json({})
+                )
+            }
         } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
@@ -367,9 +426,10 @@ export const handlers = [
             )
         }
     }),
-    rest.delete('/api/events', (req, res, ctx) => {
-        const data = req.body
-        const idsArray = data.split(';')
+
+    // deleteEvents
+    rest.delete('/api/events/delete', (req, res, ctx) => {
+        const { ids: idsArray } = req.body
         const itemsIdxsToDelete = []
         for (const id of idsArray) {
             let itemIdx = events.findIndex((obj) => obj.id === Number(id))
@@ -388,7 +448,7 @@ export const handlers = [
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(200),
-                ctx.json({ ids: data })
+                ctx.json({ ids: 'delete many' })
             )
         }
     }),
