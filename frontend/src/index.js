@@ -12,16 +12,14 @@ import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6'
 const container = document.getElementById('root')
 const root = createRoot(container)
 
-// if (process.env.REACT_APP_MOCK_ENV === 'enabled') {
-const { worker } = require('./mocks/browser')
-worker.start({
-    onUnhandledRequest: 'bypass', // "bypass"/ "warn"/ "error"
-})
-// }
-
-if (process.env.NODE_ENV === 'development') {
+if (
+    process.env.NODE_ENV === 'development' &&
+    process.env.REACT_APP_MOCK_ENV === 'enabled'
+) {
     const { worker } = require('./mocks/browser')
-    worker.start()
+    worker.start({
+        onUnhandledRequest: 'bypass', // "bypass"/ "warn"/ "error"
+    })
 }
 
 root.render(
