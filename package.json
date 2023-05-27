@@ -1,10 +1,13 @@
 {
   "name": "loc-planner",
   "version": "1.0.0",
+  "homepage": "https://uoshvis.github.io/locPlanner",
   "type": "module",
   "description": "## About",
   "main": "index.js",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "node backend/server",
     "server": "nodemon backend/server",
     "client": "npm start --prefix frontend",
@@ -26,7 +29,6 @@
   "bugs": {
     "url": "https://github.com/uoshvis/locPlanner/issues"
   },
-  "homepage": "https://github.com/uoshvis/locPlanner#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",

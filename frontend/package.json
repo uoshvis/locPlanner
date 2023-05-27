@@ -59,6 +59,7 @@
   "devDependencies": {
     "cypress": "^10.6.0",
     "eslint-plugin-cypress": "^2.12.1",
+    "gh-pages": "^5.0.0",
     "msw": "^0.44.2"
   },
   "msw": {
