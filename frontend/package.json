@@ -66,6 +66,6 @@
     "msw": "^0.44.2"
   },
   "msw": {
-    "workerDirectory": ""
+    "workerDirectory": "public"
   }
 }
