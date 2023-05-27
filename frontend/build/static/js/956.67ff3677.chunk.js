@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkloc_planner=self.webpackChunkloc_planner||[]).push([[956],{9956:function(n,e,l){l.r(e);var r=l(184);e.default=function(){return(0,r.jsxs)(r.Fragment,{children:[(0,r.jsx)("h2",{children:"About page"}),(0,r.jsx)("h3",{children:"I am so lazy..."})]})}}}]);
+//# sourceMappingURL=956.67ff3677.chunk.js.map
