@@ -1,13 +1,11 @@
 {
   "name": "loc-planner",
   "version": "1.0.0",
-  "homepage": "https://uoshvis.github.io/locPlanner",
   "type": "module",
   "description": "## About",
   "main": "index.js",
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+
     "start": "node backend/server",
     "server": "nodemon backend/server",
     "client": "npm start --prefix frontend",
