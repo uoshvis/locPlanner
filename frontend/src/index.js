@@ -17,9 +17,7 @@ if (
     process.env.REACT_APP_MOCK_ENV === 'enabled'
 ) {
     const { worker } = require('./mocks/browser')
-    worker.start({
-        onUnhandledRequest: 'bypass', // "bypass"/ "warn"/ "error"
-    })
+    worker.start()
 }
 
 root.render(

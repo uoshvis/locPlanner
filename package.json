@@ -5,6 +5,7 @@
   "description": "## About",
   "main": "index.js",
   "scripts": {
+
     "start": "node backend/server",
     "server": "nodemon backend/server",
     "client": "npm start --prefix frontend",
@@ -26,7 +27,6 @@
   "bugs": {
     "url": "https://github.com/uoshvis/locPlanner/issues"
   },
-  "homepage": "https://github.com/uoshvis/locPlanner#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
