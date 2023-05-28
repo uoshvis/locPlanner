@@ -61,3 +61,5 @@ app.listen(
             .yellow.bold
     )
 )
+
+module.exports = app
