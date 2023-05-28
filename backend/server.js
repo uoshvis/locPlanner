@@ -61,6 +61,3 @@ app.listen(
             .yellow.bold
     )
 )
-
-// Export the Express API
-module.exports = app
