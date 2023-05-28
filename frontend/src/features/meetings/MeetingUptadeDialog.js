@@ -80,10 +80,7 @@ export default function MeetingUpdateDialog({ open, setOpen, meetingData }) {
                         <DialogContentText>
                             You can update the meeting details below
                         </DialogContentText>
-                        <MeetingFormFields
-                            control={control}
-                            handleSubmit={handleSubmit}
-                        />
+                        <MeetingFormFields control={control} />
                     </DialogContent>
                     <DialogActions
                         sx={{

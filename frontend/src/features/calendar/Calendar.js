@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-
+import { useMemo, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
@@ -43,35 +42,15 @@ function MainCalendar() {
     const [open, setOpen] = useState(false)
     const [formType, setFormType] = useState('view') // 'view' |'add' | 'update'
     const { userInfo } = useSelector((state) => state.auth)
-    const [userData, setUserData] = useState([])
-    const [userColors, setUserColors] = useState({})
-    const [events, setEvents] = useState([])
     const [eventData, setEventData] = useState({ userId: userInfo.id })
-    const { data: users = [] } = useGetUsersQuery()
+    const { data: userData = [] } = useGetUsersQuery()
     const { data: eventsData = [] } = useGetEventsQuery({ location })
     const [updateEvent] = useUpdateEventMutation()
 
     const adminRoles = ['admin', 'superAdmin']
 
-    useEffect(() => {
-        if (users) {
-            setUserData(users)
-        }
-    }, [users, userData])
-
-    useEffect(() => {
-        if (userData.length > 0) {
-            const userColors = getUserColors(userData)
-            setUserColors(userColors)
-        }
-    }, [userData])
-
-    useEffect(() => {
-        if (eventsData.length > 0) {
-            const convertedEvents = dateTimeToDateObj(eventsData)
-            setEvents(convertedEvents)
-        }
-    }, [eventsData])
+    const userColors = useMemo(() => getUserColors(userData), [userData])
+    const events = useMemo(() => dateTimeToDateObj(eventsData), [eventsData])
 
     const handleEventDrop = async (data) => {
         const { start, end } = data

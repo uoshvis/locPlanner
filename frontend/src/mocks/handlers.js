@@ -1,154 +1,33 @@
 import { rest } from 'msw'
-import moment from 'moment'
+import { users, circlePickerDefaultColors } from './data/usersData'
+import { events } from './data/eventsData'
 import { meetingsData } from './data/meetingsData'
+
 // Add an extra delay to all endpoints, so loading spinners show up.
 const ARTIFICIAL_DELAY_MS = 1000
 
-const circlePickerDefaultColors = [
-    '#f44336',
-    '#e91e63',
-    '#9c27b0',
-    '#673ab7',
-    '#3f51b5',
-    '#2196f3',
-    '#03a9f4',
-    '#00bcd4',
-    '#009688',
-    '#4caf50',
-    '#8bc34a',
-    '#cddc39',
-    '#ffeb3b',
-    '#ffc107',
-    '#ff9800',
-    '#ff5722',
-    '#795548',
-    '#607d8b',
-]
-
-const items = [
-    {
-        id: 10,
-        start: moment().toDate(),
-        end: moment().add(1, 'hours').toDate(),
-        title: 'Bird song 1',
-        location: 'loc1',
-        userId: 101,
-        isCompleted: false,
-    },
-    {
-        id: 11,
-        start: moment().toDate(),
-        end: moment().add(6, 'hours').toDate(),
-        title: 'Full moon 1',
-        location: 'loc1',
-        userId: 102,
-        isCompleted: true,
-    },
-    {
-        id: 20,
-        start: moment().add(2, 'days').toDate(),
-        end: moment().add(2, 'days').add(3, 'hours').toDate(),
-        title: 'Sunshine 2',
-        location: 'loc2',
-        userId: 103,
-        isCompleted: true,
-    },
-    {
-        id: 21,
-        start: moment().add(3, 'days').toDate(),
-        end: moment().add(3, 'days').add(3, 'hours').toDate(),
-        title: 'Sunrise 2',
-        location: 'loc2',
-        userId: 104,
-        isCompleted: false,
-    },
-    {
-        id: 22,
-        start: moment().add(5, 'days').toDate(),
-        end: moment().add(5, 'days').add(5, 'hours').toDate(),
-        title: 'Sunrise 2 again',
-        location: 'loc2',
-        userId: 101,
-        isCompleted: false,
-    },
-    {
-        id: 23,
-        start: moment().add(6, 'days').toDate(),
-        end: moment().add(6, 'days').add(6, 'hours').toDate(),
-        title: 'Happy hour',
-        location: 'loc2',
-        userId: 101,
-        isCompleted: true,
-    },
-]
-
-const users = [
-    {
-        id: 999,
-        userName: 'superAdmin',
-        firstName: 'Super',
-        lastName: 'Admin',
-        isActive: true,
-        userColor: '#f44336',
-        password: '123',
-        role: 'superAdmin',
-    },
-    {
-        id: 100,
-        userName: 'admin',
-        firstName: 'Administrator',
-        lastName: 'Joker',
-        isActive: true,
-        userColor: '#f44336',
-        password: '123',
-        role: 'admin',
-    },
-    {
-        id: 101,
-        userName: 'SantaClaus',
-        firstName: 'Santa',
-        lastName: 'Claus',
-        isActive: true,
-        userColor: '#e91e63',
-        password: '123',
-        role: 'user',
-    },
-    {
-        id: 102,
-        userName: 'TeddyBear',
-        firstName: 'Teddy',
-        lastName: 'Bear',
-        isActive: false,
-        userColor: '#9c27b0',
-        password: '123',
-        role: 'user',
-    },
-    {
-        id: 103,
-        userName: 'RedNose',
-        firstName: 'Rudolf',
-        lastName: 'Red',
-        isActive: true,
-        userColor: '#673ab7',
-        password: '123',
-        role: 'user',
-    },
-    {
-        id: 104,
-        userName: 'Nobrain',
-        firstName: 'Snowman',
-        lastName: 'White',
-        isActive: false,
-        userColor: '#3f51b5',
-        password: '123',
-        role: 'user',
-    },
-]
+// Authenticate user from token
+const authenticateUser = (req) => {
+    // Mock authentication logic
+    const authorizationHeader = req.headers.get('Authorization')
+    if (authorizationHeader) {
+        const token = authorizationHeader.replace('Bearer ', '')
+        // Mock token verification logic
+        if (token.includes('_mockToken')) {
+            const id = token.split('_mockToken')[0]
+            // Mock user based on the token
+            const user = users.find((user) => user.id === Number(id))
+            return user
+        }
+    }
+    return null
+}
 
 export const handlers = [
-    // #################### Login-logout handlers #############################
+    // #################### Auth handlers #############################
 
-    rest.post('/myApi/register', (req, res, ctx) => {
+    // registerUser
+    rest.post('/api/auth/register', (req, res, ctx) => {
         const id = Number(new Date())
         const data = {
             ...req.body,
@@ -164,25 +43,41 @@ export const handlers = [
             )
         }
         data.id = id
-        users.push(data)
-        return res(
-            ctx.delay(ARTIFICIAL_DELAY_MS),
-            ctx.status(200),
-            ctx.json(data)
-        )
+        const checkUsername = (obj) => obj.userName === data.userName
+        if (!data.some(checkUsername)) {
+            users.push(data)
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(200),
+                ctx.json({
+                    id: data.id,
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                })
+            )
+        } else {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(404, 'UserName already taken'),
+                ctx.json({})
+            )
+        }
     }),
 
-    rest.post('/myApi/login', (req, res, ctx) => {
+    // loginUser
+    rest.post('api/auth/login', (req, res, ctx) => {
         const userName = req.body.userName
         const password = req.body.password
+
         if (userName && password) {
             const user = users.find((user) => user.userName === userName)
+
             if (user && user.password === password && user.isActive) {
-                const userToken = user.userName + '_token'
+                const userToken = user.id + '_mockToken'
                 return res(
                     ctx.delay(ARTIFICIAL_DELAY_MS),
                     ctx.status(200),
-                    ctx.json({ ...user, userToken })
+                    ctx.json({ userToken, userInfo: user })
                 )
             } else if (user && !user.isActive) {
                 return res(
@@ -209,7 +104,7 @@ export const handlers = [
         }
     }),
 
-    rest.post('/myApi/logout', (req, res, ctx) => {
+    rest.post('/api/auth/logout', (req, res, ctx) => {
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
@@ -219,67 +114,139 @@ export const handlers = [
 
     // #################### Users handlers ####################################
 
-    rest.get('/myApi/users', (req, res, ctx) => {
-        return res(
-            ctx.delay(ARTIFICIAL_DELAY_MS),
-            ctx.status(200),
-            ctx.json(users)
-        )
+    //  getUsers
+    rest.get('/api/users', (req, res, ctx) => {
+        const usersData = users.map((user) => ({
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            userColor: user.userColor,
+        }))
+
+        if (usersData) {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(200),
+                ctx.json(usersData)
+            )
+        } else {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(404, 'Users not found'),
+                ctx.json({})
+            )
+        }
     }),
 
-    rest.get('/myApi/users/:id', (req, res, ctx) => {
-        const { id } = req.params
-        const user = users.find((user) => user.id === Number(id))
+    //  getUsersData
+    rest.get('/api/users/users-data', (req, res, ctx) => {
+        const reqUser = authenticateUser(req)
+
+        if (['admin', 'superAdmin'].includes(reqUser.role)) {
+            if (users) {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(200),
+                    ctx.json(users)
+                )
+            } else {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(404, 'Users not found'),
+                    ctx.json({})
+                )
+            }
+        } else {
+            return res(
+                ctx.delay(ARTIFICIAL_DELAY_MS),
+                ctx.status(401, 'Only for admin role users'),
+                ctx.json({})
+            )
+        }
+    }),
+
+    //  getUserProfile
+    rest.get('/api/users/profile', (req, res, ctx) => {
+        const user = authenticateUser(req)
 
         if (user) {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(200),
-                ctx.json(user)
+                ctx.json({
+                    id: user.id,
+                    userName: user.userName,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    role: user.role,
+                    userColor: user.userColor,
+                })
             )
         } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(404, 'User not found'),
+                ctx.status(404, 'User profile not found'),
                 ctx.json({})
             )
         }
     }),
 
-    rest.post('/myApi/users', (req, res, ctx) => {
-        const id = Number(new Date())
-        const data = {
-            ...req.body,
-            userColor: circlePickerDefaultColors[0],
-        }
-        if (data.title === 'error') {
+    //  getUser
+    rest.get('/api/users/:id', (req, res, ctx) => {
+        const reqUser = authenticateUser(req)
+        const { id } = req.params
+
+        if (['admin', 'superAdmin'].includes(reqUser.role)) {
+            const user = users.find((user) => user.id === Number(id))
+
+            if (user) {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(200),
+                    ctx.json(user)
+                )
+            } else {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(404, 'User not found'),
+                    ctx.json({})
+                )
+            }
+        } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(500, 'Item not added'),
+                ctx.status(401, 'Only for admin role users'),
                 ctx.json({})
             )
         }
-        data.id = id
-        users.push(data)
-        return res(
-            ctx.delay(ARTIFICIAL_DELAY_MS),
-            ctx.status(200),
-            ctx.json(data)
-        )
     }),
 
-    rest.put('/myApi/users/:id', (req, res, ctx) => {
+    //  updateUser
+    rest.put('/api/users/:id', (req, res, ctx) => {
+        const reqUser = authenticateUser(req)
         const { id } = req.params
         const data = req.body
         const itemIdx = users.findIndex((obj) => obj.id === Number(id))
+
         // const itemIdx = -1
         if (itemIdx !== -1) {
-            users[itemIdx] = { ...data }
-            return res(
-                ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(200),
-                ctx.json(users[itemIdx])
-            )
+            if (
+                users[itemIdx].id === reqUser.id ||
+                ['admin', 'superAdmin'].includes(reqUser.role)
+            ) {
+                users[itemIdx] = { ...users[itemIdx], ...data }
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(200),
+                    ctx.json(users[itemIdx])
+                )
+            } else {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(401, 'Update not Allowed'),
+                    ctx.json({})
+                )
+            }
         } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
@@ -289,11 +256,14 @@ export const handlers = [
         }
     }),
 
-    rest.delete('/myApi/users/:id', (req, res, ctx) => {
+    // deleteUser
+    rest.delete('/api/users/:id/delete', (req, res, ctx) => {
+        const reqUser = authenticateUser(req)
         const { id } = req.params
         const itemIdx = users.findIndex((obj) => obj.id === Number(id))
         // const itemIdx = -1
-        if (itemIdx !== -1) {
+
+        if (itemIdx !== -1 && ['superAdmin'].includes(reqUser.role)) {
             users.splice(itemIdx, 1)
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
@@ -303,7 +273,7 @@ export const handlers = [
         } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(404, 'Item not found'),
+                ctx.status(401, 'Only for superAdmin'),
                 ctx.json({})
             )
         }
@@ -311,55 +281,64 @@ export const handlers = [
 
     // #################### Events handlers ####################################
 
-    rest.get('/myApi/events/:location', (req, res, ctx) => {
-        const { location } = req.params
-        var events = []
-        const validLocation = ['all', 'loc1', 'loc2'].includes(location)
+    // getEvents
+    rest.get('/api/events', (req, res, ctx) => {
+        const location = req.url.searchParams.get('location')
+        const userId = req.url.searchParams.get('userId')
 
-        if (validLocation) {
-            if (location === 'all') {
-                events = items
-            } else {
-                events = items.filter((item) => item.location === location)
-            }
+        var filteredEvents = events
+
+        // filter by location
+        if (location && location !== 'all') {
+            filteredEvents = events.filter((item) => item.location === location)
+        }
+
+        // filter by userId
+        if (userId) {
+            filteredEvents = filteredEvents.filter(
+                (item) => item.userId === Number(userId)
+            )
+        }
+
+        if (filteredEvents) {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(200),
-                ctx.json(events)
+                ctx.json(filteredEvents)
             )
         } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(404, 'Location not found'),
+                ctx.status(404, 'Events not found'),
                 ctx.json({})
             )
         }
     }),
 
-    rest.put('/myApi/events/:id', (req, res, ctx) => {
+    // getEvent
+    rest.get('/api/events/:id', (req, res, ctx) => {
         const { id } = req.params
-        const data = req.body
-        const itemIdx = items.findIndex((obj) => obj.id === Number(id))
+        const itemIdx = events.findIndex((obj) => obj.id === Number(id))
         // const itemIdx = -1
         if (itemIdx !== -1) {
-            items[itemIdx] = data
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(200),
-                ctx.json(items[itemIdx])
+                ctx.json(events[itemIdx])
             )
         } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(404, 'Update item not found'),
+                ctx.status(404, 'Event not found'),
                 ctx.json({})
             )
         }
     }),
 
-    rest.post('/myApi/events', (req, res, ctx) => {
-        const id = Number(new Date())
+    // createEvent
+    rest.post('/api/events', (req, res, ctx) => {
         const data = req.body
+        const id = Number(new Date())
 
         if (data.title === 'error') {
             return res(
@@ -370,7 +349,8 @@ export const handlers = [
         }
 
         data.id = id
-        items.push(data)
+        events.push(data)
+
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
@@ -378,17 +358,66 @@ export const handlers = [
         )
     }),
 
-    rest.delete('/myApi/events/:id', (req, res, ctx) => {
+    // updateEvent
+    rest.put('/api/events/:id', (req, res, ctx) => {
+        const reqUser = authenticateUser(req)
         const { id } = req.params
-        const itemIdx = items.findIndex((obj) => obj.id === Number(id))
+        const data = req.body
+        const itemIdx = events.findIndex((obj) => obj.id === Number(id))
         // const itemIdx = -1
         if (itemIdx !== -1) {
-            items.splice(itemIdx, 1)
+            const eventToEdit = events[itemIdx]
+            if (
+                eventToEdit.userId === Number(reqUser.id) ||
+                ['admin', 'superAdmin'].includes(reqUser.role)
+            ) {
+                events[itemIdx] = { ...eventToEdit, ...data }
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(200),
+                    ctx.json(events[itemIdx])
+                )
+            } else {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(401, 'Update Not allowed'),
+                    ctx.json({})
+                )
+            }
+        } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
-                ctx.status(200),
-                ctx.json({ id })
+                ctx.status(404, 'Update item not found'),
+                ctx.json({})
             )
+        }
+    }),
+
+    // deleteEvent
+    rest.delete('/api/events/:id/delete', (req, res, ctx) => {
+        const reqUser = authenticateUser(req)
+        const { id } = req.params
+        const itemIdx = events.findIndex((obj) => obj.id === Number(id))
+        // const itemIdx = -1
+        if (itemIdx !== -1) {
+            const eventToEdit = events[itemIdx]
+            if (
+                eventToEdit.userId === Number(reqUser.id) ||
+                ['admin', 'superAdmin'].includes(reqUser.role)
+            ) {
+                events.splice(itemIdx, 1)
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(200),
+                    ctx.json({ id })
+                )
+            } else {
+                return res(
+                    ctx.delay(ARTIFICIAL_DELAY_MS),
+                    ctx.status(401, 'Delete Not allowed'),
+                    ctx.json({})
+                )
+            }
         } else {
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
@@ -397,12 +426,13 @@ export const handlers = [
             )
         }
     }),
-    rest.delete('/myApi/events', (req, res, ctx) => {
-        const data = req.body
-        const idsArray = data.split(';')
+
+    // deleteEvents
+    rest.delete('/api/events/delete', (req, res, ctx) => {
+        const { ids: idsArray } = req.body
         const itemsIdxsToDelete = []
         for (const id of idsArray) {
-            let itemIdx = items.findIndex((obj) => obj.id === Number(id))
+            let itemIdx = events.findIndex((obj) => obj.id === Number(id))
 
             if (itemIdx === -1) {
                 return res(
@@ -414,17 +444,18 @@ export const handlers = [
             itemsIdxsToDelete.push(itemIdx)
         }
         if (itemsIdxsToDelete.length === idsArray.length) {
-            itemsIdxsToDelete.forEach((idx) => items.splice(idx, 1))
+            itemsIdxsToDelete.forEach((idx) => events.splice(idx, 1))
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
                 ctx.status(200),
-                ctx.json({ ids: data })
+                ctx.json({ ids: 'delete many' })
             )
         }
     }),
 
-    // meetings
-    rest.get('/myApi/meetings', (req, res, ctx) => {
+    // #################### Meetings handlers #################################
+
+    rest.get('/api/meetings', (req, res, ctx) => {
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),

@@ -1,14 +1,10 @@
 import React from 'react'
 import { MenuItem, TextField } from '@mui/material'
-import { Controller } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 
-export const UserSelectDropdown = ({
-    name,
-    control,
-    label,
-    usersList,
-    disabled,
-}) => {
+export const UserSelectDropdown = ({ name, label, usersList, disabled }) => {
+    const { control } = useFormContext()
+
     const generateSingleOptions = (usersList) => {
         return usersList.map((user) => {
             return (
