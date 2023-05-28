@@ -2,13 +2,13 @@ import path from 'path'
 import express from 'express'
 import dotenv from 'dotenv'
 import colors from 'colors'
-import connectDB from './config/db.js'
-import userRoutes from './routes/userRoutes.js'
-import authRoutes from './routes/authRoutes.js'
-import meetingsRoutes from './routes/meetingsRoutes.js'
-import eventsRoutes from './routes/eventsRoutes.js'
+import connectDB from './src/config/db.js'
+import userRoutes from './src/routes/userRoutes.js'
+import authRoutes from './src/routes/authRoutes.js'
+import meetingsRoutes from './src/routes/meetingsRoutes.js'
+import eventsRoutes from './src/routes/eventsRoutes.js'
 
-import { errorHandler, notFound } from './middleware/errorMiddleware.js'
+import { errorHandler, notFound } from './src/middleware/errorMiddleware.js'
 
 dotenv.config()
 
