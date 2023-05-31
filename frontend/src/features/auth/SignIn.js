@@ -17,7 +17,7 @@ import Container from '@mui/material/Container'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import TextInput from './formFields/TextInput'
 
-import Spinner from '../../components/Spinner'
+import { SpinnerBtn } from '../../components/Spinners'
 import { useLoginMutation } from '../../app/services/auth'
 
 function Copyright(props) {
@@ -137,7 +137,7 @@ export default function SignIn() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            {isLoading ? <Spinner /> : 'Sign In'}
+                            {isLoading ? <SpinnerBtn /> : 'Sign In'}
                         </Button>
                         <Grid container>
                             <Grid item xs>

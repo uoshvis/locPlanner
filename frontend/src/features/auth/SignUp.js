@@ -19,7 +19,7 @@ import Container from '@mui/material/Container'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 
 import TextInput from './formFields/TextInput'
-import Spinner from '../../components/Spinner'
+import { SpinnerBtn } from '../../components/Spinners'
 import { useRegisterMutation } from '../../app/services/auth'
 
 export const userCreateSchema = z
@@ -190,7 +190,7 @@ export default function SignUp() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            {isLoading ? <Spinner /> : 'Sign Up'}
+                            {isLoading ? <SpinnerBtn /> : 'Sign Up'}
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
