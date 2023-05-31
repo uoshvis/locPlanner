@@ -1,7 +1,7 @@
 import '../styles/spinner.css'
 import Box from '@mui/material/Box'
-import Backdrop from '@mui/material/Backdrop'
 import CircularProgress from '@mui/material/CircularProgress'
+import Backdrop from '@mui/material/Backdrop'
 
 const SpinnerBtn = () => {
     return (
