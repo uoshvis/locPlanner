@@ -2,9 +2,11 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { DataGrid } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
 import CustomFooterComponent from './CustomFooter'
 import { EventForm } from './EventForm'
 import AlertDialog from '../../components/DeleteAlertDialog'
+import { CircularIndeterminate } from '../../components/Spinners'
 import {
     useDeleteEventsMutation,
     useGetEventsQuery,
@@ -133,6 +135,24 @@ const Events = () => {
                     onRowDoubleClick={handleRowDoubleClick}
                     components={{
                         Footer: CustomFooterComponent,
+                        NoRowsOverlay: () => (
+                            <Stack
+                                height="100%"
+                                alignItems="center"
+                                justifyContent="center"
+                            >
+                                <CircularIndeterminate />
+                            </Stack>
+                        ),
+                        NoResultsOverlay: () => (
+                            <Stack
+                                height="100%"
+                                alignItems="center"
+                                justifyContent="center"
+                            >   
+                                Local filter returns no result
+                            </Stack>
+                        ),
                     }}
                     componentsProps={{
                         footer: { setDialogIsOpen },
