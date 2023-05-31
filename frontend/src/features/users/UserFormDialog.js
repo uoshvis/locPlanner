@@ -11,12 +11,13 @@ import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import FormControl from '@mui/material/FormControl'
 
 import UserFormFields from './formFields/UserFormFields'
+import { SpinnerBtn } from '../../components/Spinners'
 import { userSchema } from './formFields/userSchema'
 import { useRegisterMutation } from '../../app/services/auth'
 
 export default function UserFormDialog() {
     const [open, setOpen] = useState(false)
-    const [register] = useRegisterMutation()
+    const [register, { isLoading: isSubmitting }] = useRegisterMutation()
 
     const { control, handleSubmit, reset } = useForm({
         defaultValues: {
@@ -75,12 +76,15 @@ export default function UserFormDialog() {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button variant="contained" onClick={handleClose}>
+                            Cancel
+                        </Button>
                         <Button
+                            variant="contained"
                             type="submit"
                             onClick={handleSubmit(onSaveSubmit)}
                         >
-                            Submit
+                            {isSubmitting ? <SpinnerBtn /> : 'Submit'}
                         </Button>
                     </DialogActions>
                 </FormControl>

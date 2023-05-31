@@ -10,6 +10,7 @@ import Button from '@mui/material/Button'
 
 import Input from './formFields/Input'
 import ColorSelectorBtn from './formFields/ColorSelectorBtn'
+import { SpinnerBtn } from '../../components/Spinners'
 import {
     useUpdateUserMutation,
     useLazyGetUserProfileQuery,
@@ -109,16 +110,21 @@ function UserProfile() {
 
                 <Button
                     disabled={!readOnly}
+                    variant="contained"
                     onClick={() => setReadOnly((prev) => !prev)}
                 >
                     Edit
                 </Button>
 
-                <Button type="submit" disabled={readOnly}>
-                    Save
+                <Button type="submit" disabled={readOnly} variant="contained">
+                    {isUpdating ? <SpinnerBtn /> : 'Save'}
                 </Button>
 
-                <Button disabled={readOnly} onClick={handleCancel}>
+                <Button
+                    disabled={readOnly}
+                    onClick={handleCancel}
+                    variant="contained"
+                >
                     Cancel
                 </Button>
             </Box>

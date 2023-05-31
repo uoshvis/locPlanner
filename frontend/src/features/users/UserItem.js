@@ -17,12 +17,13 @@ import {
 
 import { useSelector } from 'react-redux'
 import { selectUserDataById } from './usersSlice'
+import { SpinnerBtn } from '../../components/Spinners'
 
-const UserItem = ({ handleRemoveUser }) => {
+const UserItem = ({ handleRemoveUser, userInfo }) => {
     const { userId } = useParams()
 
     const user = useSelector((state) => selectUserDataById(state, userId))
-
+    const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation()
     const [triggerGetProfile] = useLazyGetUserProfileQuery()
 
     const [isDialogOpen, setDialogIsOpen] = useState(false)
@@ -48,7 +49,7 @@ const UserItem = ({ handleRemoveUser }) => {
 
     const onSaveSubmit = async () => {
         const data = getValues()
-        if (data && !isUpdateLoading) {
+        if (data && !isUpdating) {
             try {
                 await updateUser(data)
                     .unwrap()
@@ -94,12 +95,12 @@ const UserItem = ({ handleRemoveUser }) => {
             >
                 <UserFormFields control={control} />
 
-                <Button variant="outlined" type="submit">
-                    Save
+                <Button variant="contained" type="submit">
+                    {isUpdating ? <SpinnerBtn /> : 'Save'}
                 </Button>
 
                 <Button
-                    variant="outlined"
+                    variant="contained"
                     onClick={() => setDialogIsOpen(true)}
                 >
                     Delete
