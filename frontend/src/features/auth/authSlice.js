@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { authApi } from '../../app/services/auth'
+import { usersApi } from '../../app/services/users'
 
 // initialize userToken from session storage
 const userToken = sessionStorage.getItem('userToken')
@@ -39,6 +40,12 @@ export const authSlice = createSlice({
                         'userToken',
                         JSON.stringify(action.payload.userToken)
                     )
+                }
+            )
+            .addMatcher(
+                usersApi.endpoints.getUserProfile.matchFulfilled,
+                (state, action) => {
+                    state.userInfo = action.payload
                 }
             )
             .addMatcher(

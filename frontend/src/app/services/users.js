@@ -62,3 +62,7 @@ export const {
     useUpdateUserMutation,
     useDeleteUserMutation,
 } = usersApi
+
+export const {
+    endpoints: { getUserProfile },
+} = usersApi
