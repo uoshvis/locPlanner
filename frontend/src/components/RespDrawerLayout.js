@@ -6,12 +6,11 @@ import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline'
 import Divider from '@mui/material/Divider'
 import Drawer from '@mui/material/Drawer'
-import MenuItems from './MenuItems'
 import Toolbar from '@mui/material/Toolbar'
 
 // Local imports
 import MainAppBar from './MainAppBar'
-
+import MenuItems from './MenuItems'
 const drawerWidth = 240
 
 function RespDrawerLayout(props) {
