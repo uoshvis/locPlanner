@@ -11,8 +11,8 @@ import Button from '@mui/material/Button'
 import Input from './formFields/Input'
 import ColorSelectorBtn from './formFields/ColorSelectorBtn'
 import {
-    useGetUserProfileQuery,
     useUpdateUserMutation,
+    useLazyGetUserProfileQuery,
 } from '../../app/services/users'
 
 const userSchema = z.object({
@@ -24,7 +24,6 @@ const userSchema = z.object({
 
 function UserProfile() {
     const { userInfo } = useSelector((state) => state.auth)
-    const { data: userProfileData } = useGetUserProfileQuery(userInfo.id)
     const { handleSubmit, reset, setValue, getValues, watch, control } =
         useForm({
             defaultValues: {
@@ -33,21 +32,26 @@ function UserProfile() {
                 lastName: '',
                 userColor: '',
             },
-            values: userProfileData,
+            values: userInfo,
             resolver: zodResolver(userSchema),
         })
 
     const watchColor = watch('userColor', '')
     const [readOnly, setReadOnly] = React.useState(true)
-    const [updateUser] = useUpdateUserMutation()
+    const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation()
+    const [triggerGetProfile] = useLazyGetUserProfileQuery()
 
     const onSaveSubmit = async () => {
         const data = getValues()
         try {
             setReadOnly(true)
-            await updateUser({ id: userProfileData.id, ...data }).unwrap()
+            await updateUser({ id: userInfo.id, ...data })
+                .unwrap()
+                .then(() => {
+                    triggerGetProfile(userInfo.id)
+                })
         } catch (err) {
-            reset(userProfileData)
+            reset(userInfo)
         }
     }
 

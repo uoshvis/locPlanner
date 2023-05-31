@@ -10,7 +10,11 @@ import Typography from '@mui/material/Typography'
 import UserFormFields from './formFields/UserFormFields'
 import AlertDialog from '../../components/DeleteAlertDialog'
 import { userSchema } from './formFields/userSchema'
-import { useUpdateUserMutation } from '../../app/services/users'
+import {
+    useUpdateUserMutation,
+    useLazyGetUserProfileQuery,
+} from '../../app/services/users'
+
 import { useSelector } from 'react-redux'
 import { selectUserDataById } from './usersSlice'
 
@@ -19,7 +23,7 @@ const UserItem = ({ handleRemoveUser }) => {
 
     const user = useSelector((state) => selectUserDataById(state, userId))
 
-    const [updateUser, { isUpdateLoading }] = useUpdateUserMutation()
+    const [triggerGetProfile] = useLazyGetUserProfileQuery()
 
     const [isDialogOpen, setDialogIsOpen] = useState(false)
 
@@ -46,7 +50,13 @@ const UserItem = ({ handleRemoveUser }) => {
         const data = getValues()
         if (data && !isUpdateLoading) {
             try {
-                await updateUser(data).unwrap()
+                await updateUser(data)
+                    .unwrap()
+                    .then(() => {
+                        if (Number(userId) === userInfo.id) {
+                            triggerGetProfile(userId)
+                        }
+                    })
             } catch (err) {
                 reset(user)
             }

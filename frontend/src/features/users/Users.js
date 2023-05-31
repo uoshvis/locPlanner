@@ -80,7 +80,10 @@ const Users = () => {
                     <Route
                         path=":userId"
                         element={
-                            <UserItem handleRemoveUser={handleRemoveUser} />
+                            <UserItem
+                                handleRemoveUser={handleRemoveUser}
+                                userInfo={userInfo}
+                            />
                         }
                     />
                 </Route>
