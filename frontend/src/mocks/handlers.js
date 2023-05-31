@@ -43,8 +43,10 @@ export const handlers = [
             )
         }
         data.id = id
+
         const checkUsername = (obj) => obj.userName === data.userName
-        if (!data.some(checkUsername)) {
+
+        if (!users.some(checkUsername)) {
             users.push(data)
             return res(
                 ctx.delay(ARTIFICIAL_DELAY_MS),
