@@ -16,6 +16,7 @@ import {
 } from '../../app/services/events'
 import { useGetUsersQuery } from '../../app/services/users'
 import { dateTimeToDateObj } from '../events/eventsHelpers'
+import { BackdropCircular } from '../../components/Spinners'
 
 moment.updateLocale('lt', {
     week: {
@@ -42,6 +43,7 @@ function MainCalendar() {
     const [open, setOpen] = useState(false)
     const [formType, setFormType] = useState('view') // 'view' |'add' | 'update'
     const { userInfo } = useSelector((state) => state.auth)
+    const { isLoading } = useSelector((state) => state.notification)
     const [eventData, setEventData] = useState({ userId: userInfo.id })
     const { data: userData = [] } = useGetUsersQuery()
     const { data: eventsData = [] } = useGetEventsQuery({ location })
@@ -103,6 +105,8 @@ function MainCalendar() {
 
     return (
         <div className={styles.MainCalendar}>
+            <BackdropCircular open={isLoading} />
+
             <LocationBtn setLocation={setLocation} location={location} />
 
             <DnDCalendar
