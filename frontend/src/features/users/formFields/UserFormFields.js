@@ -6,7 +6,7 @@ import CheckBox from './CheckBox'
 
 export default function UserFormFields({ control }) {
     return (
-        <Box component="form" noValidate sx={{ mt: 3 }}>
+        <Box component="div" noValidate sx={{ mt: 3 }}>
             <Grid container spacing={1}>
                 <Grid item xs={12}>
                     <TextInput
