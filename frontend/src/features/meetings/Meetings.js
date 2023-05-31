@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
 import { useGetMeetingsQuery } from '../../app/services/meetings'
 import MeetingUptadeDialog from './MeetingUptadeDialog'
 import MeetingFormDialog from './MeetingFormDialog'
+import { CircularIndeterminate } from '../../components/Spinners'
 
 const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
@@ -85,6 +87,26 @@ function Meetings() {
                     disableSelectionOnClick
                     onRowDoubleClick={handleRowDoubleClick}
                     sortModel={[{ field: 'id', sort: 'desc' }]}
+                    components={{
+                        NoRowsOverlay: () => (
+                            <Stack
+                                height="100%"
+                                alignItems="center"
+                                justifyContent="center"
+                            >
+                                <CircularIndeterminate />
+                            </Stack>
+                        ),
+                        NoResultsOverlay: () => (
+                            <Stack
+                                height="100%"
+                                alignItems="center"
+                                justifyContent="center"
+                            >
+                                Local filter returns no result
+                            </Stack>
+                        ),
+                    }}
                 />
             </Box>
         </div>
