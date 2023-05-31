@@ -88,9 +88,10 @@ const Events = () => {
                     ...event,
                     userFullName:
                         users.find((user) => user.id === event.userId)
-                            .firstName +
+                            ?.firstName +
                         ' ' +
-                        users.find((user) => user.id === event.userId).lastName,
+                        users.find((user) => user.id === event.userId)
+                            ?.lastName,
                 }))
             }
         }

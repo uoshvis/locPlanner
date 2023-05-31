@@ -10,7 +10,10 @@ import Button from '@mui/material/Button'
 
 import Input from './formFields/Input'
 import ColorSelectorBtn from './formFields/ColorSelectorBtn'
-import { useUpdateUserMutation } from '../../app/services/users'
+import {
+    useGetUserProfileQuery,
+    useUpdateUserMutation,
+} from '../../app/services/users'
 
 const userSchema = z.object({
     userName: z.string().max(15).min(1, { message: 'User Name Required' }),
@@ -21,6 +24,7 @@ const userSchema = z.object({
 
 function UserProfile() {
     const { userInfo } = useSelector((state) => state.auth)
+    const { data: userProfileData } = useGetUserProfileQuery(userInfo.id)
     const { handleSubmit, reset, setValue, getValues, watch, control } =
         useForm({
             defaultValues: {
@@ -29,7 +33,7 @@ function UserProfile() {
                 lastName: '',
                 userColor: '',
             },
-            values: userInfo,
+            values: userProfileData,
             resolver: zodResolver(userSchema),
         })
 
@@ -41,9 +45,9 @@ function UserProfile() {
         const data = getValues()
         try {
             setReadOnly(true)
-            await updateUser({ id: userInfo.id, ...data }).unwrap()
+            await updateUser({ id: userProfileData.id, ...data }).unwrap()
         } catch (err) {
-            reset(userInfo)
+            reset(userProfileData)
         }
     }
 

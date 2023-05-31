@@ -1,6 +1,7 @@
 import { api } from './api'
 
 export const authApi = api.injectEndpoints({
+    tagTypes: ['Users', 'UserProfile', 'UsersData'],
     endpoints: (builder) => ({
         login: builder.mutation({
             query(body) {
@@ -10,6 +11,7 @@ export const authApi = api.injectEndpoints({
                     body,
                 }
             },
+            providesTags: ['UserProfile'],
         }),
         register: builder.mutation({
             query(body) {

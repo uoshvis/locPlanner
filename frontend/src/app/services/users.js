@@ -40,7 +40,7 @@ export const usersApi = api.injectEndpoints({
                     body,
                 }
             },
-            invalidatesTags: ['UserProfile', 'Users', 'UsersData'],
+            invalidatesTags: ['Users', 'UserProfile', 'UsersData'],
         }),
         deleteUser: builder.mutation({
             query: (id) => ({
