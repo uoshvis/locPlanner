@@ -2,9 +2,11 @@
 
 ## About
 
-This project is a cloned version of a personal [Location Planner](https://github.com/uoshvis/location-planner) project.
+This project is an improved version of a **personal** [Location Planner](https://github.com/uoshvis/location-planner) project.
 
 The main task is to recreate the project and learn using:
+
+-   [React](https://react.dev/)
 
 -   [React Redux](https://react-redux.js.org/)
 
@@ -13,6 +15,8 @@ The main task is to recreate the project and learn using:
 -   [React Hook Form](https://react-hook-form.com/)
 
 -   [Material UI](https://mui.com/)
+
+-   [Express](https://expressjs.com/)
 
 -   [Cypress](https://www.cypress.io/)
 
@@ -37,9 +41,10 @@ The main task is to recreate the project and learn using:
 -   [x] Display Events by Users (colors)
 -   [x] Login/Logout
 -   [x] Router
+-   [x] Express backend
 -   [x] JWT
 -   [x] Roles
--   [ ] ! Tests, tests and tests !
+-   [x] Tests
 
 ## Usage
 
@@ -53,25 +58,25 @@ Backend & Frontend
   npm install
 ```
 
-### Environment Variables
+### Backend Environment Variables
 
-.env file
+`.env` file
 
 ```
 NODE_ENV = development
 PORT = 5000
-MONGO_URI = 'insert_your_mongodb_uri'
-JWT_SECRET = "any_string"
+MONGO_URI = insert_your_mongodb_uri
+JWT_SECRET = any_string
 ```
 
 #### Frontend with Mock API
 
 Set environment variable
 
-.env file frontend dir
+`.env` file in `frontend` directory
 
 ```
-REACT_APP_MOCK_ENV = 'enabled'
+REACT_APP_MOCK_ENV = enabled
 ```
 
 ### Available Scripts
