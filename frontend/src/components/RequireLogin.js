@@ -1,20 +1,6 @@
 import { useSelector } from 'react-redux'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import Box from '@mui/material/Box'
-import LinearProgress from '@mui/material/LinearProgress'
-import Typography from '@mui/material/Typography'
-
-function LinearIndeterminate() {
-    return (
-        <Box sx={{ width: '100%' }}>
-            <Typography variant="h6" component="h4" mb={2}>
-                Auto login..
-            </Typography>
-
-            <LinearProgress />
-        </Box>
-    )
-}
+import { LinearIndeterminate } from './Spinners'
 
 function RequireLogin({ children }) {
     const { isLoggedIn, userToken } = useSelector((state) => state.auth)

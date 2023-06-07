@@ -2,6 +2,8 @@ import '../styles/spinner.css'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import Backdrop from '@mui/material/Backdrop'
+import LinearProgress from '@mui/material/LinearProgress'
+import Typography from '@mui/material/Typography'
 
 const SpinnerBtn = () => {
     return (
@@ -42,4 +44,21 @@ const CircularIndeterminate = () => {
     )
 }
 
-export { CircularIndeterminate, BackdropCircular, SpinnerBtn }
+const LinearIndeterminate = () => {
+    return (
+        <Box sx={{ width: '100%' }}>
+            <Typography variant="h6" component="h4" mb={2}>
+                Auto login..
+            </Typography>
+
+            <LinearProgress />
+        </Box>
+    )
+}
+
+export {
+    CircularIndeterminate,
+    BackdropCircular,
+    LinearIndeterminate,
+    SpinnerBtn,
+}
