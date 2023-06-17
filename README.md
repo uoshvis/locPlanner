@@ -2,7 +2,7 @@
 
 ## Preview
 
-![LocPlanner demo](loc-planner-demo.gif)
+![LocPlanner demo](locPlanner-demo.gif)
 
 ## About
 
