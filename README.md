@@ -1,5 +1,9 @@
 # Location Planner App
 
+## Preview
+
+![LocPlanner demo](loc-planner-demo.gif)
+
 ## About
 
 This project is an improved version of a **personal** [Location Planner](https://github.com/uoshvis/location-planner) project.
@@ -102,7 +106,3 @@ REACT_APP_MOCK_ENV = enabled
   # Or use npx
   npx cypress open
 ```
-
-## Preview
-
-[![Demo video](https://img.youtube.com/vi/iUXZKbeGzjs/maxresdefault.jpg)](https://youtu.be/iUXZKbeGzjs)
